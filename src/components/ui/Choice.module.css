@@ -1,0 +1,143 @@
+/* Shared by Checkbox and Radio: a real native input, visually hidden but still
+   focusable, with a painted box next to it. Keyboard and SR behaviour is native. */
+
+.choice {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.choice.disabled { cursor: not-allowed; }
+
+.native {
+  position: absolute;
+  opacity: 0;
+  width: var(--space-5);
+  height: var(--space-5);
+  margin: 0;
+  cursor: inherit;
+}
+
+.box {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-5);
+  height: var(--space-5);
+  margin-top: 1px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--brand-on);
+  /* the painted box sits over the transparent native input; without this it
+     swallows the click instead of letting it reach the control */
+  pointer-events: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.checkbox .box { border-radius: var(--radius-sm); }
+.radio .box { border-radius: var(--radius-full); }
+
+.choice:hover .box,
+.choice[data-force~="hover"] .box { border-color: var(--brand); }
+
+.native:focus-visible + .box,
+.choice[data-force~="focus"] .box {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.native:checked + .box,
+.choice[data-force~="checked"] .box,
+.choice[data-force~="indeterminate"] .box {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.mark { opacity: 0; }
+
+.native:checked + .box .mark,
+.choice[data-force~="checked"] .box .mark,
+.choice[data-force~="indeterminate"] .box .mark { opacity: 1; }
+
+/* radio uses a dot rather than a tick */
+.dot {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.errorState .box { border-color: var(--danger-solid); }
+
+.choice.disabled .box,
+.choice[data-force~="disabled"] .box {
+  background: var(--surface-sunken);
+  border-color: var(--border-subtle);
+  color: var(--text-faint);
+  box-shadow: none;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+}
+
+.description {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+.disabled .label,
+.disabled .description,
+.choice[data-force~="disabled"] .label,
+.choice[data-force~="disabled"] .description { color: var(--text-faint); }
+
+/* ---- group ---- */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.groupRow { flex-direction: row; flex-wrap: wrap; gap: var(--space-6); }
+
+.legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.groupHint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.groupError {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--danger-fg);
+}

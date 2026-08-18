@@ -1,0 +1,156 @@
+/* Manage plan — Figma node 1:9922. Shell comes from AppLayout / AppNav, cards
+   from the shared PlanCard. */
+
+.stack { display: flex; flex-direction: column; min-width: 0; }
+.stack > * { min-width: 0; }
+
+/* Figma: breadcrumb at y=52, 8px above the panel. */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: flex-start;
+  margin-bottom: var(--space-2);
+  padding: var(--space-1) var(--space-2) var(--space-1) 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);                /* Figma: 12px */
+  color: var(--manage-lede);
+  text-decoration: none;
+}
+
+.back:hover { color: var(--manage-title); }
+.back:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* ---- header card (1:9933) ---- */
+.panel {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);                      /* Figma: 12px */
+  min-height: var(--manage-panel-h);        /* Figma: 105px */
+  padding: var(--space-4);                  /* Figma: 16px */
+  border-radius: var(--radius-sm);          /* Figma: 4px */
+  background: var(--manage-panel-bg);
+}
+
+.panelIcon { display: inline-flex; padding: var(--space-1) 0; color: var(--manage-icon); }
+
+.h1 {
+  margin: 0 0 5px;                          /* Figma: 5px */
+  font-size: var(--text-2xl);               /* Figma: 24px/32 bold */
+  font-weight: var(--weight-bold);
+  line-height: var(--space-8);
+  color: var(--manage-title);
+}
+
+.lede {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-xs);                /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--manage-lede);
+}
+
+/* ---- cards ---- */
+.grid {
+  /* Figma spaced the cards from the header card with the period toggle between
+     them; with the toggle gone the gap is kept, not collapsed. */
+  margin-top: var(--space-8);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--pricing-gutter);               /* Figma: 23px */
+}
+
+/* ---- scheduled downgrade, inside the card it lands in (1:14777) ---- */
+.schedule {
+  display: flex;
+  gap: var(--space-2);                      /* Figma: 8px */
+  width: 100%;
+  padding: var(--space-4);                  /* Figma: 16px */
+  border-radius: var(--radius-md);          /* Figma: 8px */
+  background: var(--manage-schedule-bg);
+  text-align: start;
+}
+
+.scheduleIcon { flex: none; margin-top: 1px; color: var(--manage-schedule-title); }
+
+.scheduleText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;                                 /* Figma: 5px */
+  min-width: 0;
+}
+
+.scheduleTitle {
+  margin: 0;
+  font-size: var(--text-xs);                /* Figma: 12px/18 bold */
+  font-weight: var(--weight-bold);
+  line-height: 18px;
+  color: var(--manage-schedule-title);
+}
+
+.scheduleMeta {
+  margin: 0;
+  font-size: var(--billing-text-tiny);      /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--manage-schedule-meta);
+}
+
+.scheduleMeta strong { font-weight: var(--weight-bold); }
+
+/* Figma: purple-900 pill. The token layer already chose --brand for primary
+   actions, the same substitution the Renew and "Got it" buttons make. */
+.revert {
+  padding: 2px var(--space-3);              /* Figma: 2px 12px */
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--brand);
+  font-family: var(--font-sans);
+  font-size: var(--billing-text-tiny);      /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--text-on-brand);
+  cursor: pointer;
+}
+
+.revert:hover { filter: brightness(0.97); }
+.revert:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* ---- footer (1:10050) ---- */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+}
+
+/* Figma: a red pill under the cards. */
+.cancel {
+  padding: 2px var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--cancel-menu-item);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                /* Figma: 12px */
+  line-height: 18px;
+  color: var(--cancel-menu-text);
+  cursor: pointer;
+}
+
+.cancel:hover { filter: brightness(0.97); }
+.cancel:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.help {
+  margin: 0;
+  font-size: var(--text-xs);                /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--manage-lede);
+  text-align: center;
+}
+
+.helpLink { color: var(--billing-link); }
+
+@media (max-width: 1040px) {
+  .grid { flex-wrap: wrap; }
+}

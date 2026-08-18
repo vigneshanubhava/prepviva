@@ -1,0 +1,8 @@
+/* Figma: 49x16. Tailwind preflight would otherwise cap these at their box. */
+.mark {
+  width: 49px;
+  height: 16px;
+  max-width: none;
+  display: block;
+  flex: 0 0 auto;
+}

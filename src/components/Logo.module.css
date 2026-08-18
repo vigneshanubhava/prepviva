@@ -1,0 +1,23 @@
+/* PrepViva lockup — Figma: 15×18 mark, 4px gap, 15px/-0.45px wordmark. */
+
+.logo {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.mark {
+  width: 15px;
+  height: 18px;
+  display: block;
+  /* Tailwind preflight sets img { max-width: 100% }; the mark is fixed-size */
+  max-width: none;
+}
+
+.text {
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.45px;
+  line-height: normal;
+  color: var(--signup-logo-text);
+}

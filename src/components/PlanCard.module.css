@@ -1,0 +1,273 @@
+/* The plan card — Figma's pricing card (14:11391), reused unchanged on Manage
+   plan (1:9922 and its variants). Both surfaces draw the same 312x506 card, so
+   it is one component rather than two copies that drift.
+
+   Every literal here is a --pricing-* token; the block is named for the
+   artboard that specified it, not for the page that happens to show it. */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: var(--pricing-card-width);           /* Figma: 312px */
+  min-height: var(--pricing-card-height);     /* Figma: 506px */
+  padding: var(--pricing-gutter);             /* Figma: content at x=23 */
+  background: var(--pricing-card-bg);
+  border: var(--pricing-card-edge-w) solid var(--pricing-card-edge);
+  border-radius: var(--pricing-card-radius);
+  box-shadow: var(--pricing-card-shadow);
+  overflow: clip;
+}
+
+.featured { box-shadow: var(--pricing-card-shadow-featured); }
+
+/* the tinted wash across the top of each card */
+.wash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--pricing-card-width) - var(--pricing-card-edge-w) * 2);
+  height: 190px;
+  border-radius: var(--pricing-wash-radius);
+  background: var(--pricing-wash);
+  opacity: var(--pricing-wash-opacity);
+  pointer-events: none;
+}
+
+/* Figma's wash is 233px tall (227 on the featured card), sized so the list
+   starts just below it. Dropping the "billed annually" row shortened the head
+   by one line, so the wash comes down with it and keeps that relationship —
+   otherwise the tint reads as an empty band. */
+
+.featured .wash {
+  height: 184px;
+  background: var(--pricing-wash-featured);
+}
+
+.emphasis .wash { opacity: var(--pricing-wash-opacity-emphasis); }
+
+/* Decorative blurred ellipse behind the card head.
+   The exported SVG is the blur BLEED box (391x383), inside which the ellipse
+   itself is 207x199. Drawing the file at 207px would squash the bleed and turn
+   the soft glow into a hard grey blob, so the leaf keeps its own dimensions and
+   is positioned by its centre: Figma puts that centre 117.5px down the card. */
+.ellipse {
+  position: absolute;
+  left: 50%;
+  top: calc(117.5px - 383px / 2);
+  width: 391px;
+  height: 383px;
+  max-width: none;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.featured .ellipse {
+  width: 371px;
+  height: 365px;
+  top: calc(126.5px - 365px / 2);
+}
+
+.content { position: relative; display: flex; flex-direction: column; flex: 1 1 auto; }
+
+/* ---- badge ---- */
+.badge {
+  position: absolute;
+  top: calc(var(--space-1) + 2px);            /* Figma: 6px from card edge */
+  right: calc(var(--space-1) + 3px);          /* Figma: 7px */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 2px var(--space-3);                /* Figma: 2px 12px */
+  border-radius: var(--pricing-card-radius);
+  background: linear-gradient(to right, var(--pricing-hero-from), var(--pricing-hero-to));
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--pricing-cta-primary-text);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+/* ---- head ----
+   Figma's icon treatment, kept exactly: a 34x34 outer box holding the 32.381px
+   ring and a glyph centred inside it. Only the glyphs themselves were replaced. */
+.icon {
+  position: relative;
+  display: block;
+  width: 34px;                                /* Figma: 34px outer box */
+  height: 34px;
+  margin-top: var(--space-2);
+  color: var(--pricing-icon);
+}
+
+.iconLeaf {
+  position: absolute;
+  display: block;
+  max-width: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.iconRing  { width: 32.381px; height: 32.381px; }  /* Figma: 32.381px */
+.iconGlyph { width: 19.429px; height: 19.429px; }  /* Figma: 19.429px */
+
+.name {
+  margin: var(--space-4) 0 0;                 /* Figma: 16px below the icon */
+  font-size: var(--text-xl);                  /* Figma: 20px */
+  font-weight: var(--weight-bold);
+  line-height: 28px;
+  color: var(--pricing-text-primary);
+}
+
+.name:focus { outline: none; }
+
+.priceRow {
+  display: flex;
+  align-items: flex-end;
+  margin: var(--space-6) 0 0;                 /* Figma: price at y=140 */
+}
+
+.price {
+  font-size: var(--pricing-text-price);       /* Figma: 26px */
+  font-weight: var(--weight-bold);
+  line-height: 1.5;
+  letter-spacing: var(--pricing-tracking-price);
+  color: var(--pricing-price);
+}
+
+.period {
+  padding-bottom: 3px;
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  line-height: 18px;
+  color: var(--pricing-text-secondary);
+}
+
+/* ---- includes ---- */
+.includes {
+  /* Figma runs price (y=140) -> annual line (y=184) -> "Includes:" (y=246).
+     With no annual plan the middle line is gone, so this absorbs its space and
+     keeps "Includes:" at the same distance below the price. */
+  margin: var(--space-8) 0 var(--space-4);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--pricing-text-tertiary);
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);                        /* Figma: 8px */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;                                  /* Figma: 14px */
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  line-height: 18px;
+  color: var(--pricing-text-primary);
+}
+
+.tick {
+  flex: 0 0 auto;
+  width: var(--space-3);                      /* Figma: 12px */
+  height: var(--space-3);
+  margin-top: 4px;
+  color: var(--pricing-tick);
+}
+
+/* ---- CTA ---- */
+.ctaWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--space-8);
+}
+
+.cta {
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--pricing-cta-width);            /* Figma: 250px */
+  max-width: 100%;
+  border: 0;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: filter var(--duration-fast) var(--ease-out);
+}
+
+.cta:hover { filter: brightness(0.97); }
+.cta:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.ctaPrimary {
+  padding: var(--space-2) var(--space-4);     /* Figma: 8px 16px */
+  background: linear-gradient(to top, var(--pricing-hero-from), var(--pricing-hero-to));
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--pricing-cta-primary-text);
+}
+
+.ctaSecondary {
+  padding: var(--space-2) var(--space-2);     /* Figma: 6px 8px */
+  background: var(--pricing-cta-secondary-bg);
+  font-size: var(--text-sm);                  /* Figma: 14px */
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+  letter-spacing: var(--pricing-tracking-cta);
+  color: var(--pricing-cta-secondary-text);
+}
+
+.ctaTertiary {
+  padding: var(--space-2) var(--space-2);
+  background: var(--pricing-cta-tertiary-bg);
+  font-size: var(--text-sm);                  /* Figma: 14px */
+  font-weight: var(--weight-medium);
+  line-height: 22px;
+  color: var(--pricing-text-secondary);
+}
+
+.ctaNote {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  text-align: center;
+  color: var(--pricing-text-tertiary);
+}
+
+
+/* ---- Manage plan additions ----
+   The artboards reuse the card but recolour the badge for the current plan and
+   flatten the CTA once it is not an action any more (1:11825, 1:11505). */
+
+.badgeCurrent { background: var(--manage-current-bg); color: var(--manage-current-text); }
+
+.ctaCurrent {
+  background: var(--manage-current-cta);
+  color: var(--manage-current-text);
+  cursor: default;
+}
+
+.ctaCurrent:hover { filter: none; }
+
+.priceNote {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--pricing-text-tertiary);
+}
+
+@media (max-width: 720px) {
+  .card { width: 100%; min-height: 0; }
+  .wash { width: 100%; }
+}

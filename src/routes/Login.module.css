@@ -1,0 +1,146 @@
+/* 11 Login - Email Entry — Figma node 1:3169.
+   The shell (page tint, banner, card, logo) comes from AuthShell. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);                      /* Figma: 48px */
+}
+
+.headings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);                       /* Figma: 12px */
+  max-width: 323px;                          /* Figma: 323px */
+}
+
+.h1 {
+  margin: 0;
+  font-size: var(--signup-heading-size);     /* Figma: 30px */
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--signup-heading);
+}
+
+.lede {
+  margin: 0;
+  font-size: var(--text-xs);                 /* Figma: 12px */
+  line-height: var(--leading-relaxed);
+  color: var(--signup-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);                       /* Figma: 20px */
+}
+
+/* ---- email field ---- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;                                 /* Figma: 13px */
+  width: var(--login-field-w);               /* Figma: 609px */
+  max-width: 100%;
+}
+
+.label {
+  font-size: var(--text-xs);                 /* Figma: 12px bold */
+  font-weight: var(--weight-bold);
+  color: var(--signup-heading);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);                       /* Figma: 16px */
+  height: 44px;                              /* Figma: 44px */
+  padding: var(--space-2);                   /* Figma: 8px */
+  background: var(--signup-input-bg);
+  border: 1px solid var(--signup-input-bd);
+  border-radius: var(--signup-radius-field); /* Figma: 4px */
+}
+
+.control:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.control:has(.input[aria-invalid='true']) { border-color: var(--danger-solid); }
+
+.controlIcon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--signup-muted);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                 /* Figma: 12px */
+  color: var(--signup-body);
+}
+
+.input::placeholder { color: var(--signup-muted); }
+.input:focus-visible { outline: none; }
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--danger-fg);
+}
+
+/* ---- continue ---- */
+.continue {
+  min-width: 133px;                          /* Figma: 133px */
+  padding: var(--space-2) var(--space-4);    /* Figma: 8px 16px */
+  border: 0;
+  border-radius: 50px;                       /* Figma: 50px */
+  background: var(--welcome-btn-bg);         /* Figma: graph/purple/purple-900 */
+  font-family: var(--font-sans);
+  font-size: var(--text-base);               /* Figma: 16px */
+  font-weight: var(--weight-medium);
+  line-height: var(--space-6);               /* Figma: 24px */
+  letter-spacing: -0.16px;
+  color: var(--welcome-btn-text);
+  cursor: pointer;
+}
+
+.continue:hover { filter: brightness(1.12); }
+.continue:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* ---- password fallback ---- */
+.alt {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--signup-muted);
+}
+
+.altLink { color: var(--login-link); text-decoration: none; }
+.altLink:hover { text-decoration: underline; }
+
+/* ---- footer ---- */
+.footer {
+  margin: 0;
+  font-size: var(--text-sm);                 /* Figma: 14px */
+  color: var(--login-footer-text);
+}
+
+.footerLink {
+  font-weight: var(--weight-bold);
+  color: var(--login-signup-link);           /* Figma: the "Sign up" link blue */
+  text-decoration: none;
+}
+
+.footerLink:hover { text-decoration: underline; }
+
+@media (max-width: 880px) {
+  .field { width: 100%; }
+}

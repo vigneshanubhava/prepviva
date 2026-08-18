@@ -1,0 +1,279 @@
+/* Signup — Figma node 1:2777, matched to spec.
+   Values resolve through --signup-* tokens; see tokens.css. */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-6);
+  background: var(--signup-page-bg);
+}
+
+.layout {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+/* ---- banner ---- */
+.banner {
+  flex: 0 0 auto;
+  width: var(--signup-banner-w);            /* Figma: 487px */
+  height: var(--signup-banner-h);           /* Figma: 648px */
+  border-radius: var(--signup-radius-banner) 0 0 var(--signup-radius-banner);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- card ---- */
+.card {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-10);
+  width: var(--signup-card-w);              /* Figma: 804px */
+  min-height: var(--signup-card-h);         /* Figma: 740px */
+  padding: var(--space-16) 72px;            /* Figma: 64px 72px */
+  background: var(--signup-card-bg);
+  border-radius: var(--signup-radius-card); /* Figma: 16px */
+  box-shadow: var(--signup-card-shadow);
+}
+
+/* ---- logo ---- */
+.logo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);                      /* Figma: 4px */
+}
+
+.logoMark { width: 15px; height: 18px; display: block; }
+
+.logoText {
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.45px;
+  color: var(--signup-logo-text);
+}
+
+/* ---- body ---- */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);                     /* Figma: 48px */
+}
+
+.headings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);                      /* Figma: 12px */
+}
+
+.h1 {
+  margin: 0;
+  font-size: var(--signup-heading-size);    /* Figma: 30px */
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--signup-heading);
+}
+
+.lede {
+  margin: 0;
+  font-size: var(--text-xs);                /* Figma: 12px */
+  line-height: var(--leading-relaxed);
+  color: var(--signup-muted);
+  /* no max-width: the card padding sets the measure, so each sentence holds
+     its own line instead of wrapping to a third */
+  text-wrap: pretty;
+}
+
+.plan { font-weight: var(--weight-bold); color: var(--signup-plan); }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);                      /* Figma: 20px */
+}
+
+/* ---- fields ---- */
+.field {
+  display: block;
+  width: var(--signup-field-w);              /* Figma: 523px */
+  max-width: 100%;
+}
+
+.input {
+  width: 100%;
+  height: 44px;                              /* Figma: 44px */
+  padding: var(--space-2);                   /* Figma: 8px */
+  background: var(--signup-input-bg);
+  border: 1px solid var(--signup-input-bd);
+  border-radius: var(--signup-radius-field); /* Figma: 4px */
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                 /* Figma: 12px */
+  color: var(--signup-body);
+}
+
+.input::placeholder { color: var(--signup-muted); }
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.input[aria-invalid='true'] { border-color: var(--danger-solid); }
+
+.error {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--danger-fg);
+}
+
+/* ---- promo strip ---- */
+.promoWrap {
+  position: relative;
+  width: var(--signup-field-w);
+  max-width: 100%;
+}
+
+.promo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);                       /* Figma: 8px */
+  padding: var(--space-2) var(--space-4);    /* Figma: 8px 16px */
+  background: var(--signup-promo-bg);
+}
+
+.promoText {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;                                  /* Figma: 3px */
+  padding: var(--space-2) var(--space-3);    /* Figma: 8px 12px */
+  border: 2px solid var(--signup-promo-edge);
+  border-radius: var(--signup-radius-field);
+}
+
+.promoTitle {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--signup-promo-title);
+}
+
+.promoSub { font-size: 11px; color: var(--signup-muted); }
+
+.promoBtn {
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-4);    /* Figma: 10px 16px */
+  background: var(--signup-promo-btn-bg);
+  border: 1px solid var(--signup-promo-btn-bd);
+  border-radius: var(--signup-radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--signup-promo-title);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.promoBtn:hover { filter: brightness(0.97); }
+.promoBtn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* the ticket notches either side of the strip */
+.notch {
+  position: absolute;
+  top: 2px;
+  width: 7px;
+  height: 55px;
+  color: var(--signup-card-bg);   /* the holes show the card through the strip */
+}
+
+.notchLeft  { left: -3px; }
+.notchRight { right: -3px; }
+
+/* ---- terms ---- */
+.terms { font-size: var(--text-sm); line-height: 22px; color: var(--signup-body); }
+.termsLink { color: var(--signup-link); text-decoration: none; }
+.termsLink:hover { text-decoration: underline; }
+
+/* ---- continue ---- */
+.continue {
+  padding: var(--space-3) var(--space-4);    /* Figma: 12px 16px */
+  min-width: 133px;                          /* Figma: 133px */
+  border: 0;
+  border-radius: 50px;
+  background: linear-gradient(to top, var(--signup-cta-from), var(--signup-cta-to));
+  font-family: var(--font-sans);
+  font-size: var(--text-base);               /* Figma: 16px */
+  font-weight: var(--weight-medium);
+  line-height: var(--space-6);               /* Figma: 24px */
+  letter-spacing: -0.16px;
+  color: var(--pricing-cta-primary-text);
+  cursor: pointer;
+}
+
+.continue:hover { filter: brightness(1.08); }
+.continue:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* ---- divider ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 19px;                                 /* Figma: 19px */
+  width: var(--signup-alt-w);                /* Figma: 520px */
+  max-width: 100%;
+}
+
+.rule { flex: 1 1 0; height: 1px; background: var(--signup-alt-bd); }
+
+.or { font-size: var(--text-xs); color: var(--signup-divider); }
+
+/* ---- google ---- */
+.google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;                                  /* Figma: 6px */
+  width: var(--signup-alt-w);
+  max-width: 100%;
+  height: 47px;                              /* Figma: 47px */
+  background: var(--signup-alt-bg);
+  border: 1px solid var(--signup-alt-bd);
+  border-radius: var(--signup-radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);                 /* Figma: 14px */
+  color: var(--signup-alt-text);
+  cursor: pointer;
+}
+
+.google:hover { filter: brightness(0.97); }
+.google:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.googleMark { width: 20px; height: 20px; display: block; }
+
+/* ---- footer ---- */
+.footer { margin: 0; font-size: var(--text-sm); color: var(--signup-body); }
+
+.footerLink {
+  font-weight: var(--weight-bold);
+  color: var(--signup-login-link);
+  text-decoration: none;
+}
+
+.footerLink:hover { text-decoration: underline; }
+
+/* ---- responsive ---- */
+@media (max-width: 1340px) {
+  .banner { display: none; }
+  .card { border-radius: var(--signup-radius-card); }
+}
+
+@media (max-width: 880px) {
+  .card { width: 100%; padding: var(--space-10) var(--space-6); min-height: 0; }
+  .field, .promoWrap, .divider, .google { width: 100%; }
+  .notch { display: none; }
+}

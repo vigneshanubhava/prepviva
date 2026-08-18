@@ -1,0 +1,60 @@
+/* Billing hero kebab menu — Figma node 1:6925 (artboard 25, 1:6544).
+   The trigger keeps the hero's own button styling; the menu itself drops out of
+   the gradient onto a raised surface, which is where the artboard puts it. */
+
+.wrap { position: relative; display: inline-flex; }
+
+.trigger {
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.trigger:hover,
+.trigger[aria-expanded='true'] { background: var(--billing-hero-bd); }
+.trigger:focus-visible { outline: 2px solid var(--billing-hero-text); outline-offset: 2px; }
+
+/* Figma hangs the menu off the button's right edge, 156px wide, just clear of
+   the hero's action row. */
+.menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: var(--cancel-menu-w);        /* Figma: 156px */
+  padding: var(--space-1);
+  border: 1px solid var(--cancel-menu-bd);
+  border-radius: var(--radius-md);
+  background: var(--cancel-menu-bg);
+  box-shadow: var(--shadow-lg);
+}
+
+.item {
+  display: block;
+  width: 100%;
+  padding: 6px var(--space-3);            /* Figma: 6px 12px */
+  border: 0;
+  border-radius: var(--radius-sm);        /* Figma: 4px */
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);              /* Figma: 14px/20 */
+  line-height: 20px;
+  color: var(--text-primary);
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.item:hover { background: var(--surface-sunken); }
+.item:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }
+
+/* Figma paints the cancel item surface/error with text/error, at rest. */
+.danger { background: var(--cancel-menu-item); color: var(--cancel-menu-text); }
+.danger:hover { background: var(--cancel-menu-item); filter: brightness(0.97); }

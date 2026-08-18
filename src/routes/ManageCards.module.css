@@ -1,0 +1,127 @@
+/* Manage cards panel — Figma node 29:4853 (455px right-hand drawer). */
+
+.panel {
+  --modal-drawer: var(--cards-panel-w);       /* Figma: 455px */
+  background: var(--cards-panel-bg);
+}
+
+/* Figma: title block inset 32px, title 28px tall, close 24px on the right. */
+.panel :global(header),
+.panel > div:first-child {
+  padding: var(--cards-panel-pad) var(--cards-panel-pad) 0;
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);     /* Figma: text inset 8px / 4px */
+  border-radius: var(--radius-sm);
+  background: var(--cards-note-bg);
+  font-size: var(--text-xs);                  /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--cards-note-text);
+}
+
+.list {
+  list-style: none;
+  margin: var(--space-6) 0 0;                 /* Figma: header block ends 112, rows start 128 */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);                        /* Figma: 16px between rows */
+}
+
+/* Figma: 391px wide row, 64px tall (72px for the default one). */
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--cards-row-h);
+  /* Figma: 64px row around a 32px detail block, border included */
+  padding: 15px var(--space-3);
+  border: 1px solid var(--cards-row-bd);
+  border-radius: var(--radius-md);
+  background: var(--cards-row-bg);
+}
+
+.cardDefault {
+  min-height: var(--cards-row-h-lg);          /* Figma: 72px */
+  padding: 19px var(--space-5);
+}
+
+.card:hover { background: var(--cards-row-hover); }
+
+.brand {
+  flex: 0 0 var(--cards-mark-w);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details { flex: 1 1 auto; min-width: 0; }
+
+.name {
+  margin: 0 0 5px;                            /* Figma: 12px name, 5px, 15px expiry */
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 12px;
+  color: var(--billing-title);
+}
+
+.expiry {
+  margin: 0;
+  font-size: var(--billing-text-tiny);        /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.actions { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-2); }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-xl);
+  background: var(--cards-tag-bg);
+  font-size: var(--text-xs);
+  line-height: var(--space-5);
+  color: var(--cards-tag-text);
+  white-space: nowrap;
+}
+
+.setDefault {
+  padding: 1px var(--space-2);
+  border: 1px solid var(--cards-action-bd);
+  border-radius: var(--radius-xl);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--space-5);
+  color: var(--cards-action-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.setDefault:hover { background: var(--cards-note-bg); }
+.setDefault:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.remove {
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--billing-muted);
+  cursor: pointer;
+}
+
+.remove:hover { background: var(--danger-bg); color: var(--danger-fg); }
+.remove:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.empty {
+  margin: var(--space-6) 0 0;
+  font-size: var(--text-sm);
+  color: var(--billing-muted);
+}
+
+/* The heading takes focus after an action removes the button that was clicked. */
+.panel :global(h2) { outline-offset: 4px; }

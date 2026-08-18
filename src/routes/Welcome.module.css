@@ -1,0 +1,58 @@
+/* Body content for "Preparing your account" (1:2167) and "You're in" (1:2230).
+   The banner + card shell around it comes from AuthShell. */
+
+.body { display: flex; flex-direction: column; gap: var(--space-8); }  /* Figma: 32px */
+
+.spinnerRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);                     /* Figma: 12px */
+  align-items: flex-start;
+}
+
+.spinner { color: var(--welcome-loading); }
+
+.h1 {
+  margin: 0;
+  max-width: 24ch;
+  font-size: var(--signup-heading-size);   /* Figma: 30px */
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+}
+
+.loadingHeading { color: var(--welcome-loading); }
+.successHeading { color: var(--welcome-success); }
+
+.lede {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-base);             /* Figma: 16px */
+  line-height: var(--leading-normal);
+  color: var(--welcome-body);
+}
+
+.strong { font-weight: var(--weight-bold); }
+.medium { font-weight: var(--weight-medium); }
+
+.actions { display: flex; flex-direction: column; gap: 36px; align-items: flex-start; }
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-4);  /* Figma: 8px 16px */
+  min-width: 107px;                        /* Figma: 107px */
+  border-radius: 50px;
+  background: var(--welcome-btn-bg);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);             /* Figma: 16px */
+  font-weight: var(--weight-medium);
+  line-height: var(--space-6);
+  letter-spacing: -0.16px;
+  color: var(--welcome-btn-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cta:hover { filter: brightness(1.12); }
+.cta:focus-visible { outline: none; box-shadow: var(--shadow-focus); }

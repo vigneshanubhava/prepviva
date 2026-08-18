@@ -1,0 +1,32 @@
+/* Fixed app header — Figma node 1:2121. */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* above the nav and any side drawer, so the header stays whole and its
+     shadow casts over both — see the layering scale in tokens.css */
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--app-header-h);
+  padding: var(--space-1) var(--space-4);   /* Figma: 4px 16px */
+  background: var(--app-header-bg);
+  box-shadow: var(--app-header-shadow);
+}
+
+.right { display: flex; align-items: center; gap: var(--space-4); }
+
+.iconBtn {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.iconBtn:hover { color: var(--text-primary); }
+.iconBtn:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }

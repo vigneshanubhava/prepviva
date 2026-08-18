@@ -1,0 +1,227 @@
+/* Cancel subscription — Figma nodes 1:7360 / 1:8252 (the modal, 426px) and
+   1:9709 (the confirmation dialog, 588px).
+
+   Both are much tighter than the shared Modal's default: 16px inset instead of
+   24px, a 14px title instead of 20px. The shared Modal still owns the focus
+   trap, Escape, the scrim and the portal — only the metrics are restated. */
+
+/* Figma hangs both over the page rather than centring them in it — the modal at
+   y=76, the confirmation dialog at y=60. min() keeps them on screen when the
+   viewport is short. */
+.scrim { align-items: flex-start; padding-top: min(76px, 8vh); }
+.dialogScrim { align-items: flex-start; padding-top: min(60px, 6vh); }
+
+/* ---------------------------------------------------------------- the modal */
+.panel {
+  /* Modal sizes itself from --modal-md; setting it here beats redeclaring
+     max-width, the same way the drawer sets --modal-drawer. */
+  --modal-md: var(--cancel-modal-w);      /* Figma: 426px */
+  border-radius: var(--radius-md);        /* Figma: 8px */
+  background: var(--surface-raised);
+  box-shadow: var(--signup-card-shadow);  /* Figma: the same two-stop shadow */
+}
+
+/* Modal's header: title row plus the close button. Figma: 16px inset, 14px/22
+   medium title, and a 4px gap to the close. */
+.panel > div:first-child {
+  gap: var(--space-1);                    /* Figma: 4px */
+  padding: var(--space-4) var(--space-4) 0;
+}
+
+.panel > div:first-child h2 {
+  font-size: var(--text-sm);              /* Figma: 14px/22 medium */
+  font-weight: var(--weight-medium);
+  line-height: 22px;
+  letter-spacing: normal;
+  color: var(--cancel-title);
+}
+
+/* Modal's body. Figma: 8px under the title row, 16px on the other three sides. */
+.panel > div:last-child { padding: var(--space-2) var(--space-4) var(--space-4); }
+
+.form { display: flex; flex-direction: column; gap: var(--space-6); }  /* Figma: 24px */
+
+.lede {
+  margin: 0;
+  font-size: var(--text-xs);              /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--cancel-body);
+}
+
+.strong { font-weight: var(--weight-medium); color: var(--cancel-body); }
+
+/* ---- reason ---- */
+.reason { display: flex; flex-direction: column; gap: var(--space-2); }  /* Figma: 8px */
+
+.field { gap: var(--space-2); }
+
+.field > label {
+  font-size: var(--text-xs);              /* Figma: 12px/18 regular */
+  font-weight: var(--weight-regular);
+  line-height: 18px;
+  color: var(--cancel-label);
+}
+
+/* Figma: the same pale field the signup form uses, 4px radius, 32px tall. */
+.select {
+  min-height: var(--cancel-field-h);
+  border-radius: var(--radius-sm);
+  border-color: var(--cancel-field-bd);
+  background: var(--cancel-field-bg);
+}
+
+.select:hover:not([class*='disabled']) { border-color: var(--border-strong); }
+
+.note { position: relative; display: block; }
+
+/* Figma: 100px box, 8px/16px inset, border/tertiary, placeholder text. */
+.textarea {
+  display: block;
+  width: 100%;
+  height: var(--cancel-note-h);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--cancel-note-bd);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.textarea::placeholder { color: var(--cancel-placeholder); }
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+.textarea:disabled { background: var(--surface-sunken); color: var(--text-faint); }
+
+/* ---- actions ----
+   Figma leaves these left-aligned under the form with no divider, unlike the
+   shared Modal footer, so they live in the body. */
+.actions { display: flex; gap: var(--space-2); }
+
+.back,
+.confirm {
+  min-height: var(--cancel-btn-h);        /* Figma: 24px pill */
+  padding: var(--space-1) var(--space-3); /* Figma: 4px 12px */
+  font-weight: var(--weight-regular);
+  letter-spacing: normal;
+}
+
+/* Figma: 10px/15 in text/action on surface/primary. */
+.back {
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--billing-link);
+  border-color: var(--cancel-note-bd);
+}
+
+.back:disabled {
+  background: var(--cancel-off-bg);
+  border-color: var(--cancel-off-bd);
+  color: var(--cancel-off-text);
+}
+
+.confirm { font-size: var(--text-xs); line-height: 18px; }  /* Figma: 12px/18 */
+
+.confirm:disabled {
+  background: var(--danger-solid);
+  color: var(--text-inverse);
+  opacity: 0.4;                           /* Figma: the pale red "no reason yet" state */
+}
+
+/* Confirming and confirmed both hold Figma's settled 136px width, so the
+   button does not jump as its label is swapped for a spinner then a tick. */
+.working,
+.settled { width: var(--cancel-done-w); opacity: 1; }
+
+.settled:disabled {
+  background: var(--cancel-done-bg);      /* Figma: marketing/green/green-600 */
+  color: var(--cancel-done-text);
+  opacity: 1;
+}
+
+/* ------------------------------------------------------ confirmation dialog */
+.dialog {
+  --modal-md: var(--cancel-dialog-w);     /* Figma: 588px */
+  border-radius: var(--radius-xl);        /* Figma: 16px */
+  background: var(--surface-raised);
+  box-shadow: var(--signup-card-shadow);
+}
+
+/* No header on this one — the body carries the whole card. Figma: 32px inset. */
+.dialog > div:last-child { padding: var(--space-8); }
+
+.doneBody { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+
+/* Figma ships a filled 32px check-circle. Drawn from the stroked `check` glyph
+   on a token-coloured disc instead, so it follows the theme — an exported
+   two-tone SVG would keep its own green in dark mode. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cancel-mark);              /* Figma: 32px */
+  height: var(--cancel-mark);
+  border-radius: var(--radius-full);
+  background: var(--cancel-done-bg);
+  color: var(--cancel-done-text);
+}
+
+.doneTitle {
+  margin: 0;
+  font-size: var(--text-xl);              /* Figma: 20px/28 bold */
+  font-weight: var(--weight-bold);
+  line-height: 28px;
+  color: var(--cancel-title);
+}
+
+.doneTitle:focus { outline: none; }
+
+.doneText {
+  margin: 0;
+  font-size: var(--text-xs);              /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--cancel-body);
+}
+
+/* Figma: 10px/15 pill, 16px under the copy. */
+.got {
+  margin-top: var(--space-2);
+  min-height: var(--cancel-btn-h);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  font-weight: var(--weight-regular);
+  letter-spacing: normal;
+}
+
+/* Not on the artboard: the way into 34 (14:10022), since no email is sent. */
+.proto {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.proto:hover { color: var(--text-primary); }
+.proto:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.protoTag {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-bd);
+  color: var(--warning-fg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  text-decoration: none;
+}

@@ -1,0 +1,1165 @@
+/* ============================================================
+   PrepViva — Design Tokens
+   Light-first, dark-ready. Purple brand, Tailwind palette.
+
+   Two layers:
+     1. PRIMITIVES  raw Tailwind values. Never used directly in UI.
+     2. SEMANTIC    named by role. This is what components use.
+
+   Change a theme by editing layer 2 only.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. PRIMITIVES — Tailwind palette
+   ------------------------------------------------------------ */
+:root {
+  /* purple — brand */
+  --purple-50:  #faf5ff;  --purple-100: #f3e8ff;  --purple-200: #e9d5ff;
+  --purple-300: #d8b4fe;  --purple-400: #c084fc;  --purple-500: #a855f7;
+  --purple-600: #9333ea;  --purple-700: #7e22ce;  --purple-800: #6b21a8;
+  --purple-900: #581c87;  --purple-950: #3b0764;
+
+  /* gray — surfaces and text */
+  --gray-50:  #f9fafb;  --gray-100: #f3f4f6;  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;  --gray-400: #9ca3af;  --gray-500: #6b7280;
+  --gray-600: #4b5563;  --gray-700: #374151;  --gray-800: #1f2937;
+  --gray-900: #111827;  --gray-950: #030712;
+
+  /* status */
+  --emerald-50: #ecfdf5; --emerald-200:#a7f3d0; --emerald-600:#059669; --emerald-700:#047857;
+  --amber-50:   #fffbeb; --amber-200:  #fde68a; --amber-600:  #d97706; --amber-700:  #b45309;
+  --red-50:     #fef2f2; --red-200:    #fecaca; --red-600:    #dc2626; --red-700:    #b91c1c;
+  --blue-50:    #eff6ff; --blue-200:   #bfdbfe; --blue-600:   #2563eb; --blue-700:   #1d4ed8;
+
+  /* track accents — deliberately outside the brand and status families */
+  --pink-50: #fdf2f8; --pink-100:#fce7f3; --pink-600:#db2777; --pink-700:#be185d;
+  --teal-50: #f0fdfa; --teal-100:#ccfbf1; --teal-600:#0d9488; --teal-700:#0f766e;
+
+  --white: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   2. SEMANTIC — LIGHT (default)
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* surfaces */
+  --surface-page:      var(--gray-50);
+  --surface-raised:    var(--white);
+  --surface-sunken:    var(--gray-100);
+  --surface-inset:     var(--gray-50);
+  --surface-overlay:   var(--white);
+  --surface-scrim:     rgb(17 24 39 / 0.45);
+  --surface-brand:     var(--purple-800);
+  --surface-brand-alt: var(--purple-600);
+
+  /* text */
+  --text-primary:   var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-muted:     var(--gray-500);
+  --text-faint:     var(--gray-400);
+  --text-inverse:   var(--white);
+  --text-on-brand:  var(--white);
+  --text-link:      var(--purple-700);
+
+  /* borders */
+  --border-subtle: var(--gray-200);
+  --border-default:var(--gray-300);
+  --border-strong: var(--gray-400);
+  --border-focus:  var(--purple-600);
+
+  /* brand / primary action */
+  --brand:              var(--purple-700);
+  --brand-hover:        var(--purple-800);
+  --brand-active:       var(--purple-900);
+  --brand-subtle-bg:    var(--purple-50);
+  --brand-subtle-bd:    var(--purple-200);
+  --brand-subtle-text:  var(--purple-800);
+  --brand-on:           var(--white);
+
+  /* status */
+  --success-bg: var(--emerald-50); --success-bd: var(--emerald-200); --success-fg: var(--emerald-700); --success-solid: var(--emerald-600);
+  --warning-bg: var(--amber-50);   --warning-bd: var(--amber-200);   --warning-fg: var(--amber-700);   --warning-solid: var(--amber-600);
+  --danger-bg:  var(--red-50);     --danger-bd:  var(--red-200);     --danger-fg:  var(--red-700);     --danger-solid:  var(--red-600);
+  --info-bg:    var(--blue-50);    --info-bd:    var(--blue-200);    --info-fg:    var(--blue-700);    --info-solid:    var(--blue-600);
+
+  /* interview tracks */
+  --track-nhs:        var(--blue-600);
+  --track-nhs-bg:     var(--blue-50);
+  --track-uni:        var(--pink-600);
+  --track-uni-bg:     var(--pink-50);
+  --track-pg:         var(--teal-600);
+  --track-pg-bg:      var(--teal-50);
+
+  /* elevation */
+  --shadow-sm:      0 1px 2px 0 rgb(17 24 39 / 0.05);
+  --shadow-md:      0 2px 4px -1px rgb(17 24 39 / 0.06), 0 4px 12px -2px rgb(17 24 39 / 0.08);
+  --shadow-lg:      0 8px 24px -4px rgb(17 24 39 / 0.10), 0 2px 6px -2px rgb(17 24 39 / 0.06);
+  --shadow-overlay: 0 24px 48px -12px rgb(17 24 39 / 0.25);
+  --shadow-focus:   0 0 0 3px rgb(147 51 234 / 0.25);
+}
+
+/* ------------------------------------------------------------
+   2b. SEMANTIC — DARK
+   Same names, different values. No component changes needed.
+   ------------------------------------------------------------ */
+[data-theme="dark"] {
+  --surface-page:      #0b0b10;
+  --surface-raised:    #15151d;
+  --surface-sunken:    #101017;
+  --surface-inset:     #1c1c26;
+  --surface-overlay:   #1a1a24;
+  --surface-scrim:     rgb(0 0 0 / 0.65);
+  --surface-brand:     var(--purple-900);
+  --surface-brand-alt: var(--purple-700);
+
+  --text-primary:   #f4f4f6;
+  --text-secondary: #a8a8b8;
+  --text-muted:     #86868f;
+  --text-faint:     #5f5f6b;
+  --text-inverse:   var(--gray-900);
+  --text-on-brand:  var(--white);
+  --text-link:      var(--purple-300);
+
+  --border-subtle: #26262f;
+  --border-default:#33333f;
+  --border-strong: #4a4a58;
+  --border-focus:  var(--purple-400);
+
+  --brand:             var(--purple-500);
+  --brand-hover:       var(--purple-400);
+  --brand-active:      var(--purple-300);
+  --brand-subtle-bg:   rgb(168 85 247 / 0.12);
+  --brand-subtle-bd:   rgb(168 85 247 / 0.35);
+  --brand-subtle-text: var(--purple-300);
+  --brand-on:          #16061f;
+
+  --success-bg: rgb(5 150 105 / 0.14);  --success-bd: rgb(5 150 105 / 0.4);  --success-fg: #6ee7b7; --success-solid: var(--emerald-600);
+  --warning-bg: rgb(217 119 6 / 0.14);  --warning-bd: rgb(217 119 6 / 0.4);  --warning-fg: #fcd34d; --warning-solid: var(--amber-600);
+  --danger-bg:  rgb(220 38 38 / 0.14);  --danger-bd:  rgb(220 38 38 / 0.4);  --danger-fg:  #fca5a5; --danger-solid:  var(--red-600);
+  --info-bg:    rgb(37 99 235 / 0.14);  --info-bd:    rgb(37 99 235 / 0.4);  --info-fg:    #93c5fd; --info-solid:    var(--blue-600);
+
+  --track-nhs:    #60a5fa; --track-nhs-bg: rgb(37 99 235 / 0.14);
+  --track-uni:    #f472b6; --track-uni-bg: rgb(219 39 119 / 0.14);
+  --track-pg:     #2dd4bf; --track-pg-bg:  rgb(13 148 136 / 0.14);
+
+  --shadow-sm:      0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md:      0 2px 4px -1px rgb(0 0 0 / 0.4), 0 4px 12px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg:      0 8px 24px -4px rgb(0 0 0 / 0.55);
+  --shadow-overlay: 0 24px 48px -12px rgb(0 0 0 / 0.7);
+  --shadow-focus:   0 0 0 3px rgb(168 85 247 / 0.35);
+}
+
+/* ------------------------------------------------------------
+   2c. PRICING PAGE — exact Figma spec (node 14:11391)
+   The public pricing page is specified pixel-for-pixel in Figma, including
+   colours that sit outside the palette above (the deep purple gradient stop,
+   the card tints, the two secondary CTA fills, the yellow footnote).
+
+   They live here as semantic tokens rather than as hex in the component, so
+   the light theme matches Figma exactly AND dark mode still resolves. The
+   dark values are derived — Figma has no dark artboard for this screen.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* hero */
+  --pricing-hero-from:   #7e22ce;
+  --pricing-hero-to:     #401168;
+  --pricing-hero-text:   #ffffff;
+
+  /* card shell */
+  --pricing-card-bg:     #ffffff;
+  --pricing-card-edge:   #ffffff;
+  --pricing-card-shadow: 0 0 13.5px 0 rgb(90 90 90 / 0.16);
+  --pricing-card-shadow-featured:
+    0 0 19px 0 rgb(5 38 153 / 0.16),
+    0 4px 24px 0 rgb(0 44 189 / 0.26);
+
+  /* card top wash */
+  --pricing-wash: linear-gradient(
+    15.7357deg,
+    rgb(255 255 255 / 0) 24.226%,
+    rgb(246 250 255) 51.609%,
+    rgb(207 228 255) 94.409%
+  );
+  --pricing-wash-featured: linear-gradient(
+    38.3686deg,
+    rgb(252 209 140 / 0.6) 1.4048%,
+    rgb(235 239 255 / 0.7) 51.008%,
+    rgb(140 183 239) 89.278%
+  );
+  --pricing-wash-opacity:          0.5;
+  --pricing-wash-opacity-emphasis: 0.6;
+
+  /* card type */
+  --pricing-text-primary:   #101828;
+  --pricing-text-secondary: #364153;
+  --pricing-text-tertiary:  #6a7282;
+  --pricing-price:          #000000;
+
+  /* CTAs */
+  --pricing-cta-secondary-bg:   #eef6ff;
+  --pricing-cta-secondary-text: rgb(0 0 0 / 0.8);
+  --pricing-cta-tertiary-bg: linear-gradient(
+    82.9898deg,
+    rgb(238 240 243) 6.6882%,
+    rgb(253 254 254) 48.525%,
+    rgb(236 233 233) 103.74%
+  );
+  --pricing-cta-primary-text: #ffffff;
+
+  /* icons — Figma strokes these #0772FF / #2769F2 */
+  --pricing-icon: #0772FF;
+  --pricing-tick: #2769F2;
+
+  /* toggle track (kept for the Manage Plan screens) */
+  --pricing-toggle-track: #e9d5ff;
+
+  /* footnote */
+  --pricing-note-bg:     #fefce8;
+  --pricing-note-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.03);
+}
+
+[data-theme="dark"] {
+  --pricing-hero-from:   var(--purple-700);
+  --pricing-hero-to:     var(--purple-950);
+  --pricing-hero-text:   #ffffff;
+
+  --pricing-card-bg:     var(--surface-raised);
+  --pricing-card-edge:   var(--surface-inset);
+  --pricing-card-shadow: 0 0 13.5px 0 rgb(0 0 0 / 0.5);
+  --pricing-card-shadow-featured:
+    0 0 19px 0 rgb(0 0 0 / 0.55),
+    0 4px 24px 0 rgb(0 44 189 / 0.35);
+
+  --pricing-wash: linear-gradient(
+    15.7357deg,
+    rgb(255 255 255 / 0) 24.226%,
+    rgb(56 74 104 / 0.5) 51.609%,
+    rgb(64 98 156 / 0.75) 94.409%
+  );
+  --pricing-wash-featured: linear-gradient(
+    38.3686deg,
+    rgb(252 209 140 / 0.28) 1.4048%,
+    rgb(120 130 190 / 0.35) 51.008%,
+    rgb(66 105 168 / 0.75) 89.278%
+  );
+  --pricing-wash-opacity:          0.42;
+  --pricing-wash-opacity-emphasis: 0.5;
+
+  --pricing-text-primary:   var(--text-primary);
+  --pricing-text-secondary: var(--text-secondary);
+  --pricing-text-tertiary:  var(--text-muted);
+  --pricing-price:          var(--text-primary);
+
+  --pricing-cta-secondary-bg:   var(--surface-inset);
+  --pricing-cta-secondary-text: var(--text-primary);
+  --pricing-cta-tertiary-bg:    var(--surface-inset);
+  --pricing-cta-primary-text:   #ffffff;
+
+  --pricing-icon: #5aa2ff;
+  --pricing-tick: #6ba4ff;
+
+  --pricing-toggle-track: var(--brand-subtle-bg);
+
+  --pricing-note-bg:     rgb(217 119 6 / 0.14);
+  --pricing-note-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.3);
+}
+
+/* Sizes and radii the pricing artboard uses that are outside the 8-step type
+   scale and 6-step radius scale. Scoped to this screen so the global scales
+   stay as tokens.css defines them. */
+:root {
+  --pricing-card-width:   312px;
+  --pricing-card-height:  506px;
+  --pricing-card-radius:  24px;
+  --pricing-card-edge-w:  5px;
+  --pricing-wash-radius:  19px;
+  --pricing-gutter:       23px;
+  --pricing-cta-width:    250px;
+  --pricing-column:       1096px;
+  --pricing-hero-inner:   872px;
+  --pricing-hero-sub-max: 648px;
+
+  --pricing-text-hero:  40px;
+  --pricing-text-price: 26px;
+  --pricing-leading-hero: 1;
+  --pricing-tracking-hero: -0.36px;
+  --pricing-tracking-price: -0.26px;
+  --pricing-tracking-cta: -0.14px;
+}
+
+/* ------------------------------------------------------------
+   2d. SIGNUP SCREEN — exact Figma spec (node 1:2777)
+   Same approach as the pricing block: Figma's literal values live here as
+   semantic tokens so the component stays hex-free and dark mode resolves.
+   Dark values are derived — Figma has no dark artboard.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  --signup-page-bg:    #f3e8ff;
+  --signup-card-bg:    #ffffff;
+  --signup-card-shadow:
+    0 2px 5px 0 rgb(2 31 134 / 0.05),
+    0 24px 48px 0 rgb(21 41 110 / 0.1);
+
+  --signup-logo-text:  #323232;
+  --signup-heading:    #373737;
+  --signup-muted:      #727272;
+  --signup-plan:       #59168b;
+
+  --signup-input-bg:   #f6f6f6;
+  --signup-input-bd:   #e0e0e0;
+
+  --signup-promo-bg:   #f3f4f6;
+  --signup-promo-edge: #ffffff;
+  --signup-promo-title:#364153;
+  --signup-promo-btn-bg:#f3e8ff;
+  --signup-promo-btn-bd:#d1d5dc;
+
+  --signup-body:       #101828;
+  --signup-link:       #2769f2;
+  --signup-login-link: #8200db;
+  --signup-divider:    #6a7282;
+
+  --signup-cta-from:   #7e22ce;
+  --signup-cta-to:     #401168;
+
+  --signup-alt-bg:     #f3f4f6;
+  --signup-alt-bd:     #d1d5dc;
+  --signup-alt-text:   #364153;
+}
+
+[data-theme="dark"] {
+  --signup-page-bg:    var(--surface-page);
+  --signup-card-bg:    var(--surface-raised);
+  --signup-card-shadow:
+    0 2px 5px 0 rgb(0 0 0 / 0.35),
+    0 24px 48px 0 rgb(0 0 0 / 0.55);
+
+  --signup-logo-text:  var(--text-primary);
+  --signup-heading:    var(--text-primary);
+  --signup-muted:      var(--text-muted);
+  --signup-plan:       var(--brand-subtle-text);
+
+  --signup-input-bg:   var(--surface-inset);
+  --signup-input-bd:   var(--border-default);
+
+  --signup-promo-bg:   var(--surface-sunken);
+  --signup-promo-edge: var(--border-subtle);
+  --signup-promo-title:var(--text-secondary);
+  --signup-promo-btn-bg:var(--brand-subtle-bg);
+  --signup-promo-btn-bd:var(--brand-subtle-bd);
+
+  --signup-body:       var(--text-primary);
+  --signup-link:       #6ba4ff;
+  --signup-login-link: var(--brand-subtle-text);
+  --signup-divider:    var(--text-muted);
+
+  --signup-cta-from:   var(--purple-700);
+  --signup-cta-to:     var(--purple-950);
+
+  --signup-alt-bg:     var(--surface-inset);
+  --signup-alt-bd:     var(--border-default);
+  --signup-alt-text:   var(--text-secondary);
+}
+
+/* Figma sizes for this screen that sit outside the global scales. */
+:root {
+  --signup-banner-w:  474px;
+  --signup-banner-h:  668px;
+  --signup-card-w:    804px;
+  --signup-card-h:    740px;
+  --signup-field-w:   523px;
+  --signup-alt-w:     520px;
+  --signup-heading-size: 30px;
+  --signup-radius-card:  16px;
+  --signup-radius-banner:32px;
+  --signup-radius-field: 4px;
+  --signup-radius-pill:  100px;
+}
+
+/* ------------------------------------------------------------
+   2e. CHECKOUT SCREEN — Figma spec (node 1:2121)
+   Most of this artboard already lands on existing semantic tokens:
+     surface/primary  #f9fafb -> --surface-page
+     border/secondary #e5e7eb -> --border-subtle
+     surface/disabled #f3f4f6 -> --surface-sunken
+   Only the values with no equivalent are declared here.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* the fixed app header is shared (checkout, billing, …) — see AppHeader.jsx */
+  --app-header-bg:     #ffffff;
+  /* Figma specifies 0 2px 1.5px rgb(0 0 0 / 0.05). That reads over the grey
+     content column but vanishes against the white left nav directly beneath it,
+     so the header is lifted a little further on request. */
+  --app-header-shadow:
+    0 1px 2px 0 rgb(17 24 39 / 0.06),
+    0 4px 10px -2px rgb(17 24 39 / 0.12);
+  --checkout-panel-bg:      #ffffff;
+  --checkout-field-bg:      #ffffff;
+  --checkout-field-bd:      #e5e5e5;      /* Figma: color/neutral/200 */
+  --checkout-field-shadow:  0 1px 1px 0 rgb(0 0 0 / 0.07);
+  --checkout-label:         #737373;      /* Figma: color/neutral/500 */
+  --checkout-link:          #0a3fbc;
+}
+
+[data-theme="dark"] {
+  --app-header-bg:     var(--surface-raised);
+  --app-header-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.5),
+    0 4px 10px -2px rgb(0 0 0 / 0.6);
+  --checkout-panel-bg:      var(--surface-raised);
+  --checkout-field-bg:      var(--surface-inset);
+  --checkout-field-bd:      var(--border-default);
+  --checkout-field-shadow:  0 1px 1px 0 rgb(0 0 0 / 0.3);
+  --checkout-label:         var(--text-muted);
+  --checkout-link:          var(--text-link);
+}
+
+:root {
+  --app-header-h:   40px;   /* 4px + 32px avatar + 4px */
+  --checkout-col-left:  488px;
+  --checkout-col-right: 442px;
+  --checkout-col-gap:    99px;
+}
+
+/* ------------------------------------------------------------
+   2f. SIGNUP OUTCOME SCREENS — Figma spec (nodes 1:2167, 1:2230)
+   "Preparing your account" and "You're in". Same shell as signup, different
+   page tint and accent.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  --welcome-page-bg:  #e9d4ff;
+  --welcome-loading:  #0a3fbc;   /* Figma: text/action */
+  --welcome-success:  #43a047;   /* Figma: green-100 */
+  --welcome-body:     #373737;   /* Figma: neutral-600 */
+  --welcome-btn-bg:   #59168b;   /* Figma: graph/purple/purple-900 */
+  --welcome-btn-text: #ffffff;
+}
+
+[data-theme="dark"] {
+  --welcome-page-bg:  var(--surface-page);
+  --welcome-loading:  var(--info-fg);
+  --welcome-success:  var(--success-fg);
+  --welcome-body:     var(--text-secondary);
+  --welcome-btn-bg:   var(--brand);
+  --welcome-btn-text: var(--brand-on);
+}
+
+:root {
+  --welcome-card-h: 680px;
+}
+
+/* ------------------------------------------------------------
+   2g. LOGIN SCREENS — Figma spec (nodes 1:3169, 1:6287, 1:5516)
+   "Email entry", "Generating secure link" and "Sign-in link sent".
+   The card shell, page tint, heading and success green all land on tokens the
+   signup and welcome blocks already declare, so only the values with no
+   equivalent are declared here. Dark values are derived — Figma has no dark
+   artboard for these screens.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* email-entry footer: Figma sets this line in pure black, not the body ink */
+  --login-footer-text: #000000;
+  --login-signup-link: #235dee;   /* Figma: "Sign up" */
+  --login-link:        #0a3fbc;   /* Figma: text/action — "sign in" on 1:5516 */
+
+  /* generating-secure-link screen (1:6287) sits on white, not --surface-page */
+  --login-loading-bg:    #ffffff;
+  --login-loading-panel: rgb(255 255 255 / 0.8);
+  --login-loading-text:  #364153;   /* Figma: text/secondary */
+  --login-logo-tile:     #eef6ff;   /* Figma: surface/bg03 */
+}
+
+[data-theme="dark"] {
+  --login-footer-text: var(--text-primary);
+  --login-signup-link: #6ba4ff;
+  --login-link:        var(--text-link);
+
+  --login-loading-bg:    var(--surface-page);
+  --login-loading-panel: rgb(21 21 29 / 0.8);
+  --login-loading-text:  var(--text-secondary);
+  --login-logo-tile:     var(--surface-inset);
+}
+
+/* Figma sizes for the login screens that sit outside the global scales. */
+:root {
+  --login-field-w:      609px;   /* Figma: 609px */
+  --login-copy-w:       470px;   /* Figma: 470px */
+  --login-illus:         94px;   /* Figma: 94px */
+  --login-logo-tile-p:  9.6px;   /* Figma: 9.6px */
+  --login-logo-tile-r:  4.8px;   /* Figma: 4.8px */
+  --login-loading-w:    260px;   /* Figma: 260px */
+}
+
+/* ------------------------------------------------------------
+   2h. MAGIC-LINK EMAIL — Figma spec (node 14:10469)
+   Two things live on this artboard: a simulated mail client (Gmail chrome) and
+   the PrepViva email inside it. Both are tokenised so the screen still resolves
+   in dark mode; the client's dark values follow Gmail's own dark theme.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* ---- mail client chrome ---- */
+  --mail-bg:          #ffffff;
+  --mail-rule:        #edeff1;
+  --mail-text:        #202124;
+  --mail-text-muted:  rgb(0 0 0 / 0.54);
+  --mail-text-faint:  rgb(0 0 0 / 0.6);
+  --mail-count:       #767676;
+  --mail-search-bg:   #f1f3f4;
+  --mail-active-bg:   #f9e9e7;
+  --mail-active-text: #c84031;
+  --mail-compose-bg:  #ffffff;
+  --mail-compose-shadow: 0 1px 3px 1px rgb(0 0 0 / 0.15), 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --mail-chip-bg:     rgb(0 0 0 / 0.05);
+  --mail-chip-text:   rgb(0 0 0 / 0.6);
+  --mail-tag-bg:      #98d7e4;
+  --mail-tag-text:    #0d3b44;
+  --mail-btn-bg:      #4f81e5;
+  --mail-btn-text:    #ffffff;
+  --mail-canvas:      rgb(0 0 0 / 0.05);
+  --mail-action-bd:   rgb(0 0 0 / 0.16);
+
+  /* ---- the PrepViva email itself ---- */
+  --email-body-bg:     #ffffff;
+  --email-hero-from:   #052699;
+  --email-hero-to:     #126af9;
+  --email-hero-text:   #ffffff;
+  --email-heading:     #0b3fbc;
+  --email-title:       #101828;
+  --email-text:        #0e0e0e;
+  --email-footer-bg:   #f7f8fc;
+  --email-footer-text: #101828;
+  --email-rule:        #e5e7eb;
+  --email-cta-bg:      #59168b;   /* Figma: graph/purple/purple-900 */
+  --email-cta-text:    #ffffff;
+  /* 34 Email - Subscription Canceled (14:10022) fills the same hero in purple
+     rather than blue. */
+  --email-hero-alt-from: #401168;
+  --email-hero-alt-to:   #7e22ce;
+}
+
+[data-theme="dark"] {
+  --mail-bg:          #1f1f1f;
+  --mail-rule:        #35363a;
+  --mail-text:        #e8eaed;
+  --mail-text-muted:  rgb(255 255 255 / 0.6);
+  --mail-text-faint:  rgb(255 255 255 / 0.66);
+  --mail-count:       #9aa0a6;
+  --mail-search-bg:   #2f3033;
+  --mail-active-bg:   #3c2e2e;
+  --mail-active-text: #f28b82;
+  --mail-compose-bg:  #2f3033;
+  --mail-compose-shadow: 0 1px 3px 1px rgb(0 0 0 / 0.5), 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --mail-chip-bg:     rgb(255 255 255 / 0.08);
+  --mail-chip-text:   rgb(255 255 255 / 0.66);
+  --mail-tag-bg:      #17414b;
+  --mail-tag-text:    #9fdbe8;
+  --mail-btn-bg:      #4f81e5;
+  --mail-btn-text:    #ffffff;
+  --mail-canvas:      rgb(0 0 0 / 0.35);
+  --mail-action-bd:   rgb(255 255 255 / 0.2);
+
+  --email-body-bg:     var(--surface-raised);
+  --email-hero-from:   #041c6e;
+  --email-hero-to:     #0d4fbd;
+  --email-hero-text:   #ffffff;
+  --email-heading:     #6ba4ff;
+  --email-title:       var(--text-primary);
+  --email-text:        var(--text-secondary);
+  --email-footer-bg:   var(--surface-sunken);
+  --email-footer-text: var(--text-secondary);
+  --email-rule:        var(--border-subtle);
+  --email-cta-bg:      var(--brand);
+  --email-cta-text:    var(--brand-on);
+  --email-hero-alt-from: var(--purple-950);
+  --email-hero-alt-to:   var(--purple-700);
+}
+
+/* Figma sizes for the email artboard that sit outside the global scales. */
+:root {
+  --mail-header-h:   64px;    /* Figma: 64px */
+  --mail-nav-w:     248px;    /* Figma: 248px */
+  --mail-rail-w:     56px;    /* Figma: 56px */
+  --mail-item-w:    232px;    /* Figma: 232px */
+  --mail-toolbar-h:  48px;    /* Figma: 48px */
+
+  --email-body-w:   640px;    /* Figma: 640px */
+  --email-hero-w:   608px;    /* Figma: 608px */
+  --email-hero-h:   280px;    /* Figma: 280px */
+  --email-hero-r:    20px;    /* Figma: 20px */
+  --email-copy-w:   544px;    /* Figma: 544px */
+  --email-heading-size: 20px; /* Figma: 20px */
+  --email-note-size:    10px; /* Figma: 10px */
+}
+
+/* ------------------------------------------------------------
+   2i. SIGNED-IN APP SHELL + BILLING — Figma spec (node 1:5133)
+   The first signed-in screen, so this block covers the left navigation as well
+   as the billing page itself. Most of the artboard resolves onto tokens that
+   already exist (surface/page, border/secondary, text/secondary); only the
+   values with no equivalent are declared here. Dark values are derived —
+   Figma has no dark artboard.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* shell */
+  --app-page-bg:      #e5e7eb;   /* Figma: surface/tertiary */
+  --app-nav-bg:       #ffffff;
+  --app-nav-text:     #364153;   /* Figma: text/secondary */
+  --app-nav-icon:     #6a7282;   /* Figma: icon/primary2 */
+  --app-nav-active:   #59168b;   /* Figma: graph/purple/purple-900 */
+  --app-nav-on-active:#ffffff;
+  --app-nav-hover:    #f3f4f6;   /* Figma: surface/secondary */
+
+  /* credits panel in the nav footer */
+  --app-credits-bg:      #eef6ff;   /* Figma: surface/bg03 */
+  --app-credits-tile:    #5ba6ff;   /* Figma: marketing/blue/blue-400 */
+  --app-credits-track:   #ffffff;
+  --app-credits-note-bg: #fff7ed;   /* Figma: marketing/orange/orange-50 */
+  --app-upgrade-bg:      #daeaff;   /* Figma: surface/bg-100 */
+  --app-upgrade-bd:      #3583fc;   /* Figma: border/focus */
+  --app-upgrade-text:    #59168b;
+
+  /* billing hero */
+  --billing-hero-from: #7e22ce;
+  --billing-hero-to:   #401168;
+  --billing-hero-text: #ffffff;
+  --billing-hero-bd:   #99a1af;   /* Figma: border/tertiary2 */
+
+  /* cards, table and controls */
+  --billing-card-bg:    #ffffff;
+  --billing-card-bd:    #e5e7eb;   /* Figma: border/secondary */
+  --billing-strip-bg:   #f3f4f6;   /* Figma: surface/secondary */
+  --billing-title:      #364153;   /* Figma: text/secondary */
+  --billing-muted:      #6a7282;   /* Figma: text/tertiary */
+  --billing-link:       #0a3fbc;   /* Figma: text/action */
+  --billing-track:      #e5e7eb;
+  --billing-fill:       #126af9;
+  --billing-control-bd: #d1d5dc;   /* Figma: border/tertiary */
+  --billing-placeholder:#99a1af;   /* Figma: text/placeholder */
+  --billing-head-bg:    #f9fafb;   /* Figma: surface/primary */
+  --billing-tab-active: #101828;   /* Figma: text/primary */
+  --billing-free-bg:    #dcfce7;   /* Figma: marketing/green/green-100 */
+  --billing-free-bd:    #05df72;   /* Figma: marketing/green/green-400 */
+  --billing-unpaid-bg:  #fffbeb;   /* Figma: marketing/amber/amber-50 */
+  --billing-unpaid-bd:  #fbbf24;   /* Figma: marketing/amber/amber-400 */
+  --billing-failed-bg:  #fef2f2;   /* no artboard — matches the amber/green pair */
+  --billing-failed-bd:  #f87171;
+  --billing-zebra:      #f9fafb;   /* Figma: alternating row fill */
+}
+
+[data-theme="dark"] {
+  --app-page-bg:      #08080c;
+  --app-nav-bg:       var(--surface-raised);
+  --app-nav-text:     var(--text-secondary);
+  --app-nav-icon:     var(--text-muted);
+  --app-nav-active:   var(--brand);
+  --app-nav-on-active:var(--brand-on);
+  --app-nav-hover:    var(--surface-inset);
+
+  --app-credits-bg:      var(--surface-inset);
+  --app-credits-tile:    var(--info-solid);
+  --app-credits-track:   var(--surface-sunken);
+  --app-credits-note-bg: var(--warning-bg);
+  --app-upgrade-bg:      var(--brand-subtle-bg);
+  --app-upgrade-bd:      var(--brand-subtle-bd);
+  --app-upgrade-text:    var(--brand-subtle-text);
+
+  --billing-hero-from: var(--purple-700);
+  --billing-hero-to:   var(--purple-950);
+  --billing-hero-text: #ffffff;
+  --billing-hero-bd:   rgb(255 255 255 / 0.35);
+
+  --billing-card-bg:    var(--surface-raised);
+  --billing-card-bd:    var(--border-subtle);
+  --billing-strip-bg:   var(--surface-sunken);
+  --billing-title:      var(--text-primary);
+  --billing-muted:      var(--text-muted);
+  --billing-link:       var(--text-link);
+  --billing-track:      var(--surface-inset);
+  --billing-fill:       #5aa2ff;
+  --billing-control-bd: var(--border-default);
+  --billing-placeholder:var(--text-faint);
+  --billing-head-bg:    var(--surface-sunken);
+  --billing-tab-active: var(--text-primary);
+  --billing-free-bg:    var(--success-bg);
+  --billing-free-bd:    var(--success-bd);
+  --billing-unpaid-bg:  var(--warning-bg);
+  --billing-unpaid-bd:  var(--warning-bd);
+  --billing-failed-bg:  var(--danger-bg);
+  --billing-failed-bd:  var(--danger-bd);
+  --billing-zebra:      var(--surface-sunken);
+}
+
+/* Manage-cards panel — Figma node 29:4853. */
+:root,
+[data-theme="light"] {
+  --cards-panel-bg:   #ffffff;
+  --cards-note-bg:    #eef6ff;   /* Figma: surface/bg03 */
+  --cards-note-text:  #364153;   /* Figma: text/secondary */
+  --cards-row-bg:     #ffffff;
+  --cards-row-bd:     #e5e7eb;   /* Figma: border/secondary */
+  --cards-row-hover:  #f9fafb;   /* Figma: surface/primary */
+  --cards-tag-bg:     #f3f4f6;   /* Figma: surface/secondary */
+  --cards-tag-text:   #364153;
+  --cards-action-bd:  #3583fc;   /* Figma: border/focus */
+  --cards-action-text:#0a3fbc;   /* Figma: text/action */
+}
+
+[data-theme="dark"] {
+  --cards-panel-bg:   var(--surface-overlay);
+  --cards-note-bg:    var(--surface-inset);
+  --cards-note-text:  var(--text-secondary);
+  --cards-row-bg:     var(--surface-raised);
+  --cards-row-bd:     var(--border-subtle);
+  --cards-row-hover:  var(--surface-inset);
+  --cards-tag-bg:     var(--surface-inset);
+  --cards-tag-text:   var(--text-secondary);
+  --cards-action-bd:  var(--brand-subtle-bd);
+  --cards-action-text:var(--text-link);
+}
+
+:root {
+  --cards-panel-w:    455px;   /* Figma: 455px */
+  --cards-panel-pad:   32px;   /* Figma: 32px */
+  --cards-row-h:       64px;   /* Figma: 64px, 72px for the default row */
+  --cards-row-h-lg:    72px;
+  --cards-mark-w:      49px;   /* Figma: 49x16 brand mark */
+}
+
+/* Figma sizes for the shell and this screen that sit outside the global scales. */
+:root {
+  --app-nav-w:          166px;   /* Figma: 150px item + 8px padding each side */
+  --app-nav-item-w:     150px;   /* Figma: 150px */
+  --app-gutter:          16px;   /* Figma: content inset from the right edge */
+  --app-gutter-start:    20px;   /* Figma: gap between the nav and the content */
+  --app-content-gap:     15px;   /* Figma: gap under the 40px header */
+
+  --billing-hero-h:     206px;   /* Figma: 206px */
+  --billing-hero-pad:    40px;   /* Figma: 40px */
+  --billing-card-h:     148px;   /* Figma: 148px, fixed */
+  /* Figma keeps the frame at 148 on the cancelled artboard even though its own
+     strip is 11px taller than the renewal line, so the content overflows the
+     card there. Held here as the height that actually fits it. */
+  --billing-card-h-cancel: 159px;
+  --billing-card-head-h: 41px;   /* Figma: title + 5px + sub-line */
+  --billing-card-gap:    32px;   /* Figma: head bottom 57 -> body top 89 */
+  --billing-card-icon:   40px;   /* Figma: 40px tile, inset 8px */
+  --billing-card-inset:   8px;   /* Figma: tile at x=362, y=8 in a 410 card */
+  --billing-row-h:       62px;   /* Figma: data row */
+  --billing-row-pad-y:   20px;   /* Figma: (62 - 22 line) / 2 */
+  --billing-head-h:      34px;   /* Figma: header row */
+  --billing-tab-h:       36px;   /* Figma: 18px label + 16px + 2px rule */
+  --billing-search-w:   332px;   /* Figma: 332px */
+  --billing-bar-h:       12px;   /* Figma: 12px */
+  --billing-text-stat:   20px;   /* Figma: 20px/28 */
+  --billing-text-tiny:   10px;   /* Figma: 10px/15 */
+
+  /* Figma's column widths (250/200/150x4/219/44 of 1313) held as proportions,
+     so the table scales with the viewport instead of overflowing into a
+     scrollbar. --billing-table-min is the width below which the columns can no
+     longer hold their content on one line and scrolling takes over. */
+  --billing-col-number:  19.04%;
+  --billing-col-due:     15.23%;
+  --billing-col-std:     11.42%;
+  --billing-col-date:    16.68%;
+  --billing-col-menu:     3.35%;
+  --billing-table-min:   780px;
+
+  /* Transactions has no artboard; these follow the invoice table's ratios. */
+  --billing-col-desc:    22.00%;
+  --billing-col-method:  17.00%;
+  --billing-col-status:  11.96%;
+}
+
+/* ------------------------------------------------------------
+   2ja. PROFILE MENU — Figma spec (node 1:5099, artboard 18)
+   The dropdown under the header avatar: account block, theme setting, links.
+   Most of it lands on tokens that already exist (surface/page, surface/
+   secondary); only the values with no equivalent are here.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  --profile-email:  #364153;   /* Figma: text/secondary */
+  --profile-label:  #364153;   /* Figma: text/secondary, the theme captions */
+  --profile-item:   #101828;   /* Figma: text/primary */
+  --profile-shadow:
+    0 3px 6px -4px rgb(0 0 0 / 0.12),
+    0 6px 16px 0 rgb(0 0 0 / 0.08),
+    0 9px 28px 8px rgb(0 0 0 / 0.05);
+}
+
+[data-theme="dark"] {
+  --profile-email:  var(--text-secondary);
+  --profile-label:  var(--text-secondary);
+  --profile-item:   var(--text-primary);
+  --profile-shadow:
+    0 3px 6px -4px rgb(0 0 0 / 0.5),
+    0 6px 16px 0 rgb(0 0 0 / 0.45),
+    0 9px 28px 8px rgb(0 0 0 / 0.35);
+}
+
+/* Figma sizes for this menu that sit outside the global scales. */
+:root {
+  --profile-menu-w:   241px;   /* Figma: 241px */
+  --profile-block-g:   14px;   /* Figma: avatar to email */
+  --profile-theme-w:  179px;   /* Figma: 179px, space-between */
+  --profile-option-w:  40px;   /* Figma: 40px column */
+  --profile-tile-h:    32px;   /* Figma: 32px tile */
+  --profile-icon:      14px;   /* Figma: 14px link glyph */
+}
+
+/* ------------------------------------------------------------
+   2j. CANCEL SUBSCRIPTION FLOW — Figma spec (nodes 1:6544, 1:6928 - 1:9718)
+   The cancel modal, its confirmation dialog, the canceled banner and the
+   canceled strip inside the plan card. Most of the sequence lands on tokens
+   the billing block already declares; only the values with no equivalent are
+   here. Dark values are derived — Figma has no dark artboard.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* modal */
+  --cancel-title:       #000000;   /* Figma: c-dark/100 */
+  --cancel-body:        #364153;   /* Figma: text/secondary */
+  --cancel-label:       #101828;   /* Figma: text/primary */
+  --cancel-placeholder: #99a1af;   /* Figma: text/placeholder */
+  --cancel-field-bg:    #f6f6f6;
+  --cancel-field-bd:    #e0e0e0;
+  --cancel-note-bd:     #d1d5dc;   /* Figma: border/tertiary */
+
+  /* the confirm button's three states: danger, then working, then done */
+  --cancel-off-bg:      #e5e7eb;   /* Figma: button/disabled */
+  --cancel-off-bd:      #d1d5dc;   /* Figma: border/disabled */
+  --cancel-off-text:    #99a1af;   /* Figma: text/disabled */
+  --cancel-done-bg:     #00a63e;   /* Figma: marketing/green/green-600 */
+  --cancel-done-text:   #ffffff;
+
+  /* "Subscription canceled. Access active until <date>" strip in the plan card */
+  --cancel-strip-bg:    #fef2f2;   /* Figma: surface/error */
+  --cancel-strip-text:  #c10007;   /* Figma: text/error */
+  --cancel-strip-meta:  #6a7282;   /* Figma: text/tertiary */
+  --cancel-strip-date:  #364153;   /* Figma: text/secondary */
+
+  /* the page-wide canceled banner */
+  --cancel-banner-bg:   #bddcff;   /* Figma: marketing/blue/blue-200 */
+  --cancel-banner-tile: #5ba6ff;   /* Figma: marketing/blue/blue-400 */
+  --cancel-banner-bd:   #d1d5dc;   /* Figma: border/tertiary */
+  --cancel-banner-text: #364153;   /* Figma: text/secondary */
+
+  /* the hero's kebab menu */
+  --cancel-menu-bg:     #ffffff;
+  --cancel-menu-bd:     #e5e7eb;
+  --cancel-menu-item:   #fef2f2;   /* Figma: surface/error */
+  --cancel-menu-text:   #c10007;   /* Figma: text/error */
+}
+
+[data-theme="dark"] {
+  --cancel-title:       var(--text-primary);
+  --cancel-body:        var(--text-secondary);
+  --cancel-label:       var(--text-primary);
+  --cancel-placeholder: var(--text-faint);
+  --cancel-field-bg:    var(--surface-inset);
+  --cancel-field-bd:    var(--border-default);
+  --cancel-note-bd:     var(--border-default);
+
+  --cancel-off-bg:      var(--surface-inset);
+  --cancel-off-bd:      var(--border-subtle);
+  --cancel-off-text:    var(--text-faint);
+  --cancel-done-bg:     var(--success-solid);
+  --cancel-done-text:   #ffffff;
+
+  --cancel-strip-bg:    var(--danger-bg);
+  --cancel-strip-text:  var(--danger-fg);
+  --cancel-strip-meta:  var(--text-muted);
+  --cancel-strip-date:  var(--text-secondary);
+
+  --cancel-banner-bg:   var(--info-bg);
+  --cancel-banner-tile: var(--info-solid);
+  --cancel-banner-bd:   var(--info-bd);
+  --cancel-banner-text: var(--text-secondary);
+
+  --cancel-menu-bg:     var(--surface-overlay);
+  --cancel-menu-bd:     var(--border-subtle);
+  --cancel-menu-item:   var(--danger-bg);
+  --cancel-menu-text:   var(--danger-fg);
+}
+
+/* Figma sizes for this sequence that sit outside the global scales. */
+:root {
+  --cancel-modal-w:   426px;   /* Figma: 426px */
+  --cancel-dialog-w:  588px;   /* Figma: 588px */
+  --cancel-note-h:    100px;   /* Figma: 100px message box */
+  --cancel-field-h:    32px;   /* Figma: 32px reason row */
+  --cancel-mark:       32px;   /* Figma: 32px check-circle */
+  --cancel-btn-h:      24px;   /* Figma: 24px pill */
+  --cancel-done-w:    136px;   /* Figma: the confirm button's settled width */
+  --cancel-banner-h:   38px;   /* Figma: 38px */
+  --cancel-menu-w:    156px;   /* Figma: 156px */
+}
+
+/* ------------------------------------------------------------
+   2j-b. FIRST-RUN SETUP — /welcome/setup
+   The onboarding flow ported from the sibling interview-prototype. The page
+   itself is AuthShell, so its shell values come from --signup-*; these are the
+   parts the flow adds — the progress bar, the choice cards and chips, and the
+   CV drop zone.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  --ftu-chip-bg:    #eef6ff;   /* Figma: surface/bg03 — a chosen card or chip */
+  --ftu-link:       #0a3fbc;   /* Figma: text/action */
+  --ftu-dot:        #d1d5dc;   /* the steps still to come */
+  --ftu-dot-on:     #126af9;   /* the steps done, and a selected edge */
+  --ftu-drop-bg:    #f9fafb;   /* Figma: surface/primary */
+  --ftu-drop-bd:    #d1d5dc;
+  --ftu-file-bg:    #eef6ff;   /* the attached CV, on surface/bg03 */
+}
+
+/* The card holds one height across all six steps: the tallest of them (the date
+   step, at 738px) rather than AuthShell's 680, so nothing jumps or clips. */
+:root { --ftu-card-h: 740px; }
+
+[data-theme="dark"] {
+  --ftu-chip-bg:    var(--info-bg);
+  --ftu-link:       var(--text-link);
+  --ftu-dot:        var(--border-default);
+  --ftu-dot-on:     var(--info-solid);
+  --ftu-drop-bg:    var(--surface-inset);
+  --ftu-drop-bd:    var(--border-default);
+  --ftu-file-bg:    var(--info-bg);
+}
+
+/* ------------------------------------------------------------
+   2k. MANAGE PLAN + PLAN CHANGE — Figma spec (nodes 1:9922, 1:10184)
+   The plan-change flow: the Manage plan screen and the modal that confirms an
+   upgrade or a downgrade. The plan cards themselves are the pricing card, so
+   they keep the --pricing-* block. Figma's Annual/Monthly toggle is gone with
+   the annual period, so its tokens went with it.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  --manage-panel-bg:   #ffffff;
+  --manage-title:      #101828;   /* Figma: text/primary */
+  --manage-lede:       #6a7282;   /* Figma: text/tertiary */
+  --manage-icon:       #126af9;
+
+  /* the current plan's badge and its flattened CTA */
+  --manage-current-bg:   #dbeafe;   /* Figma: the badge reads slate against the wash */
+  --manage-current-text: #364153;
+  --manage-current-cta:  #eef2f7;
+
+  /* the scheduled-downgrade notice inside a plan card (1:14777) */
+  --manage-schedule-bg:    #eef6ff;   /* Figma: surface/bg03 */
+  --manage-schedule-title: #0a3fbc;   /* Figma: text/action */
+  --manage-schedule-meta:  #364153;   /* Figma: text/secondary */
+
+  /* change modal */
+  --change-title:  #000000;   /* Figma: c-dark/100 */
+  --change-name:   #101828;   /* Figma: text/primary */
+  --change-sub:    #364153;   /* Figma: text/secondary */
+  --change-meta:   #6a7282;   /* Figma: text/tertiary */
+  --change-block:  #f3f4f6;   /* Figma: surface/secondary */
+  --change-row:    #f9fafb;   /* Figma: surface/primary */
+  --change-rule:   #d1d5dc;   /* the timeline's spine */
+  --change-impact: #fef2f2;   /* Figma: surface/error, the downgrade warning */
+}
+
+[data-theme="dark"] {
+  --manage-panel-bg:   var(--surface-raised);
+  --manage-title:      var(--text-primary);
+  --manage-lede:       var(--text-muted);
+  --manage-icon:       #5aa2ff;
+
+  --manage-current-bg:   var(--info-bg);
+  --manage-current-text: var(--text-secondary);
+  --manage-current-cta:  var(--surface-inset);
+
+  --manage-schedule-bg:    var(--info-bg);
+  --manage-schedule-title: var(--info-fg);
+  --manage-schedule-meta:  var(--text-secondary);
+
+  --change-title:  var(--text-primary);
+  --change-name:   var(--text-primary);
+  --change-sub:    var(--text-secondary);
+  --change-meta:   var(--text-muted);
+  --change-block:  var(--surface-sunken);
+  --change-row:    var(--surface-inset);
+  --change-rule:   var(--border-default);
+  --change-impact: var(--danger-bg);
+}
+
+/* Figma sizes for this flow that sit outside the global scales. */
+:root {
+  --manage-panel-h:     105px;   /* Figma: 105px header card */
+  --manage-column:     1314px;   /* Figma: 1314px content block */
+  --change-modal-w:     588px;   /* Figma: 588px */
+  --change-dot:           6px;   /* Figma: 6px timeline dot */
+  --change-mark:         32px;   /* Figma: 32px success tick */
+}
+
+/* ------------------------------------------------------------
+   3. TYPE, SPACE, RADIUS, MOTION — theme-independent
+   ------------------------------------------------------------ */
+:root {
+  /* one family. FK Grotesk Neue is licensed — Inter is the fallback. */
+  --font-sans: "FK Grotesk Neue", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* 8 steps. Was 19 sizes incl. 13.5 and 11.1999998 */
+  --text-xs:   0.75rem;   /* 12 */
+  --text-sm:   0.875rem;  /* 14 */
+  --text-base: 1rem;      /* 16 */
+  --text-lg:   1.125rem;  /* 18 */
+  --text-xl:   1.25rem;   /* 20 */
+  --text-2xl:  1.5rem;    /* 24 */
+  --text-3xl:  1.875rem;  /* 30 */
+  --text-4xl:  2.25rem;   /* 36 */
+
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed:1.7;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+
+  --tracking-tight:  -0.02em;
+  --tracking-tighter:-0.03em;
+  --tracking-wide:    0.02em;
+  --tracking-caps:    0.08em;
+
+  /* 4px base */
+  --space-1: 0.25rem;  --space-2: 0.5rem;   --space-3: 0.75rem;
+  --space-4: 1rem;     --space-5: 1.25rem;  --space-6: 1.5rem;
+  --space-8: 2rem;     --space-10:2.5rem;   --space-12:3rem;
+  --space-16:4rem;     --space-20:5rem;
+
+  /* 6 steps. Was 31 incl. 0.5 and 6.6666660 */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  20px;
+  --radius-full: 9999px;
+
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ------------------------------------------------------------
+     LAYERING — one ordered scale, so stacking is decided here rather than
+     guessed at each use site.
+
+       nav     the fixed left navigation
+       drawer  a side panel that deliberately sits UNDER the app header, so the
+               header stays whole and casts its shadow over the panel
+       header  the fixed app header — above the nav and any drawer
+       modal   a centred dialog, which dims the whole viewport including the header
+       toast   always last
+     ------------------------------------------------------------ */
+  --z-nav:     20;
+  --z-drawer:  30;
+  --z-header:  40;
+  --z-modal:  100;
+  --z-toast:  200;
+
+  --nav-width:           240px;
+  --nav-width-collapsed:  68px;
+  --content-max:        1440px;
+  --header-height:        60px;
+}
+
+/* ------------------------------------------------------------
+   4. TAILWIND v4 BRIDGE
+   Makes every token above available as a utility class,
+   e.g. bg-surface-raised, text-secondary, rounded-lg.
+   ------------------------------------------------------------ */
+@theme inline {
+  --color-surface-page:    var(--surface-page);
+  --color-surface-raised:  var(--surface-raised);
+  --color-surface-sunken:  var(--surface-sunken);
+  --color-surface-inset:   var(--surface-inset);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-brand:   var(--surface-brand);
+
+  --color-primary:   var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted:     var(--text-muted);
+  --color-faint:     var(--text-faint);
+  --color-on-brand:  var(--text-on-brand);
+  --color-link:      var(--text-link);
+
+  --color-subtle-border: var(--border-subtle);
+  --color-default-border:var(--border-default);
+  --color-strong-border: var(--border-strong);
+
+  --color-brand:            var(--brand);
+  --color-brand-hover:      var(--brand-hover);
+  --color-brand-subtle:     var(--brand-subtle-bg);
+  --color-brand-subtle-bd:  var(--brand-subtle-bd);
+  --color-brand-subtle-text:var(--brand-subtle-text);
+
+  --color-success:     var(--success-solid);
+  --color-success-bg:  var(--success-bg);
+  --color-success-fg:  var(--success-fg);
+  --color-warning:     var(--warning-solid);
+  --color-warning-bg:  var(--warning-bg);
+  --color-warning-fg:  var(--warning-fg);
+  --color-danger:      var(--danger-solid);
+  --color-danger-bg:   var(--danger-bg);
+  --color-danger-fg:   var(--danger-fg);
+  --color-info:        var(--info-solid);
+  --color-info-bg:     var(--info-bg);
+  --color-info-fg:     var(--info-fg);
+
+  --color-track-nhs:    var(--track-nhs);
+  --color-track-nhs-bg: var(--track-nhs-bg);
+  --color-track-uni:    var(--track-uni);
+  --color-track-uni-bg: var(--track-uni-bg);
+  --color-track-pg:     var(--track-pg);
+  --color-track-pg-bg:  var(--track-pg-bg);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl:var(--radius-2xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+/* ------------------------------------------------------------
+   5. BASE
+   ------------------------------------------------------------ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+::selection { background: var(--brand-subtle-bg); color: var(--brand-subtle-text); }

@@ -1,0 +1,19 @@
+/* Status tags — Figma: 57x22 pill in a 62px row. */
+.tag {
+  display: inline-flex;
+  vertical-align: middle;                     /* else the baseline gap grows the row */
+  align-items: center;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-xl);            /* Figma: 16px */
+  font-size: var(--text-xs);                  /* Figma: 12px/20 */
+  line-height: var(--space-5);
+  color: var(--billing-title);
+  white-space: nowrap;
+}
+
+.free,
+.paid,
+.succeeded { background: var(--billing-free-bg);   border-color: var(--billing-free-bd); }
+.unpaid    { background: var(--billing-unpaid-bg); border-color: var(--billing-unpaid-bd); }
+.failed    { background: var(--billing-failed-bg); border-color: var(--billing-failed-bd); }

@@ -1,0 +1,87 @@
+/* Toast column width — a layout constraint, see the note in Modal.module.css. */
+.viewport {
+  --toast-width: 380px;
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: min(var(--toast-width), calc(100vw - var(--space-12)));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-left-width: 3px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  pointer-events: auto;
+  animation: slideIn var(--duration-base) var(--ease-out);
+}
+
+.leaving { animation: slideOut var(--duration-base) var(--ease-out) forwards; }
+
+.info    { border-left-color: var(--info-solid); }
+.success { border-left-color: var(--success-solid); }
+.warning { border-left-color: var(--warning-solid); }
+.danger  { border-left-color: var(--danger-solid); }
+
+.icon { flex: 0 0 auto; margin-top: 1px; }
+.info .icon    { color: var(--info-fg); }
+.success .icon { color: var(--success-fg); }
+.warning .icon { color: var(--warning-fg); }
+.danger .icon  { color: var(--danger-fg); }
+
+.content { flex: 1 1 auto; min-width: 0; }
+
+.title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.body {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.dismiss:hover { color: var(--text-primary); background: var(--surface-sunken); }
+.dismiss:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(var(--space-4)); }
+}
+@keyframes slideOut {
+  to { opacity: 0; transform: translateY(var(--space-2)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast, .leaving { animation: none; }
+}

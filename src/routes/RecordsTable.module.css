@@ -1,0 +1,171 @@
+/* Toolbar + record table — Figma node 1:13303 ("Frame 633538").
+   Shared by the Previous invoices and Transactions tabs. */
+
+/* ---- toolbar ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;                  /* Figma: 12px */
+}
+
+.toolbarLeft { display: flex; align-items: center; gap: var(--space-2); min-width: 0; flex: 1 1 auto; }
+.toolbarRight { display: flex; align-items: center; gap: var(--space-4); }
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);                        /* Figma: 8px */
+  flex: 0 1 var(--billing-search-w);          /* Figma: 332px */
+  min-width: 0;
+  height: var(--space-8);                     /* Figma: 32px */
+  padding: 0 11px;                            /* Figma: 11px */
+  border: 1px solid var(--billing-control-bd);
+  border-radius: 32px;                        /* Figma: 32px */
+  background: var(--billing-card-bg);
+}
+
+.search:focus-within { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+
+.searchIcon { flex: 0 0 auto; display: inline-flex; color: var(--billing-muted); }
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);                  /* Figma: 14px/22 */
+  line-height: 22px;
+  color: var(--billing-title);
+}
+
+.searchInput::placeholder { color: var(--billing-placeholder); }
+.searchInput:focus-visible { outline: none; }
+.searchInput::-webkit-search-cancel-button { cursor: pointer; }
+
+.iconBtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  padding: 7px;                               /* Figma: 7px inside a 1px frame */
+  border: 1px solid var(--billing-control-bd);
+  border-radius: 36px;                        /* Figma: 36px */
+  background: var(--billing-card-bg);
+  color: var(--billing-title);
+  cursor: pointer;
+}
+
+.iconBtn:hover { background: var(--billing-strip-bg); }
+.iconBtn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.outlineBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);                        /* Figma: 8px */
+  height: var(--space-8);                     /* Figma: 32px */
+  padding: 0 var(--space-4);                  /* Figma: 16px */
+  border: 1px solid var(--billing-hero-bd);
+  border-radius: var(--radius-full);          /* Figma: 9999px */
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  color: var(--billing-title);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.outlineBtn:hover { background: var(--billing-card-bg); }
+.outlineBtn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.iconBtnBare {
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--billing-title);
+  cursor: pointer;
+}
+
+.iconBtnBare:hover { background: var(--billing-strip-bg); }
+.iconBtnBare:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* ---- table ----
+   Column widths and cell padding are the artboard's; the sorting, scope and
+   aria-sort plumbing is the shared Table component's. */
+.table { background: var(--billing-card-bg); border-radius: var(--radius-md); }
+
+/* Fixed layout so the artboard's column proportions hold instead of being
+   treated as suggestions. Percentage widths mean the table always fits its box,
+   so no scrollbar appears until it is narrower than its content can take. */
+.table :global(table) { table-layout: fixed; min-width: var(--billing-table-min); }
+
+.table :global(th) {
+  /* Positioned so visually-hidden text inside a cell resolves against the cell.
+     Without this its containing block is the page, and a 1px box parked at the
+     table's un-scrolled x extends the document's scroll width. */
+  position: relative;
+  background: var(--billing-head-bg);         /* Figma: surface/primary */
+  padding: var(--space-2) 10px;               /* Figma: 8px 10px */
+  font-size: var(--text-xs);                  /* Figma: 12px/18 */
+  font-weight: var(--weight-regular);
+  line-height: 18px;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--billing-muted);
+  white-space: nowrap;
+}
+
+/* Figma alternates the row fill, newest row first. */
+.table :global(tbody tr:nth-child(odd)) { background: var(--billing-zebra); }
+
+.table :global(td) {
+  height: var(--billing-row-h);               /* Figma: 62px row */
+  padding: var(--billing-row-pad-y) var(--space-4);   /* Figma: 20px 16px */
+  font-size: var(--text-sm);                  /* Figma: 14px/22 */
+  line-height: 22px;
+  color: var(--billing-title);
+  /* a wrapped date would push the row well past its 62px */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-number { width: var(--billing-col-number); }
+.col-due    { width: var(--billing-col-due); }
+.col-std    { width: var(--billing-col-std); }
+.col-date   { width: var(--billing-col-date); }
+.col-menu   { width: var(--billing-col-menu); }
+.col-desc   { width: var(--billing-col-desc); }
+.col-method { width: var(--billing-col-method); }
+.col-status { width: var(--billing-col-status); }
+
+/* Figma puts a 24px target at y=16 in the 62px row, so this cell's vertical
+   padding is 19px rather than the 20px the text cells use.
+   No horizontal padding: this column is the narrowest, and any padding would
+   push the 24px target past the column edge on smaller viewports — which
+   spills the whole table and brings back the scrollbar. The ellipsis the text
+   cells use is off too; it would clip the button itself. */
+.table :global(td).col-menu {
+  padding: 19px 0;
+  text-align: center;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.rowMenu {
+  display: inline-flex;
+  vertical-align: middle;                     /* else the baseline gap grows the row */
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--billing-title);
+  cursor: pointer;
+}
+
+.rowMenu:hover { background: var(--billing-strip-bg); }
+.rowMenu:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+

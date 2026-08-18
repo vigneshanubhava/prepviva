@@ -1,0 +1,56 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  white-space: nowrap;
+}
+
+.sm { padding: var(--space-1) var(--space-2); font-size: var(--text-xs); }
+.md { padding: var(--space-1) var(--space-3); font-size: var(--text-xs); }
+
+.dot {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+/* ---- subtle (default) ---- */
+.subtle.neutral { background: var(--surface-sunken); border-color: var(--border-subtle); color: var(--text-secondary); }
+.subtle.brand   { background: var(--brand-subtle-bg); border-color: var(--brand-subtle-bd); color: var(--brand-subtle-text); }
+.subtle.success { background: var(--success-bg); border-color: var(--success-bd); color: var(--success-fg); }
+.subtle.warning { background: var(--warning-bg); border-color: var(--warning-bd); color: var(--warning-fg); }
+.subtle.danger  { background: var(--danger-bg);  border-color: var(--danger-bd);  color: var(--danger-fg); }
+.subtle.info    { background: var(--info-bg);    border-color: var(--info-bd);    color: var(--info-fg); }
+.subtle.nhs     { background: var(--track-nhs-bg); border-color: var(--track-nhs); color: var(--track-nhs); }
+.subtle.uni     { background: var(--track-uni-bg); border-color: var(--track-uni); color: var(--track-uni); }
+.subtle.pg      { background: var(--track-pg-bg);  border-color: var(--track-pg);  color: var(--track-pg); }
+
+/* ---- solid ---- */
+.solid { color: var(--text-inverse); }
+.solid.neutral { background: var(--text-secondary); color: var(--surface-raised); }
+.solid.brand   { background: var(--brand); color: var(--brand-on); }
+.solid.success { background: var(--success-solid); color: var(--surface-raised); }
+.solid.warning { background: var(--warning-solid); color: var(--surface-raised); }
+.solid.danger  { background: var(--danger-solid);  color: var(--surface-raised); }
+.solid.info    { background: var(--info-solid);    color: var(--surface-raised); }
+.solid.nhs     { background: var(--track-nhs); color: var(--surface-raised); }
+.solid.uni     { background: var(--track-uni); color: var(--surface-raised); }
+.solid.pg      { background: var(--track-pg);  color: var(--surface-raised); }
+
+/* ---- outline ---- */
+.outline { background: transparent; }
+.outline.neutral { border-color: var(--border-default); color: var(--text-secondary); }
+.outline.brand   { border-color: var(--brand); color: var(--brand); }
+.outline.success { border-color: var(--success-solid); color: var(--success-fg); }
+.outline.warning { border-color: var(--warning-solid); color: var(--warning-fg); }
+.outline.danger  { border-color: var(--danger-solid);  color: var(--danger-fg); }
+.outline.info    { border-color: var(--info-solid);    color: var(--info-fg); }
+.outline.nhs     { border-color: var(--track-nhs); color: var(--track-nhs); }
+.outline.uni     { border-color: var(--track-uni); color: var(--track-uni); }
+.outline.pg      { border-color: var(--track-pg);  color: var(--track-pg); }

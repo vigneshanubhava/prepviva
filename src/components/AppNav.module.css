@@ -1,0 +1,191 @@
+/* Left navigation — Figma node 1:5133 ("Main-menu"). */
+
+.nav {
+  position: fixed;
+  top: var(--app-header-h);
+  bottom: 0;
+  left: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);                       /* Figma: 8px */
+  width: var(--app-nav-w);                   /* Figma: 150px item + 8px each side */
+  padding: var(--space-2);                   /* Figma: 8px */
+  background: var(--app-nav-bg);
+  overflow: hidden;
+  transition: width var(--duration-base) var(--ease-out);
+}
+
+.collapsed { width: var(--nav-width-collapsed); }
+
+/* ---- items ---- */
+.list {
+  flex: 1 1 auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);                       /* Figma: 34px pitch = 28px + 6px */
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);                       /* Figma: 12px */
+  width: 100%;
+  padding: 6px var(--space-2);               /* Figma: 6px 8px */
+  border-radius: var(--radius-sm);           /* Figma: 4px */
+  font-size: var(--text-xs);                 /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--app-nav-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.item:hover { background: var(--app-nav-hover); }
+.item:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }
+
+.active,
+.active:hover {
+  background: var(--app-nav-active);         /* Figma: purple-900 */
+  color: var(--app-nav-on-active);
+}
+
+.icon { flex: 0 0 16px; display: inline-flex; color: var(--app-nav-icon); }
+.active .icon { color: inherit; }
+
+.label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+.collapsed .label { display: none; }
+.collapsed .item { justify-content: center; padding-inline: 0; }
+
+/* ---- credits panel ---- */
+.credits {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding: var(--space-4) var(--space-3) var(--space-3);   /* Figma: 16/12/12 */
+  border-radius: var(--radius-md);           /* Figma: 8px */
+  background: var(--app-credits-bg);
+}
+
+.collapsed .credits { display: none; }
+
+/* Figma floats this tile above the panel's top edge. */
+.creditsTile {
+  position: absolute;
+  top: calc(var(--space-6) * -1);
+  left: var(--space-3);
+  display: inline-flex;
+  padding: var(--space-1);                   /* Figma: 4px */
+  border-radius: var(--radius-sm);
+  background: var(--app-credits-tile);
+  color: var(--text-inverse);
+}
+
+.creditsTitle {
+  margin: 0;
+  font-size: var(--text-xs);                 /* Figma: 12px/18 medium */
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--text-primary);
+}
+
+.creditsFigure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);                       /* Figma: 4px */
+  margin: 0;
+}
+
+.creditsCount {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 18px;
+  color: var(--billing-title);
+}
+
+.creditsOf {
+  font-size: var(--billing-text-tiny);       /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.track {
+  display: block;
+  height: 5px;                               /* Figma: 5px */
+  margin-top: var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--app-credits-track);
+  overflow: hidden;
+}
+
+.fill { display: block; height: 100%; background: var(--billing-fill); }
+
+.creditsTerms {
+  margin: var(--space-2) 0 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.trialNote {
+  margin: var(--space-3) 0 0;
+  padding: 6px;                              /* Figma: 6px */
+  border-radius: 2px;                        /* Figma: 2px */
+  background: var(--app-credits-note-bg);
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.trialDays { font-weight: var(--weight-medium); color: var(--text-primary); }
+
+.upgrade {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-3);                /* Figma: 12px */
+  padding: 5px var(--space-2);               /* Figma: 5px 8px */
+  border: 1px solid var(--app-upgrade-bd);
+  border-radius: var(--radius-sm);
+  background: var(--app-upgrade-bg);
+  font-size: var(--billing-text-tiny);       /* Figma: 10px/15 medium */
+  font-weight: var(--weight-medium);
+  line-height: 15px;
+  color: var(--app-upgrade-text);
+  text-decoration: none;
+}
+
+.upgrade:hover { filter: brightness(0.97); }
+.upgrade:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* ---- collapse ---- */
+.toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--billing-muted);
+  cursor: pointer;
+}
+
+.toggle:hover { background: var(--app-nav-hover); color: var(--text-primary); }
+.toggle:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.toggleIcon { display: inline-flex; transition: transform var(--duration-base) var(--ease-out); }
+.collapsed .toggleIcon { transform: rotate(180deg); }
+
+/* Below this width the nav becomes an icon rail whether or not the user has
+   collapsed it, so it never overlaps the content column. */
+@media (max-width: 900px) {
+  .nav { width: var(--nav-width-collapsed); }
+  .label { display: none; }
+  .item { justify-content: center; padding-inline: 0; }
+  .credits { display: none; }
+}

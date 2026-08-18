@@ -1,0 +1,21 @@
+/* 14 Email - Magic Link (14:10469) — everything but the sign-in button is the
+   shared EmailCard. */
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 118px;                          /* Figma: 118px */
+  padding: var(--space-2) var(--space-4);    /* Figma: 8px 16px */
+  border-radius: 50px;                       /* Figma: 50px */
+  background: var(--email-cta-bg);
+  font-size: var(--text-xs);                 /* Figma: 12px */
+  font-weight: var(--weight-medium);
+  line-height: 15.451px;
+  letter-spacing: -0.12px;
+  color: var(--email-cta-text);
+  text-decoration: none;
+}
+
+.cta:hover { filter: brightness(1.12); }
+.cta:focus-visible { outline: none; box-shadow: var(--shadow-focus); }

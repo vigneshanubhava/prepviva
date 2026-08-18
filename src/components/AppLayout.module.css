@@ -1,0 +1,23 @@
+/* Signed-in shell — Figma node 1:5133. */
+
+.page {
+  min-height: 100vh;
+  background: var(--app-page-bg);
+  --shell-nav: var(--app-nav-w);
+}
+
+.page[data-collapsed] { --shell-nav: var(--nav-width-collapsed); }
+
+.content {
+  /* clears the fixed header and the fixed nav.
+     Figma: content block at x=186, y=55 — 20px in from the 166px nav, 15px
+     below the 40px header, 16px from the right edge. */
+  padding: calc(var(--app-header-h) + var(--app-content-gap)) var(--app-gutter) var(--space-8)
+    var(--app-gutter-start);
+  margin-inline-start: var(--shell-nav);
+  transition: margin-inline-start var(--duration-base) var(--ease-out);
+}
+
+@media (max-width: 900px) {
+  .content { margin-inline-start: var(--nav-width-collapsed); }
+}

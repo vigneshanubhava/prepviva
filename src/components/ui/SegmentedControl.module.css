@@ -1,0 +1,62 @@
+/* Switches which data is shown, not which panel — so it is a radiogroup, not tabs. */
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.lg .segment { padding: var(--space-3) var(--space-5); font-size: var(--text-base); }
+
+.segment:hover:not(:disabled),
+.segment[data-force~="hover"] { color: var(--text-primary); }
+
+.segment[aria-checked='true'],
+.segment[data-force~="selected"] {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  box-shadow: var(--shadow-sm);
+}
+
+.segment:focus-visible,
+.segment[data-force~="focus"] {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.segment:disabled,
+.segment[data-force~="disabled"] { color: var(--text-faint); cursor: not-allowed; }
+
+/* the saving label rides along inside the segment */
+.note {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--success-fg);
+}
+
+.segment[aria-checked='false'] .note { color: var(--text-muted); }

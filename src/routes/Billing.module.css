@@ -1,0 +1,376 @@
+/* Billing — Figma node 1:5133. Shell comes from AppLayout / AppNav. */
+
+/* Figma holds the manage-cards drawer and its scrim clear of the app header
+   (scrim at y=40, node 29:4851): the header stays whole and undimmed, so the
+   drawer layer belongs *under* it. Both variables sit on the scrim itself —
+   the drawer is its child, and custom properties only inherit downward. */
+.drawerScrim {
+  --modal-inset-top: var(--app-header-h);
+  --modal-z: var(--z-drawer);
+}
+
+.stack { display: flex; flex-direction: column; min-width: 0; }
+.stack > * { min-width: 0; }
+
+/* Figma paints a surface/secondary panel behind the hero and the cards
+   (node 1:5134, 279px tall) so the cards' lower halves sit on a lighter strip
+   rather than straight on the page grey. */
+.masthead {
+  border-radius: var(--radius-md);            /* Figma: 8px */
+  background: var(--billing-strip-bg);
+  padding-bottom: var(--space-6);             /* Figma: strip runs 24px past the cards */
+}
+
+/* ---- hero ---- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;                                   /* Figma: 6px */
+  min-height: var(--billing-hero-h);          /* Figma: 206px */
+  padding: var(--space-6) var(--billing-hero-pad);  /* Figma: 24px 40px */
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: linear-gradient(to top, var(--billing-hero-from), var(--billing-hero-to));
+  color: var(--billing-hero-text);
+}
+
+.heroTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.heroTitle { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.heroIcon { display: inline-flex; }
+
+.h1 {
+  margin: 0;
+  font-size: var(--text-base);                /* Figma: 16px/24 bold */
+  font-weight: var(--weight-bold);
+  line-height: var(--space-6);
+  color: inherit;
+}
+
+.heroLede {
+  margin: 0;
+  max-width: 1254px;                          /* Figma: 1254px */
+  font-size: var(--text-xs);                  /* Figma: 12px/18 */
+  line-height: 18px;
+  color: inherit;
+}
+
+.heroActions { display: flex; align-items: center; gap: 6px; }
+
+.heroBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);                        /* Figma: 8px */
+  padding: var(--space-2) var(--space-4);     /* Figma: 8px 16px */
+  border: 1px solid var(--billing-hero-bd);
+  border-radius: var(--radius-full);          /* Figma: 9999px */
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.heroBtn:hover { background: var(--billing-hero-bd); }
+.heroBtn:focus-visible { outline: 2px solid var(--billing-hero-text); outline-offset: 2px; }
+
+/* ---- stat cards ----
+   Figma floats these over the hero: the row sits at y=106 inside a 206px hero,
+   so the top half overlaps the gradient and the bottom half the grey strip. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);                        /* Figma: 16px */
+  margin-top: calc(var(--billing-hero-h) * -1 + 106px);
+  padding: 0 var(--space-6);                  /* Figma: 24px */
+}
+
+/* The cancelled strip is 11px taller than the renewal line it replaces. Raising
+   the row's height rather than only the plan card's keeps all three bottoms on
+   one line, which is what Figma draws — its own frame stays 148 and lets the
+   strip overflow. */
+.cardsCanceled { --billing-card-h: var(--billing-card-h-cancel); }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--billing-card-gap);               /* Figma: 32px */
+  height: var(--billing-card-h);              /* Figma: 148px, fixed */
+  padding: var(--space-4);                    /* Figma: 16px */
+  border: 1px solid var(--billing-card-bd);
+  border-radius: var(--radius-md);            /* Figma: 8px */
+  background: var(--billing-card-bg);
+}
+
+/* Figma pins the head at 41px so all three cards' bodies start at y=89. */
+.cardHead {
+  flex: 0 0 var(--billing-card-head-h);
+  /* the icon is absolutely placed, so the head is a plain block */
+  padding-inline-end: calc(var(--billing-card-icon) + var(--space-2));
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-base);                /* Figma: 16px/24 bold */
+  font-weight: var(--weight-bold);
+  line-height: var(--space-6);
+  color: var(--billing-title);
+}
+
+.cardLink,
+.cardSub {
+  display: block;
+  margin: 5px 0 0;                            /* Figma: title 24 + 5 + sub 12 = 41 */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                  /* Figma: 12px */
+  line-height: 12px;
+  text-align: start;
+}
+
+.cardLink { color: var(--billing-link); text-decoration: none; cursor: pointer; }
+.cardLink:hover { text-decoration: underline; }
+.cardLink:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+.cardSub { color: var(--billing-muted); }
+
+/* Figma: 40px tile at x=362, y=8 inside a 410x148 card — 8px from both edges,
+   not the card's 16px padding edge. */
+.cardIcon {
+  position: absolute;
+  top: var(--billing-card-inset);
+  right: var(--billing-card-inset);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--billing-card-icon);
+  height: var(--billing-card-icon);
+  border-radius: 6.667px;                     /* Figma: 6.667px */
+  color: var(--billing-fill);
+}
+
+/* Figma: card 1's body is 43 tall (28 + 15, no gap); card 2's is 44 (28 + 4 + 12). */
+.cardBody { display: flex; flex-direction: column; }
+.cardBodyGap { gap: var(--space-1); }         /* Figma: 4px */
+
+.statRow { display: flex; align-items: baseline; gap: var(--space-1); margin: 0; }
+
+.stat {
+  font-size: var(--billing-text-stat);        /* Figma: 20px/28 bold */
+  font-weight: var(--weight-bold);
+  line-height: 28px;
+  color: var(--billing-title);
+}
+
+.statUnit {
+  font-size: var(--billing-text-tiny);        /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.statUnitWide {
+  font-size: var(--text-xs);                  /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--billing-muted);
+}
+
+.cardMeta {
+  margin: 0;
+  font-size: var(--billing-text-tiny);        /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--billing-muted);
+}
+
+.cardMetaStrong { font-weight: var(--weight-medium); color: var(--billing-title); }
+
+.track {
+  display: block;
+  height: var(--billing-bar-h);               /* Figma: 12px */
+  border-radius: var(--radius-sm);
+  background: var(--billing-track);
+  overflow: hidden;
+}
+
+.fill { display: block; height: 100%; background: var(--billing-fill); }
+
+.cardPayment { display: flex; align-items: flex-start; gap: 15px; }  /* Figma: 15px */
+.cardPayment > div { min-width: 0; }
+
+/* The card brand mark keeps its own colours — a payment logo is not themeable.
+   Figma: 49x16. Tailwind preflight would otherwise cap it at its box. */
+.brand {
+  flex: 0 0 auto;
+  width: 49px;
+  height: 16px;
+  max-width: none;
+  display: block;
+}
+
+.cardNumber {
+  margin: 0 0 5px;                            /* Figma: 12px name, 5px, 15px expiry */
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 12px;
+  color: var(--billing-title);
+}
+
+/* ---- cancelled state ----
+   33 Canceled Banner with Renew Option (1:9718) and its plan-card strip
+   (1:9536). Both are reachable two ways: by walking the cancel flow, or by
+   seeding ACCOUNT.status = 'canceled'. */
+
+/* Figma runs the banner edge to edge under the app header (x=166 to the right
+   edge, 38px tall), so it steps out of the content column's own inset. */
+.notice {
+  align-items: center;
+  gap: 6px;                                   /* Figma: 6px */
+  min-height: var(--cancel-banner-h);         /* Figma: 38px */
+  margin:
+    calc(var(--app-content-gap) * -1)
+    calc(var(--app-gutter) * -1)
+    var(--app-content-gap)
+    calc(var(--app-gutter-start) * -1);
+  padding: 6px 14px;                          /* Figma: 6px 14px */
+  border-inline: 0;
+  border-radius: 0;
+  border-color: var(--cancel-banner-bd);
+  background: var(--cancel-banner-bg);
+  color: var(--cancel-banner-text);
+  font-size: var(--text-xs);                  /* Figma: 12px/18 */
+  line-height: 18px;
+}
+
+/* Banner's icon slot. Figma sets it in a filled blue-400 disc. */
+.notice > span:first-child {
+  margin-top: 0;
+  padding: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--cancel-banner-tile);
+  color: var(--text-on-brand);
+}
+
+/* Banner stacks title, body and actions; the artboard runs them along one line. */
+.notice > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.notice > div > p:first-child {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);           /* Figma: 12px/18 medium */
+  line-height: 18px;
+  letter-spacing: normal;
+}
+
+.notice > div > div:last-child { flex: 0 0 auto; margin-top: 0; margin-inline-start: auto; }
+
+.notice p { opacity: 1; }
+
+.noticeStrong { font-weight: var(--weight-medium); }
+
+/* Figma: 26px pill, 12px label, 64px minimum — and no border, which is what
+   keeps it at 26 rather than 28. */
+.noticeBtn {
+  min-width: 64px;
+  border: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  font-weight: var(--weight-regular);
+  letter-spacing: normal;
+}
+
+/* The strip that replaces the renewal line inside the plan card. */
+.canceled {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;                                   /* Figma: 3px */
+  margin: 0;
+  padding: var(--space-1);                    /* Figma: 4px */
+  border-radius: var(--radius-sm);
+  background: var(--cancel-strip-bg);
+  font-size: var(--billing-text-tiny);        /* Figma: 10px/15 */
+  line-height: 15px;
+}
+
+.canceledFlag { font-weight: var(--weight-medium); color: var(--cancel-strip-text); }
+
+/* The same strip in the "scheduled, not lost" tone — artboard 55 (1:15222). */
+.scheduled { background: var(--info-bg); }
+.scheduledFlag { font-weight: var(--weight-medium); color: var(--info-fg); }
+.canceledMeta { color: var(--cancel-strip-meta); }
+.canceledDate { color: var(--cancel-strip-date); }
+
+/* Figma: 18px pill, 64px minimum, pushed to the strip's right edge. */
+.renew {
+  min-width: 64px;
+  border: 0;
+  margin-inline-start: auto;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  font-weight: var(--weight-regular);
+  letter-spacing: normal;
+}
+
+/* ---- tabs ---- */
+/* No margin: the masthead's 24px bottom padding is already Figma's gap between
+   the cards and the tab bar (cards end 254, tab frame starts 278). */
+.tabs { margin-top: 0; }
+
+.tabBar {
+  padding: var(--space-4) var(--space-4) 0;   /* Figma: 16px inset, 52px tall */
+  border-bottom: 1px solid var(--billing-control-bd);
+}
+
+/* Figma spaces the tabs 32px apart, inks the selected one in text/primary
+   rather than the brand purple, and carries no rule of its own — the bar above
+   draws it. */
+.tabBar :global([role='tablist']) { gap: var(--space-8); border-bottom: 0; }
+
+.tabBar :global([role='tab']) {
+  height: var(--billing-tab-h);               /* Figma: 36px */
+  padding: 0 0 var(--space-4);
+  font-weight: var(--weight-regular);
+  color: var(--billing-title);
+}
+
+.tabBar :global([role='tab'][aria-selected='true']) {
+  font-weight: var(--weight-bold);
+  color: var(--billing-tab-active);
+}
+
+.tabBar :global([role='tab'][aria-selected='true'])::after {
+  bottom: 0;
+  background: var(--billing-tab-active);
+}
+
+/* Figma starts the toolbar 12px under the tab rule; .toolbar supplies that. */
+.tabs :global([role='tabpanel']) { padding-top: 0; }
+
+.empty {
+  margin: 0;
+  padding: var(--space-10) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--billing-card-bg);
+  font-size: var(--text-sm);
+  color: var(--billing-muted);
+  text-align: center;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 1100px) {
+  .cards { grid-template-columns: minmax(0, 1fr); margin-top: var(--space-4); padding: 0; }
+  .hero { min-height: 0; padding: var(--space-5); border-radius: var(--radius-md); }
+  .toolbar { flex-wrap: wrap; }
+}

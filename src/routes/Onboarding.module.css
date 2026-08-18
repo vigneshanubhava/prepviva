@@ -1,0 +1,390 @@
+/* First-run setup. The page shell is AuthShell (the signup/login composition);
+   everything here is the card's contents. Values follow the --signup-* block,
+   since this screen sits in that card, plus the --ftu-* block for the parts the
+   flow adds: progress, choice cards, chips and the CV drop zone. */
+
+/* One height for every step. The steps are not the same length — the date step
+   runs 58px past the shortest — so without this the card resizes as you move
+   through it. The step region absorbs the difference; the footer stays put. */
+.shellCard {
+  height: var(--ftu-card-h);
+  min-height: 0;
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+/* ---- progress ---- */
+.progress { display: flex; align-items: center; gap: var(--space-4); }
+
+.bar { display: flex; flex: 1 1 auto; gap: var(--space-1); min-width: 0; }
+
+.segment {
+  flex: 1 1 0;
+  max-width: 56px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--ftu-dot);
+  transition: background var(--duration-base) var(--ease-out);
+}
+
+.segmentOn { background: var(--ftu-dot-on); }
+
+.count {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--signup-muted);
+}
+
+/* ---- the step ---- */
+.step {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.h1 {
+  margin: 0;
+  font-size: var(--signup-heading-size);      /* the signup card's heading */
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  color: var(--signup-heading);
+}
+
+.h1:focus { outline: none; }
+
+.lede {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--signup-muted);
+  text-wrap: pretty;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  width: 100%;
+  margin-top: var(--space-4);
+}
+
+.field { display: block; width: 100%; max-width: var(--signup-field-w); }
+
+/* ---- choice cards ---- */
+.cardSet { width: 100%; margin: 0; padding: 0; border: 0; }
+
+.legend {
+  padding: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--signup-body);
+}
+
+.caption {
+  margin: var(--space-1) 0 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--signup-muted);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.cardsRow { flex-direction: row; flex-wrap: wrap; }
+.cardsRow .card { flex: 1 1 200px; }
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--signup-input-bd);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+
+.card:hover { border-color: var(--ftu-dot-on); }
+
+.cardOn {
+  border-color: var(--ftu-dot-on);
+  background: var(--ftu-chip-bg);
+}
+
+/* The input carries the focus ring for the whole card. */
+.cardInput { position: absolute; opacity: 0; width: 1px; height: 1px; }
+
+.cardInput:focus-visible + * { outline: 2px solid var(--border-focus); outline-offset: 4px; }
+
+.cardIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--ftu-chip-bg);
+  color: var(--ftu-dot-on);
+}
+
+.cardOn .cardIcon { background: var(--surface-raised); }
+
+.cardText { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.cardLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: 20px;
+  color: var(--signup-body);
+}
+
+.cardDetail {
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--signup-muted);
+}
+
+.cardTick { flex: none; margin-inline-start: auto; color: var(--ftu-dot-on); }
+
+/* ---- worry chips ---- */
+.chipSet { width: 100%; margin: 0; padding: 0; border: 0; }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--signup-input-bd);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--signup-body);
+  cursor: pointer;
+}
+
+.chipOn {
+  border-color: var(--ftu-dot-on);
+  background: var(--ftu-chip-bg);
+  color: var(--ftu-link);
+}
+
+.chipInput { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chipInput:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 4px; }
+
+/* ---- what the worries do ---- */
+.preview {
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--info-bd);
+  border-radius: var(--radius-md);
+  background: var(--info-bg);
+}
+
+.previewTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--info-fg);
+}
+
+.previewList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.previewItem {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--signup-body);
+}
+
+.previewNote {
+  margin: var(--space-2) 0 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--signup-muted);
+}
+
+/* ---- the question step ---- */
+.quote {
+  width: 100%;
+  margin: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--info-bd);
+  border-radius: var(--radius-lg);
+  background: var(--info-bg);
+}
+
+.quoteEyebrow {
+  margin: 0;
+  font-size: var(--billing-text-tiny);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--info-fg);
+}
+
+.quoteText {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--signup-body);
+}
+
+.quoteAfter {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--signup-muted);
+}
+
+/* ---- the CV step ---- */
+.drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-6);
+  border: 1px dashed var(--ftu-drop-bd);
+  border-radius: var(--radius-md);
+  background: var(--ftu-drop-bg);
+  text-align: center;
+}
+
+.dropIcon { display: inline-flex; color: var(--ftu-dot-on); }
+
+.dropHint {
+  margin: 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--signup-muted);
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--ftu-file-bg);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--signup-body);
+  text-align: start;
+}
+
+.fileIcon { flex: none; color: var(--success-fg); }
+.fileName { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fileSize { flex: none; color: var(--signup-muted); }
+
+.fileRemove {
+  flex: none;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--ftu-link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fileRemove:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.fine {
+  margin: 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--signup-muted);
+}
+
+.warn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--warning-bd);
+  border-radius: var(--radius-md);
+  background: var(--warning-bg);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--warning-fg);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--danger-fg);
+}
+
+/* ---- footer ---- */
+/* One row: the primary, then the two text actions beside it. */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.next { min-width: 148px; }
+
+/* Back, Skip and "Set up later" are secondary buttons beside the primary, not
+   text links — same size, so the row reads as one set of choices. They carry the
+   lighter weight the app's other secondary actions use (Renew, Done, Got it), so
+   the primary keeps the emphasis. */
+.footerLinks { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+
+.secondary { font-weight: var(--weight-regular); letter-spacing: normal; }
+
+@media (max-width: 880px) {
+  /* the card is as tall as its content once it is the whole width */
+  .shellCard { height: auto; }
+  .cardsRow { flex-direction: column; }
+  .footer { gap: var(--space-4); }
+  .next { flex: 1 1 100%; }
+}

@@ -1,0 +1,322 @@
+/* Plan change — Figma node 1:10184 (the modal, 588px) and 1:10230 (its
+   confirmation). The shared Modal owns the focus trap, Escape, the scrim and
+   the portal; only the metrics are restated here.
+
+   The modal draws its own header row rather than using Modal's, because the
+   artboard puts a 24px glyph beside the title and no divider under it. */
+
+/* Figma hangs both over the page rather than centring them: modal y=60,
+   confirmation y=60. min() keeps them on screen when the viewport is short. */
+.scrim,
+.dialogScrim { align-items: flex-start; padding-top: min(60px, 6vh); }
+
+.panel {
+  --modal-md: var(--change-modal-w);       /* Figma: 588px */
+  border-radius: var(--radius-xl);         /* Figma: 16px */
+  background: var(--manage-panel-bg);
+  box-shadow: var(--signup-card-shadow);   /* Figma: the same two-stop shadow */
+}
+
+/* Modal's body wrapper. Figma: 32px inset, 24px between blocks. */
+.panel > div:last-child { padding: var(--space-8); }
+
+.body { display: flex; flex-direction: column; gap: var(--space-6); }
+
+/* ---- header ---- */
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);                     /* Figma: 8px */
+  margin: 0;
+  font-size: var(--text-xl);               /* Figma: 20px/28 bold */
+  font-weight: var(--weight-bold);
+  line-height: 28px;
+  letter-spacing: normal;
+  color: var(--change-title);
+}
+
+.title:focus { outline: none; }
+
+.titleIcon { display: inline-flex; padding: var(--space-1) 0; color: var(--manage-icon); }
+
+.close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--change-meta);
+  cursor: pointer;
+}
+
+.close:hover:not(:disabled) { color: var(--change-title); }
+.close:disabled { opacity: 0.4; cursor: default; }
+.close:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* ---- the plan being moved to (1:10191) ---- */
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);                     /* Figma: 4px */
+  padding: var(--space-4);                 /* Figma: 16px */
+  border-radius: var(--radius-sm);         /* Figma: 4px */
+  background: var(--change-block);
+}
+
+.planName {
+  margin: 0;
+  font-size: var(--text-base);             /* Figma: 16px/24 bold */
+  font-weight: var(--weight-bold);
+  line-height: var(--space-6);
+  color: var(--change-name);
+}
+
+.planSub {
+  margin: 0;
+  font-size: var(--text-xs);               /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--change-sub);
+}
+
+/* ---- current -> new, on a downgrade (1:14889) ---- */
+.swap {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--change-block);
+}
+
+.swapSide { flex: 1 1 0; min-width: 0; }
+
+.swapLabel {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--change-sub);
+}
+
+.swapPlan {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--manage-panel-bg);
+}
+
+.swapPlan .planName { font-size: var(--text-sm); line-height: 22px; }
+.swapPlan .planSub { font-size: var(--billing-text-tiny); line-height: 15px; }
+
+.swapArrow { display: inline-flex; padding-bottom: var(--space-4); color: var(--change-meta); }
+
+/* ---- upcoming charges (1:10194) ---- */
+.charges { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.chargesTitle {
+  margin: 0;
+  font-size: var(--text-sm);               /* Figma: 14px/22 regular */
+  font-weight: var(--weight-regular);
+  line-height: 22px;
+  color: var(--change-title);
+}
+
+/* Figma runs a hairline spine down the left with a dot per event. */
+.timeline { list-style: none; margin: 0; padding: 0; }
+
+.event {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-4);
+  padding: 0 0 var(--space-4) var(--space-4);   /* Figma: text starts at x=16 */
+}
+
+.event:last-child { padding-bottom: 0; }
+
+/* the spine, drawn by the row rather than as a separate element */
+.event:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: var(--change-dot);
+  bottom: 0;
+  width: 1px;
+  background: var(--change-rule);
+}
+
+.dot {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: var(--change-dot);                /* Figma: 6px */
+  height: var(--change-dot);
+  border-radius: var(--radius-full);
+  background: var(--manage-icon);
+}
+
+/* Figma draws the second dot hollow — the change has not happened yet. */
+.dotEnd { background: var(--manage-panel-bg); box-shadow: inset 0 0 0 1px var(--manage-icon); }
+
+.when {
+  grid-column: 1;
+  margin: 0;
+  font-size: var(--text-xs);               /* Figma: 12px/18 bold */
+  font-weight: var(--weight-bold);
+  line-height: 18px;
+  color: var(--change-sub);
+}
+
+.amount {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.amountFigure {
+  font-size: var(--text-xs);               /* Figma: 12px/18 bold */
+  font-weight: var(--weight-bold);
+  line-height: 18px;
+  color: var(--change-name);
+}
+
+.amountUnit {
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--change-meta);
+}
+
+.detail {
+  grid-column: 1 / -1;
+  margin: 0;
+  max-width: 340px;                        /* Figma: 311px note column */
+  font-size: var(--billing-text-tiny);     /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--change-meta);
+}
+
+/* ---- card on file (1:10211) ---- */
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3);                 /* Figma: 12px */
+  border-radius: var(--radius-sm);
+  background: var(--change-row);
+}
+
+.cardText { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+
+.cardLabel {
+  margin: 0;
+  font-size: var(--billing-text-tiny);     /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--change-title);
+}
+
+.cardLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);                     /* Figma: 8px */
+  margin: 0;
+  font-size: var(--text-xs);               /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--change-sub);
+}
+
+/* Figma: 36.75 x 11.894. Tailwind preflight would otherwise cap it at its box. */
+.brand { flex: 0 0 auto; width: 36.75px; height: 12px; max-width: none; display: block; }
+
+.cardChevron { display: inline-flex; color: var(--change-meta); }
+
+/* ---- downgrade impact (1:14889) ---- */
+.impact {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--change-impact);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--cancel-strip-text);
+}
+
+.legal {
+  margin: 0;
+  font-size: var(--billing-text-tiny);     /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--change-meta);
+}
+
+/* ---- actions ---- */
+.actions { display: flex; gap: var(--space-2); }
+
+.submit,
+.close2,
+.done {
+  min-height: var(--cancel-btn-h);
+  padding: var(--space-1) var(--space-3);  /* Figma: 4px 12px */
+  font-size: var(--text-xs);               /* Figma: 12px/18 */
+  line-height: 18px;
+  font-weight: var(--weight-regular);
+  letter-spacing: normal;
+}
+
+.submit { min-width: 108px; }              /* Figma: 108px */
+
+/* ---------------------------------------------------- confirmation dialog */
+.dialog {
+  --modal-md: var(--change-modal-w);
+  border-radius: var(--radius-xl);
+  background: var(--manage-panel-bg);
+  box-shadow: var(--signup-card-shadow);
+}
+
+.dialog > div:last-child { padding: var(--space-8); }
+
+.doneBody { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+
+/* Figma ships a filled check-circle. Drawn from the stroked `check` glyph on a
+   token-coloured disc instead, so it follows the theme. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--change-mark);               /* Figma: 32px */
+  height: var(--change-mark);
+  border-radius: var(--radius-full);
+  background: var(--cancel-done-bg);
+  color: var(--cancel-done-text);
+}
+
+.doneTitle {
+  margin: 0;
+  font-size: var(--text-xl);               /* Figma: 20px/28 bold */
+  font-weight: var(--weight-bold);
+  line-height: 28px;
+  color: var(--change-title);
+}
+
+.doneTitle:focus { outline: none; }
+
+.doneText {
+  margin: 0;
+  font-size: var(--text-xs);               /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--change-sub);
+}
+
+.doneText strong { font-weight: var(--weight-medium); }
+
+.done { margin-top: var(--space-2); }
+
+@media (max-width: 720px) {
+  .swap { flex-direction: column; align-items: stretch; }
+  .swapArrow { align-self: center; padding: 0; transform: rotate(90deg); }
+}

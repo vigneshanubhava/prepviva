@@ -1,0 +1,137 @@
+/* The PrepViva email card — the branded message inside the mail client, shared
+   by Figma nodes 14:10469 (magic link) and 14:10022 (subscription cancelled).
+   Both artboards draw the same 640px card: logo, gradient hero, centred
+   heading, body column, footer. Only the wording and the heading's colour
+   differ, so those are props. */
+
+
+.email {
+  width: var(--email-body-w);                /* Figma: 640px */
+  max-width: 100%;
+  border-radius: var(--radius-md);           /* Figma: 8px */
+  background: var(--email-body-bg);
+  overflow: hidden;
+}
+
+.emailLogo { padding: 22px 0 var(--space-4) 13px; }   /* Figma: logo at 13, 22 */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: var(--email-hero-w);                /* Figma: 608px */
+  max-width: calc(100% - var(--space-8));
+  height: var(--email-hero-h);               /* Figma: 280px */
+  margin: 0 auto;
+  padding: var(--space-8);                   /* Figma: text at x=32 */
+  border-radius: var(--email-hero-r);        /* Figma: 20px */
+  background: linear-gradient(to bottom, var(--email-hero-from), var(--email-hero-to));
+  overflow: hidden;
+}
+
+/* 34 (14:10022) fills the same panel in purple. */
+.heroBrand {
+  background: linear-gradient(to bottom, var(--email-hero-alt-from), var(--email-hero-alt-to));
+}
+
+.heroArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  color: var(--email-hero-text);
+  opacity: 0.18;
+  stroke-width: 1;
+}
+
+.heroLine {
+  position: relative;
+  margin: 0;
+  font-size: 20.578px;                       /* Figma: 20.578px */
+  line-height: 24.114px;
+  color: var(--email-hero-text);
+}
+
+.heroStrong { font-weight: var(--weight-bold); }
+
+.heroMark {
+  position: absolute;
+  right: var(--space-8);
+  bottom: var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.36px;
+  color: var(--email-hero-text);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);                       /* Figma: 24px */
+  width: var(--email-copy-w);                /* Figma: 544px */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 52px 0 var(--space-10);           /* Figma: heading at y=404 */
+}
+
+.emailHeading {
+  margin: 0;
+  font-size: var(--email-heading-size);      /* Figma: 20px */
+  font-weight: var(--weight-bold);
+  line-height: 26.146px;
+  color: var(--email-heading);
+  text-align: center;
+}
+
+.copyBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);                       /* Figma: 16px */
+  width: 100%;
+}
+
+.hi {
+  margin: 0;
+  font-size: var(--text-base);               /* Figma: 16px bold */
+  font-weight: var(--weight-bold);
+  line-height: 19.218px;
+  color: var(--email-title);
+  opacity: 0.7;
+}
+
+/* The body is written by the route, so its paragraphs are styled as elements
+   rather than by a class the route could not reach. */
+.copyBody p {
+  margin: 0;
+  font-size: var(--text-xs);                 /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--email-text);
+  opacity: 0.7;
+}
+
+.emailFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);                       /* Figma: 16px */
+  padding: var(--space-4) var(--space-8);    /* Figma: 16px */
+  border-top: 1px solid var(--email-rule);
+  background: var(--email-footer-bg);
+}
+
+.footerNote {
+  max-width: 475px;                          /* Figma: 475px */
+  margin: 0;
+  font-size: var(--email-note-size);         /* Figma: 10px */
+  letter-spacing: -0.1px;
+  color: var(--email-footer-text);
+  opacity: 0.6;
+  text-align: center;
+}
+
+.footerStrong { font-weight: var(--weight-bold); opacity: 1; }
+

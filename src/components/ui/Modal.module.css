@@ -1,0 +1,137 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--modal-z, var(--z-modal));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--surface-scrim);
+  animation: fade var(--duration-base) var(--ease-out);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--space-12));
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-overlay);
+  color: var(--text-primary);
+  animation: rise var(--duration-base) var(--ease-out);
+}
+
+.dialog:focus { outline: none; }
+
+/* Dialog widths are layout constraints, not style values — tokens.css defines
+   --nav-width / --content-max for the same purpose but none for dialogs, so they
+   are named here rather than left as bare numbers at the use site. */
+.dialog { --modal-sm: 400px; --modal-md: 520px; --modal-lg: 720px; }
+
+.sm { max-width: var(--modal-sm); }
+.md { max-width: var(--modal-md); }
+.lg { max-width: var(--modal-lg); }
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-6) var(--space-4);
+}
+
+.headings { flex: 1 1 auto; min-width: 0; }
+
+.title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+}
+
+.description {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.close:hover { background: var(--surface-sunken); color: var(--text-primary); }
+.close:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 var(--space-6) var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(var(--space-4)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim, .dialog { animation: none; }
+}
+
+/* ---- drawer ----
+   A right-hand panel instead of a centred dialog (Figma 29:4853, 455px wide).
+   --modal-inset-top lets a page hold the drawer clear of a fixed header. */
+.scrimDrawer {
+  top: var(--modal-inset-top, 0);
+  align-items: stretch;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.drawer {
+  width: var(--modal-drawer, 455px);          /* Figma: 455px */
+  max-width: 100%;
+  max-height: none;
+  height: 100%;
+  border: 0;
+  border-inline-start: 1px solid var(--border-subtle);
+  border-radius: 0;
+  animation: slideIn var(--duration-base) var(--ease-out);
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer { animation: none; }
+}

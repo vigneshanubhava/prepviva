@@ -1,0 +1,135 @@
+/* Profile menu — Figma node 1:5099 (artboard 18, 1:4997).
+   241px wide, 8px inset, 8px between its four blocks. */
+
+.wrap { position: relative; display: inline-flex; }
+
+.trigger {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  cursor: pointer;
+}
+
+.trigger:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* Figma hangs it from the header's right edge, 2px under the 40px header. */
+.menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-header);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);                       /* Figma: 8px */
+  width: var(--profile-menu-w);              /* Figma: 241px */
+  padding: var(--space-2);                   /* Figma: 8px */
+  border-radius: var(--radius-md);           /* Figma: 8px */
+  background: var(--surface-raised);
+  box-shadow: var(--profile-shadow);
+}
+
+/* ---- account block ---- */
+.account {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--profile-block-g);               /* Figma: 14px */
+  width: 100%;
+  padding: var(--space-4);                   /* Figma: 16px */
+  border-radius: var(--radius-sm);           /* Figma: 4px */
+  background: var(--surface-sunken);         /* Figma: surface/secondary */
+}
+
+.email {
+  margin: 0;
+  width: 100%;
+  font-size: var(--text-xs);                 /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--profile-email);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rule {
+  width: 100%;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ---- theme setting ----
+   Figma: a 179px row, three 40px columns, space-between. */
+.themes {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: var(--profile-theme-w);
+}
+
+.theme {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);                       /* Figma: 4px */
+  width: var(--profile-option-w);            /* Figma: 40px */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+.theme:focus-visible { outline: none; }
+.theme:focus-visible .tile { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* Figma: 32x32, so the fill is a circle rather than a pill across the 40px
+   column. The column centres it. */
+.tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--profile-tile-h);              /* Figma: 32px */
+  height: var(--profile-tile-h);
+  border-radius: var(--radius-full);
+  color: var(--profile-label);
+}
+
+.theme:hover .tile { background: var(--surface-sunken); }
+
+/* Figma fills the selected tile graph/purple/purple-900. Brand purple is the
+   token layer's decision for a selected control, as on the left nav. */
+.tileOn,
+.theme:hover .tileOn { background: var(--brand); color: var(--brand-on); }
+
+.themeLabel {
+  font-size: var(--billing-text-tiny);       /* Figma: 10px/15 */
+  line-height: 15px;
+  color: var(--profile-label);
+}
+
+/* ---- links ---- */
+.links { display: flex; flex-direction: column; width: 100%; }
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);                       /* Figma: 16px */
+  width: 100%;
+  padding: var(--space-2) var(--space-3);    /* Figma: 8px 12px */
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                 /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--profile-item);
+  text-align: start;
+  cursor: pointer;
+}
+
+.link:hover { background: var(--surface-sunken); }
+.link:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }

@@ -1,0 +1,97 @@
+/* Public pricing page — Figma node 14:11391, matched to spec.
+   Every value resolves through a --pricing-* or core token; see the
+   "PRICING PAGE — exact Figma spec" block in tokens.css. */
+
+.page {
+  min-height: 100vh;
+  background: var(--surface-page);
+  padding: var(--space-10) var(--space-6) var(--space-20);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-10);            /* Figma: 40px */
+  max-width: var(--pricing-column); /* Figma: 1096px */
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------- hero */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-12) var(--space-10);   /* Figma: 48px 40px */
+  border-radius: var(--pricing-card-radius);  /* Figma: 24px */
+  background: linear-gradient(to top, var(--pricing-hero-from), var(--pricing-hero-to));
+  overflow: clip;
+}
+
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);                        /* Figma: 16px */
+  width: 100%;
+  max-width: var(--pricing-hero-inner);       /* Figma: 872px */
+  text-align: center;
+  color: var(--pricing-hero-text);
+}
+
+.h1 {
+  margin: 0;
+  font-size: var(--pricing-text-hero);        /* Figma: 40px */
+  font-weight: var(--weight-medium);          /* Figma: Medium */
+  line-height: var(--pricing-leading-hero);   /* Figma: leading-none */
+  color: inherit;
+}
+
+.heroSub {
+  margin: 0;
+  max-width: var(--pricing-hero-sub-max);     /* Figma: 648px */
+  font-size: var(--text-lg);                  /* Figma: 18px */
+  font-weight: var(--weight-regular);
+  line-height: 1.5;
+  letter-spacing: var(--pricing-tracking-hero);
+  color: inherit;
+}
+
+/* --------------------------------------------------------------- cards */
+.grid {
+  display: flex;
+  gap: var(--space-6);                        /* Figma: 24px */
+  align-items: stretch;                       /* Figma: all three cards equal height */
+  justify-content: center;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------ footnote */
+.footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: var(--space-2) var(--space-4);     /* Figma: 8px 16px */
+  border-radius: var(--radius-md);            /* Figma: 8px */
+  background: var(--pricing-note-bg);
+  box-shadow: var(--pricing-note-shadow);
+  font-size: var(--text-sm);                  /* Figma: 14px */
+  line-height: 1.6;
+  letter-spacing: var(--pricing-tracking-cta);
+  text-align: center;
+  color: var(--pricing-text-secondary);
+}
+
+/* ---------------------------------------------------------- responsive */
+@media (max-width: 1040px) {
+  .grid { flex-wrap: wrap; }
+}
+
+@media (max-width: 720px) {
+  /* .card and .wash narrow in PlanCard.module.css, where they now live. */
+  .hero { padding: var(--space-10) var(--space-6); }
+  .h1 { font-size: var(--text-3xl); }
+}

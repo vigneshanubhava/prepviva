@@ -1,0 +1,56 @@
+/* 12 Login - Generating Secure Link Loading — Figma node 1:6287. */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-6);
+  background: var(--login-loading-bg);       /* Figma: surface/page = white */
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 43px var(--space-8);              /* Figma: 43px 32px */
+  border-radius: var(--radius-md);           /* Figma: 8px */
+  background: var(--login-loading-panel);    /* Figma: white @ 80% */
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);                       /* Figma: 16px */
+  width: var(--login-loading-w);             /* Figma: 260px */
+  max-width: 100%;
+}
+
+.tile {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--login-logo-tile-p);         /* Figma: 9.6px */
+  border-radius: var(--login-logo-tile-r);   /* Figma: 4.8px */
+  background: var(--login-logo-tile);        /* Figma: surface/bg03 */
+}
+
+.mark {
+  width: 15px;                               /* Figma: 15×18 */
+  height: 18px;
+  display: block;
+  max-width: none;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs);                 /* Figma: 12px */
+  color: var(--login-loading-text);          /* Figma: text/secondary */
+  text-align: center;
+}
+
+.spinner { display: inline-flex; color: var(--login-loading-text); }

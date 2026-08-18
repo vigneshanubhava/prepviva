@@ -1,0 +1,115 @@
+/* Pill buttons. Every value is a semantic token — see doc/BRIEF.md styling rules.
+   [data-force~="…"] mirrors each interactive state so the kitchen sink can show
+   hover / active / focus side by side without a pointer. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.btn:focus { outline: none; }
+
+.btn:focus-visible,
+.btn[data-force~="focus"] {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-color: var(--border-focus);
+}
+
+/* ---- sizes ---- */
+.sm { padding: var(--space-2) var(--space-4); font-size: var(--text-xs); }
+.md { padding: var(--space-3) var(--space-5); font-size: var(--text-sm); }
+.lg { padding: var(--space-4) var(--space-6); font-size: var(--text-base); }
+
+.fullWidth { width: 100%; }
+
+/* ---- primary ---- */
+.primary { background: var(--brand); color: var(--brand-on); }
+.primary:hover:not(:disabled),
+.primary[data-force~="hover"] { background: var(--brand-hover); }
+.primary:active:not(:disabled),
+.primary[data-force~="active"] { background: var(--brand-active); }
+
+/* ---- secondary ---- */
+.secondary {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+.secondary:hover:not(:disabled),
+.secondary[data-force~="hover"] {
+  background: var(--surface-sunken);
+  border-color: var(--border-strong);
+}
+.secondary:active:not(:disabled),
+.secondary[data-force~="active"] { background: var(--surface-inset); }
+
+/* ---- ghost ---- */
+.ghost { background: transparent; color: var(--text-secondary); }
+.ghost:hover:not(:disabled),
+.ghost[data-force~="hover"] {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+.ghost:active:not(:disabled),
+.ghost[data-force~="active"] { background: var(--surface-inset); }
+
+/* ---- danger ---- */
+.danger { background: var(--danger-solid); color: var(--text-inverse); }
+.danger:hover:not(:disabled),
+.danger[data-force~="hover"] { background: var(--danger-fg); }
+.danger:active:not(:disabled),
+.danger[data-force~="active"] { background: var(--danger-fg); filter: saturate(1.2); }
+
+/* Two dark-mode corrections for danger.
+   1. --text-inverse flips to a dark grey in dark mode, unreadable on a red fill.
+   2. --danger-fg is a light pink foreground in dark mode, so the light-theme
+      hover (which darkens to --danger-fg) would wash the button out. tokens.css
+      has no --danger-hover / --danger-active pair, so dark shifts the solid
+      instead of swapping to a different token. */
+:global([data-theme="dark"]) .danger { color: var(--text-primary); }
+
+:global([data-theme="dark"]) .danger:hover:not(:disabled),
+:global([data-theme="dark"]) .danger[data-force~="hover"] {
+  background: var(--danger-solid);
+  filter: brightness(1.18);
+}
+
+:global([data-theme="dark"]) .danger:active:not(:disabled),
+:global([data-theme="dark"]) .danger[data-force~="active"] {
+  background: var(--danger-solid);
+  filter: brightness(0.86);
+}
+
+/* ---- disabled ----
+   :not(.loading) matters: a loading button is disabled for interaction but must
+   keep its variant colour, otherwise every spinner renders on grey. */
+.btn:disabled:not(.loading),
+.btn[aria-disabled="true"]:not(.loading),
+.btn[data-force~="disabled"]:not(.loading) {
+  background: var(--surface-sunken);
+  color: var(--text-faint);
+  border-color: var(--border-subtle);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---- loading ---- */
+.loading { cursor: progress; }
+.loading .label { opacity: 0.85; }

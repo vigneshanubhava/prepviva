@@ -1,0 +1,229 @@
+/* Review and checkout — Figma node 1:2121. */
+
+.page { min-height: 100vh; background: var(--surface-page); }
+
+/* ---- layout ---- */
+.wrap {
+  position: relative;
+  max-width: calc(var(--checkout-col-left) + var(--checkout-col-gap) + var(--checkout-col-right));
+  margin: 0 auto;
+  /* top padding clears the fixed header (4px + 32px avatar + 4px) and keeps the
+     24px gap the artboard has above the title */
+  padding: calc(var(--app-header-h) + var(--space-6)) var(--space-6) var(--space-20);
+}
+
+.back {
+  position: absolute;
+  left: calc(var(--space-6) - 46px);        /* Figma: arrow at 143, title at 189 */
+  top: calc(var(--app-header-h) + var(--space-6));
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.back:hover { background: var(--surface-sunken); }
+.back:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.h1 {
+  margin: 0 0 var(--space-8);
+  font-size: var(--text-2xl);               /* Figma: 24px */
+  font-weight: var(--weight-bold);
+  line-height: 32px;
+  color: var(--pricing-text-primary);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: var(--checkout-col-left) var(--checkout-col-right);
+  gap: var(--checkout-col-gap);
+  align-items: start;
+}
+
+/* ---- left column ---- */
+.sectionTitle {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);                /* Figma: 14px bold */
+  font-weight: var(--weight-bold);
+  line-height: 22px;
+  color: var(--pricing-text-primary);
+}
+
+.planRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.planName {
+  font-size: var(--text-sm);
+  line-height: 22px;
+  color: var(--pricing-text-primary);
+}
+
+.planMeta {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);                /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--pricing-text-tertiary);
+}
+
+.planLink { color: var(--checkout-link); text-decoration: none; }
+.planLink:hover { text-decoration: underline; }
+
+.priceRow { display: flex; align-items: center; gap: 3px; white-space: nowrap; }
+
+.price {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 22px;
+  color: var(--pricing-text-primary);
+}
+
+.priceUnit {
+  font-size: var(--text-sm);
+  line-height: 22px;
+  color: var(--pricing-text-tertiary);
+}
+
+
+.summary {
+  margin-top: var(--space-6);               /* Figma: box at y=241 */
+  padding: var(--space-4);                  /* Figma: 16px */
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);          /* Figma: 8px */
+}
+
+.summaryTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--pricing-text-primary);
+}
+
+.features { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;                                /* Figma: 14px */
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--pricing-text-primary);
+}
+
+.tick { flex: 0 0 auto; margin-top: 3px; color: var(--pricing-tick); }
+
+/* ---- right panel ---- */
+.panel {
+  padding: var(--space-6);
+  background: var(--checkout-panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--pricing-text-primary);
+}
+
+.fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+
+.field { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.label {
+  font-size: var(--text-sm);                /* Figma: 14px/20 medium */
+  font-weight: var(--weight-medium);
+  line-height: var(--space-5);
+  color: var(--checkout-label);
+}
+
+.control {
+  width: 100%;
+  padding: 10px var(--space-4);             /* Figma: 10px 16px */
+  background: var(--checkout-field-bg);
+  border: 1px solid var(--checkout-field-bd);
+  border-radius: var(--radius-md);
+  box-shadow: var(--checkout-field-shadow);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);                /* Figma: 12px/18 */
+  line-height: 18px;
+  color: var(--pricing-text-primary);
+}
+
+.control::placeholder { color: var(--pricing-text-tertiary); }
+
+.control:focus-visible {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.control[aria-invalid='true'] { border-color: var(--danger-solid); }
+
+.control:disabled,
+.readOnly {
+  background: var(--surface-sunken);
+  color: var(--pricing-text-tertiary);
+  cursor: not-allowed;
+}
+
+/* card number + expiry/cvc stack as one grouped control, as Stripe renders it */
+.cardGroup { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.cardGroup > .full { grid-column: 1 / -1; }
+
+.cardNumberWrap { position: relative; display: flex; align-items: center; }
+.cardNumberWrap .control { padding-right: var(--space-10); }
+.cardIcon { position: absolute; right: var(--space-4); color: var(--pricing-text-tertiary); }
+
+.error { font-size: var(--text-xs); color: var(--danger-fg); }
+
+.row { display: flex; align-items: center; gap: var(--space-2); }
+
+/* ---- pay ---- */
+.submit {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: 50px;
+  background: linear-gradient(to top, var(--signup-cta-from), var(--signup-cta-to));
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  line-height: var(--space-6);
+  letter-spacing: -0.16px;
+  color: var(--pricing-cta-primary-text);
+  cursor: pointer;
+}
+
+.submit:hover { filter: brightness(1.08); }
+.submit:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.submit:disabled { filter: grayscale(0.6) brightness(1.1); cursor: progress; }
+
+.reassure {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--pricing-text-tertiary);
+}
+
+.reassureIcon { flex: 0 0 auto; margin-top: 2px; }
+
+/* ---- responsive ---- */
+@media (max-width: 1100px) {
+  .columns { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .back { position: static; margin-bottom: var(--space-2); }
+}

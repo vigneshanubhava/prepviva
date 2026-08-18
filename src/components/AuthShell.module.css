@@ -1,0 +1,53 @@
+/* Shared out-of-app shell: banner left, card right.
+   Figma: 1:2167, 1:2230 (signup outcomes) and 1:3169, 1:5516 (login). */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-6);
+}
+
+.welcome { background: var(--welcome-page-bg); }   /* Figma: graph/purple/purple-200 */
+.signup  { background: var(--signup-page-bg); }    /* Figma: the signup page tint */
+
+.layout { display: flex; align-items: center; max-width: 100%; }
+
+.banner {
+  flex: 0 0 auto;
+  width: var(--signup-banner-w);
+  height: var(--signup-banner-h);
+  border-radius: var(--signup-radius-banner) 0 0 var(--signup-radius-banner);
+  object-fit: cover;
+  display: block;
+}
+
+.card {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: var(--signup-card-w);              /* Figma: 804px */
+  min-height: var(--welcome-card-h);        /* Figma: 680px */
+  padding: var(--space-16) 72px;            /* Figma: 64px 72px */
+  background: var(--signup-card-bg);
+  border-radius: var(--signup-radius-card); /* Figma: 16px */
+  box-shadow: var(--signup-card-shadow);
+}
+
+/* Figma spaces the logo from the body differently per screen. */
+.gap-lg   { gap: var(--space-20); }         /* Figma: 88px */
+.gap-apart{ justify-content: space-between; gap: var(--space-10); }
+
+.logo { flex: 0 0 auto; }
+
+@media (max-width: 1340px) { .banner { display: none; } }
+
+@media (max-width: 880px) {
+  .card {
+    width: 100%;
+    padding: var(--space-10) var(--space-6);
+    min-height: 0;
+    gap: var(--space-12);
+  }
+}
