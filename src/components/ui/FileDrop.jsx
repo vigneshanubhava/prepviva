@@ -2,16 +2,18 @@ import { useId, useRef } from 'react'
 import Button from './Button.jsx'
 import Icon from './Icon.jsx'
 import VisuallyHidden from './VisuallyHidden.jsx'
+import { checkFile } from './fileRules.js'
 import styles from './FileDrop.module.css'
 
 /**
  * Attach one file: an empty zone with a button, or the attached file with its
  * size and a way to remove it.
  *
- * It owns the two checks a file always needs — extension and size — because a
- * component that accepts anything teaches the user nothing until the server
- * says no. The message is handed back through `onReject` rather than rendered
- * from inside, so the screen keeps its own voice; `error` renders it.
+ * It makes the two checks a file always needs — extension and size, shared
+ * with the avatar picker in `fileRules.js` — because a component that accepts
+ * anything teaches the user nothing until the server says no. The message is
+ * handed back through `onReject` rather than rendered from inside, so the
+ * screen keeps its own voice; `error` renders it.
  *
  * Only the file's name and size are passed on. This prototype has no backend,
  * and nothing here reads the bytes — with one opt-in exception: `passFile`
@@ -56,17 +58,13 @@ export default function FileDrop({
     event.target.value = ''      // so re-picking the same file still fires
     if (!chosen) return
 
-    const named = chosen.name.toLowerCase()
-    if (accept.length && !accept.some((ext) => named.endsWith(ext))) {
+    const bad = checkFile(chosen, { accept, maxMB })
+    if (bad) {
       onSelect?.(null)
-      onReject?.(`That file type is not accepted — use ${accept.join(', ')}.`, 'type')
+      onReject?.(bad.message, bad.reason)
       return
     }
-    if (maxMB && chosen.size > maxMB * 1024 * 1024) {
-      onSelect?.(null)
-      onReject?.(`That file is over ${maxMB}MB.`, 'size')
-      return
-    }
+
     onSelect?.({
       name: chosen.name,
       size: chosen.size,

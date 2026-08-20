@@ -1,4 +1,5 @@
 export { default as Avatar, initialsFrom } from './Avatar.jsx'
+export { default as AvatarUpload } from './AvatarUpload.jsx'
 export { default as Badge } from './Badge.jsx'
 export { default as Banner } from './Banner.jsx'
 export { default as Button } from './Button.jsx'

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  AvatarUpload,
   Badge,
   Banner,
   Button,
@@ -35,6 +36,7 @@ import {
   useToast,
 } from '../components/ui/index.js'
 import { useTheme } from '../theme/ThemeProvider.jsx'
+import { readPhoto } from '../data/photo.js'
 import styles from './KitchenSink.module.css'
 
 const SECTIONS = [
@@ -47,6 +49,7 @@ const SECTIONS = [
   ['choicecards', 'ChoiceCards'],
   ['chipgroup', 'ChipGroup'],
   ['filedrop', 'FileDrop'],
+  ['avatarupload', 'AvatarUpload'],
   ['stepprogress', 'StepProgress'],
   ['badge', 'Badge'],
   ['card', 'Card'],
@@ -100,6 +103,8 @@ export default function KitchenSink() {
   const [worries, setWorries] = useState(['Freezing up'])
   const [cv, setCv] = useState(null)
   const [cvError, setCvError] = useState(null)
+  const [photo, setPhoto] = useState(null)
+  const [photoError, setPhotoError] = useState(null)
   const [wizardStep, setWizardStep] = useState(2)
 
   const trackOptions = [
@@ -520,6 +525,35 @@ export default function KitchenSink() {
                 onRemove={() => {}}
               />
             </div>
+          </div>
+        </Section>
+
+        {/* ----------------------------------------------------- AvatarUpload */}
+        <Section
+          id="avatarupload"
+          title="AvatarUpload"
+          note="The picture is the button: a camera badge on the circle, the browser's own file dialog behind it, and a drop target for a dragged file. Same extension and size checks as FileDrop — they share fileRules.js. The badge carries the state: camera, spinner while the image is squared, tick when it is kept."
+        >
+          <div className={styles.panel}>
+            <div className={styles.row}>
+              <AvatarUpload
+                name="Oliver Davies"
+                src={photo?.url}
+                accept={['.png', '.jpg', '.jpeg', '.webp']}
+                maxMB={5}
+                hint="JPG, PNG or WEBP · up to 5MB"
+                onSelect={(file) => {
+                  setPhotoError(null)
+                  return readPhoto(file).then(setPhoto)
+                }}
+                onRemove={() => setPhoto(null)}
+                onReject={(message) => setPhotoError(message)}
+              />
+
+              <AvatarUpload name="Oliver Davies" disabled onSelect={() => {}} />
+            </div>
+
+            {photoError ? <p className={styles.eyebrow}>{photoError}</p> : null}
           </div>
         </Section>
 

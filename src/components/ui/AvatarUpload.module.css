@@ -1,0 +1,99 @@
+/* The picture as a button, with a camera badge hanging off its lower edge. */
+
+.wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.target {
+  position: relative;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  cursor: pointer;
+  /* room for the badge to sit half outside the circle without clipping */
+  margin-block-end: var(--space-1);
+}
+
+.target:disabled { cursor: default; }
+
+.target:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; }
+
+/* ---- the veil over the photograph ---- */
+.veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: rgb(17 24 39 / 0.55);
+  color: var(--white);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.target:hover .veil,
+.target:focus-visible .veil,
+.dragging .veil { opacity: 1; }
+
+.target:disabled .veil { opacity: 0; }
+
+/* ---- the badge ---- */
+.badge {
+  position: absolute;
+  inset-block-end: -2px;
+  inset-inline-end: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;                       /* 18px against a 40px circle */
+  height: 1.125rem;
+  border-radius: var(--radius-full);
+  /* the ring reads as a cut-out of whatever the badge sits on, so the surface
+     is a variable the screen can set — sunken inside the profile menu. */
+  border: 2px solid var(--avatar-badge-ring, var(--surface-raised));
+  background: var(--brand);
+  color: var(--brand-on);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.target:hover .badge { background: var(--brand-hover); }
+
+.badgeDone { background: var(--success-solid); }
+
+/* ---- dragged over ---- */
+.dragging { outline: 2px dashed var(--border-focus); outline-offset: 3px; }
+
+/* ---- the words under it ---- */
+.hint {
+  margin: 0;
+  font-size: var(--billing-text-tiny);
+  line-height: 15px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.remove {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.remove:disabled { color: var(--text-muted); cursor: default; text-decoration: none; }
+.remove:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .veil, .badge { transition: none; }
+}

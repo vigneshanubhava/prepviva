@@ -316,8 +316,9 @@ label.rowTitle { cursor: pointer; }
 
 .identityMeta { margin: var(--space-1) 0 0; font-size: var(--text-xs); line-height: 18px; color: var(--screen-muted); }
 
-/* the photo actions sit after the status badge; a rejection takes its own line */
-.identityPhoto { flex: 0 0 auto; inline-size: auto; }
+/* the picture leads the row and carries its own camera badge; the badge ring
+   is cut out of the row's fill, and a rejection takes its own line */
+.identityPhoto { flex: 0 0 auto; inline-size: auto; --avatar-badge-ring: var(--screen-row-hover); }
 
 .identityError {
   flex: 1 0 100%;

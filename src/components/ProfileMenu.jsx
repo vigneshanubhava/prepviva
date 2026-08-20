@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Avatar, FileDrop, Icon } from './ui/index.js'
+import { Avatar, AvatarUpload, Icon, useToast } from './ui/index.js'
 import { useAccount } from '../data/AccountProvider.jsx'
 import { useTheme } from '../theme/ThemeProvider.jsx'
 import { PHOTO_MAX_MB, PHOTO_TYPES } from '../data/onboarding.js'
@@ -29,6 +29,7 @@ export default function ProfileMenu({ name, email }) {
   const { account, savePhoto, removePhoto } = useAccount()
   const [photoError, setPhotoError] = useState(null)
   const { theme, setTheme } = useTheme()
+  const { toast } = useToast()
   const navigate = useNavigate()
   const wrapRef = useRef(null)
   const buttonRef = useRef(null)
@@ -114,27 +115,36 @@ export default function ProfileMenu({ name, email }) {
           {/* Figma draws a photograph here, and now so can the account holder:
               their own picture, chosen by them, or the initials they get by
               default. What was ruled out was a stock face standing in for a
-              person who never agreed to be here. */}
-          <div className={styles.account}>
-            <Avatar name={name} src={account.avatar?.url} size="lg" aria-hidden="true" />
-            <p className={styles.email}>{email}</p>
+              person who never agreed to be here.
 
-            <FileDrop
+              The picture is the button — a camera badge on the circle, the
+              browser's own file dialog behind it. A link reading "Add a photo"
+              said the same thing in more words and further from the thing it
+              changed. */}
+          <div className={styles.account}>
+            <AvatarUpload
               className={styles.photo}
-              compact
-              passFile
-              file={account.avatar}
+              name={name}
+              src={account.avatar?.url}
+              size="lg"
+              itemRole="menuitem"
               accept={PHOTO_TYPES}
               maxMB={PHOTO_MAX_MB}
-              chooseLabel="Add a photo"
-              replaceLabel="Change"
-              onSelect={(picked) => {
+              onSelect={(file) => {
                 setPhotoError(null)
-                if (picked?.file) savePhoto(picked.file).catch((e) => setPhotoError(e.message))
+                return savePhoto(file).then(() =>
+                  toast({ tone: 'success', title: 'Photo updated' }),
+                )
               }}
-              onRemove={removePhoto}
+              onRemove={() => {
+                setPhotoError(null)
+                removePhoto()
+                toast({ tone: 'success', title: 'Photo removed' })
+              }}
               onReject={(message) => setPhotoError(message)}
             />
+
+            <p className={styles.email}>{email}</p>
 
             {photoError ? (
               <p className={styles.photoError} role="alert">

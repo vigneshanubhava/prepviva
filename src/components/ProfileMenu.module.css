@@ -53,11 +53,10 @@
   overflow-wrap: anywhere;
 }
 
-/* The photo controls under the address. The zone shrinks to its button here —
-   the menu is 241px wide and a full drop target would dominate it. */
-.photo { inline-size: auto; }
-
-.photo button { white-space: nowrap; }
+/* The picture, its camera badge and the one link that removes it. The badge
+   is ringed in the surface it sits on, which inside this block is the sunken
+   one rather than the menu's own. */
+.photo { --avatar-badge-ring: var(--surface-sunken); }
 
 .photoError {
   margin: 0;

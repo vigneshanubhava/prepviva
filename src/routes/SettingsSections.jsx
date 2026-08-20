@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-  Avatar,
+  AvatarUpload,
   Badge,
   Button,
   ChipGroup,
@@ -108,7 +108,28 @@ export function ProfileSection() {
 
       <Panel icon="userCheck" title="Your details" sub="Shown on your reports and in the app header.">
         <div className={styles.identity}>
-          <Avatar name={account.name} src={account.avatar?.url} size="lg" aria-hidden="true" />
+          {/* The picture is the picker: a camera badge on the circle, the file
+              dialog behind it, and the same two checks every other attach here
+              makes. */}
+          <AvatarUpload
+            className={styles.identityPhoto}
+            name={account.name}
+            src={account.avatar?.url}
+            size="lg"
+            accept={PHOTO_TYPES}
+            maxMB={PHOTO_MAX_MB}
+            hint={`JPG, PNG or WEBP · up to ${PHOTO_MAX_MB}MB`}
+            onSelect={(file) => {
+              setPhotoError(null)
+              return savePhoto(file).then(() => toast({ tone: 'success', title: 'Photo updated' }))
+            }}
+            onRemove={() => {
+              setPhotoError(null)
+              removePhoto()
+              toast({ tone: 'success', title: 'Photo removed' })
+            }}
+            onReject={(message) => setPhotoError(message)}
+          />
 
           <div className={styles.identityText}>
             <p className={styles.identityName}>{account.name}</p>
@@ -120,24 +141,6 @@ export function ProfileSection() {
           <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
             {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
           </Badge>
-
-          {/* Same picker and the same two checks as every other upload here. */}
-          <FileDrop
-            className={styles.identityPhoto}
-            compact
-            passFile
-            file={account.avatar}
-            accept={PHOTO_TYPES}
-            maxMB={PHOTO_MAX_MB}
-            chooseLabel="Upload a photo"
-            allowRemove
-            onSelect={(picked) => {
-              setPhotoError(null)
-              if (picked?.file) savePhoto(picked.file).catch((e) => setPhotoError(e.message))
-            }}
-            onRemove={removePhoto}
-            onReject={(message) => setPhotoError(message)}
-          />
 
           {photoError ? (
             <p className={styles.identityError} role="alert">
@@ -188,7 +191,8 @@ export function ProfileSection() {
         </div>
 
         <Disclosure>
-          Avatars are your initials throughout PrepViva — there is no photograph to upload.
+          Your photo is prepared in this browser — squared to 256px and kept on this device. Without
+          one, your initials stand in throughout PrepViva.
         </Disclosure>
       </Panel>
 
