@@ -68,7 +68,7 @@ const PHONE = /^[+\d][\d\s()-]{6,}$/
 const LINKEDIN = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/.+/i
 
 export function ProfileSection() {
-  const { account, summary, saveDetails, savePhoto } = useAccount()
+  const { account, summary, saveDetails, savePhoto, removePhoto } = useAccount()
   const { toast } = useToast()
 
   const committed = useMemo(
@@ -108,35 +108,42 @@ export function ProfileSection() {
 
       <Panel icon="userCheck" title="Your details" sub="Shown on your reports and in the app header.">
         <div className={styles.identity}>
-          {/* The picture is the picker: a camera badge on the circle, the file
-              dialog behind it, and the same two checks every other attach here
-              makes. Nothing sits under it: the accepted types and the size
-              limit are the disclosure's job at the foot of the panel, and a
-              caption here would push the name and the badge out of line. */}
+          <div className={styles.identityHead}>
+            <div className={styles.identityText}>
+              <p className={styles.identityName}>{account.name}</p>
+              <p className={styles.identityMeta}>
+                {summary.plan.name} &middot; member since {formatDate(account.signedUpOn)}
+              </p>
+            </div>
+
+            <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
+              {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
+            </Badge>
+          </div>
+
+          {/* Named buttons rather than the menu's camera badge: this is the
+              screen with room to say what each one does, and the only one
+              where deleting the photograph has to be possible. Same file
+              dialog and the same two checks behind both. */}
           <AvatarUpload
+            actions
             className={styles.identityPhoto}
             name={account.name}
             src={account.avatar?.url}
-            size="lg"
+            size="xl"
             accept={PHOTO_TYPES}
             maxMB={PHOTO_MAX_MB}
             onSelect={(file) => {
               setPhotoError(null)
               return savePhoto(file).then(() => toast({ tone: 'success', title: 'Photo updated' }))
             }}
+            onRemove={() => {
+              setPhotoError(null)
+              removePhoto()
+              toast({ tone: 'success', title: 'Photo removed' })
+            }}
             onReject={(message) => setPhotoError(message)}
           />
-
-          <div className={styles.identityText}>
-            <p className={styles.identityName}>{account.name}</p>
-            <p className={styles.identityMeta}>
-              {summary.plan.name} &middot; member since {formatDate(account.signedUpOn)}
-            </p>
-          </div>
-
-          <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
-            {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
-          </Badge>
 
           {photoError ? (
             <p className={styles.identityError} role="alert">

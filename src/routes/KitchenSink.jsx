@@ -532,7 +532,7 @@ export default function KitchenSink() {
         <Section
           id="avatarupload"
           title="AvatarUpload"
-          note="The picture is the button: a camera badge on the circle, the browser's own file dialog behind it, and a drop target for a dragged file. One control and nothing under it — a caption or a second link turns a picture into a block and pushes whatever sits beside it out of line. Same extension and size checks as FileDrop, from fileRules.js. The badge carries the state: camera, spinner while the image is squared, tick when it is kept."
+          note="The picture is the button: a camera badge on the circle, the browser's own file dialog behind it, and a drop target for a dragged file. One control and nothing under it — a caption or a second link turns a picture into a block and pushes whatever sits beside it out of line. Same extension and size checks as FileDrop, from fileRules.js. The badge carries the state: camera, spinner while the image is squared, tick when it is kept. `actions` is the settings arrangement instead: the picture stops being a button, and two named ones sit beside it — the one place deleting the photograph has to be possible."
         >
           <div className={styles.panel}>
             <div className={styles.row}>
@@ -550,6 +550,22 @@ export default function KitchenSink() {
 
               <AvatarUpload name="Oliver Davies" disabled onSelect={() => {}} />
             </div>
+
+            <p className={styles.eyebrow}>Actions — named buttons instead of the badge</p>
+            <AvatarUpload
+              actions
+              size="xl"
+              name="Oliver Davies"
+              src={photo?.url}
+              accept={['.png', '.jpg', '.jpeg', '.webp']}
+              maxMB={5}
+              onSelect={(file) => {
+                setPhotoError(null)
+                return readPhoto(file).then(setPhoto)
+              }}
+              onRemove={() => setPhoto(null)}
+              onReject={(message) => setPhotoError(message)}
+            />
 
             {photoError ? <p className={styles.eyebrow}>{photoError}</p> : null}
           </div>

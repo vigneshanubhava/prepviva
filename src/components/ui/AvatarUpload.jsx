@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Avatar from './Avatar.jsx'
+import Button from './Button.jsx'
 import Icon from './Icon.jsx'
 import Spinner from './Spinner.jsx'
 import VisuallyHidden from './VisuallyHidden.jsx'
@@ -22,12 +23,16 @@ import styles from './AvatarUpload.module.css'
  * file that lands anywhere else is a browser navigation, so the target says so
  * with a ring while you drag.
  *
- * There is one control and nothing else. Picking again replaces what is
- * there, so "Replace" would be a second button for what the badge already
- * does, and a line of type under the circle — a size limit, a remove link —
- * turns a picture into a four-line block and pushes everything beside it out
- * of line. Whatever the screen has to say about the file, it says where its
- * own copy lives.
+ * There is one control and nothing else — nothing sits under the circle. A
+ * size limit or a remove link there turns a picture into a four-line block and
+ * pushes whatever stands beside it out of line; whatever the screen has to say
+ * about the file, it says where its own copy lives.
+ *
+ * `actions` is the other arrangement: the picture stops being a button and two
+ * named ones sit beside it instead. It is for a settings page — room to spell
+ * out "Upload new photo" and "Delete", and a place where deleting has to be
+ * possible at all. A badge in a 241px menu and a pair of pills on a settings
+ * row are the same control with the same checks behind them.
  *
  * `onSelect` may return a promise; that is what drives the spinner. Rejections
  * — a bad type, an oversize file, an unreadable image — come back through
@@ -41,7 +46,15 @@ export default function AvatarUpload({
   accept = [],
   maxMB,
   onSelect,
+  /** Only reachable in `actions` mode — the badge has nowhere to put it. */
+  onRemove,
   onReject,
+  /** Buttons beside the picture instead of a badge on it. For a settings page,
+      where there is room to name both actions and the picture is a record
+      rather than a control. */
+  actions = false,
+  uploadLabel = 'Upload new photo',
+  removeLabel = 'Delete',
   /** The button takes this role, so the control can join a menu's roving
       focus rather than sitting outside the list a screen reader reads. */
   itemRole,
@@ -95,6 +108,72 @@ export default function AvatarUpload({
 
   const action = src ? 'Change your photo' : 'Add a photo'
 
+  const input = (
+    <VisuallyHidden>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept.join(',')}
+        aria-label={action}
+        disabled={disabled || busy}
+        tabIndex={-1}
+        onChange={pick}
+      />
+    </VisuallyHidden>
+  )
+
+  const live = (
+    // Announced, because the change itself is silent to a screen reader.
+    <VisuallyHidden aria-live="polite">
+      {busy ? 'Saving your photo' : status === 'done' ? 'Photo updated' : ''}
+    </VisuallyHidden>
+  )
+
+  if (actions) {
+    return (
+      <div
+        className={`${styles.actions} ${dragging ? styles.dragging : ''} ${className}`}
+        onDragOver={(event) => {
+          event.preventDefault()
+          if (!disabled && !busy) setDragging(true)
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDrop}
+      >
+        {/* Not hidden here, unlike the badge arrangement: there is no labelled
+            button wrapped around it to do the announcing. */}
+        <Avatar name={name} src={src} size={size} />
+
+        <Button
+          variant="secondary"
+          size="sm"
+          role={itemRole}
+          loading={busy}
+          loadingLabel="Saving"
+          disabled={disabled}
+          onClick={() => inputRef.current?.click()}
+        >
+          {uploadLabel}
+        </Button>
+
+        {src && onRemove ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            role={itemRole}
+            disabled={disabled || busy}
+            onClick={onRemove}
+          >
+            {removeLabel}
+          </Button>
+        ) : null}
+
+        {input}
+        {live}
+      </div>
+    )
+  }
+
   return (
     <div className={`${styles.wrap} ${className}`}>
       <button
@@ -128,22 +207,8 @@ export default function AvatarUpload({
         </span>
       </button>
 
-      <VisuallyHidden>
-        <input
-          ref={inputRef}
-          type="file"
-          accept={accept.join(',')}
-          aria-label={action}
-          disabled={disabled || busy}
-          tabIndex={-1}
-          onChange={pick}
-        />
-      </VisuallyHidden>
-
-      {/* Announced, because the change itself is silent to a screen reader. */}
-      <VisuallyHidden aria-live="polite">
-        {busy ? 'Saving your photo' : status === 'done' ? 'Photo updated' : ''}
-      </VisuallyHidden>
+      {input}
+      {live}
     </div>
   )
 }

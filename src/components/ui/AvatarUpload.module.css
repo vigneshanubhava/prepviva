@@ -62,6 +62,14 @@
 
 .badgeDone { background: var(--success-solid); }
 
+/* ---- named buttons beside the picture, for a settings row ---- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-radius: var(--radius-full);
+}
+
 /* ---- dragged over ---- */
 .dragging { outline: 2px dashed var(--border-focus); outline-offset: 3px; }
 
