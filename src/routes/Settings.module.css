@@ -303,6 +303,8 @@ label.rowTitle { cursor: pointer; }
   background: var(--screen-row-hover);
 }
 
+/* on the panel, not in the photo row: the gap the panel body already sets is
+   the space under it */
 .identityHead { display: flex; align-items: center; gap: var(--space-4); }
 
 .identityText { flex: 1 1 auto; min-width: 0; }

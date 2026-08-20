@@ -107,20 +107,23 @@ export function ProfileSection() {
       />
 
       <Panel icon="userCheck" title="Your details" sub="Shown on your reports and in the app header.">
-        <div className={styles.identity}>
-          <div className={styles.identityHead}>
-            <div className={styles.identityText}>
-              <p className={styles.identityName}>{account.name}</p>
-              <p className={styles.identityMeta}>
-                {summary.plan.name} &middot; member since {formatDate(account.signedUpOn)}
-              </p>
-            </div>
-
-            <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
-              {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
-            </Badge>
+        {/* Who the account is, on the panel itself — a fill around it made a
+            row out of a heading, and the only thing in this panel that needs
+            a row of its own is the photograph. */}
+        <div className={styles.identityHead}>
+          <div className={styles.identityText}>
+            <p className={styles.identityName}>{account.name}</p>
+            <p className={styles.identityMeta}>
+              {summary.plan.name} &middot; member since {formatDate(account.signedUpOn)}
+            </p>
           </div>
 
+          <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
+            {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
+          </Badge>
+        </div>
+
+        <div className={styles.identity}>
           {/* Named buttons rather than the menu's camera badge: this is the
               screen with room to say what each one does, and the only one
               where deleting the photograph has to be possible. Same file
