@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import AppLayout from '../components/AppLayout.jsx'
-import { Button, Icon, useToast } from '../components/ui/index.js'
+import { Button, Icon } from '../components/ui/index.js'
 import {
   OrderPanel,
   StepContext,
@@ -19,6 +19,7 @@ import {
   focusTarget,
   isCircuit,
   minutesOf,
+  summaryRows,
   trackConfig,
 } from '../data/practice.js'
 import styles from './SessionConfig.module.css'
@@ -63,7 +64,6 @@ export default function SessionConfig() {
   const navigate = useNavigate()
   const location = useLocation()
   const { account, summary, spend } = useAccount()
-  const { toast } = useToast()
 
   const config = trackConfig(trackId)
   const plan = location.state?.plan ?? null
@@ -140,18 +140,26 @@ export default function SessionConfig() {
   }
 
   /**
-   * Starting spends the credits. The interview room is not built in this
-   * prototype, so this lands back on the dashboard — where the spend is
-   * visible in the same figures the session was priced against.
+   * Starting spends the credits and hands the session to the room.
+   *
+   * The room itself is not built — no model to ask the questions, nothing to
+   * record — but it is a screen now rather than a bounce back to the dashboard
+   * with an apology in a toast. What was configured travels with it in router
+   * state, so the one place the prototype stops is also the place that can
+   * still show what it stopped holding.
    */
   function start() {
     spend(cost)
-    toast({
-      tone: 'success',
-      title: `${config.name} session started`,
-      body: `${cost} credits used — ${balance - cost} left. The interview room is not built in this prototype, so you are back on the dashboard.`,
+    navigate(`/practice/${config.id}/room`, {
+      // replace: Back from the room returns to the track picker, not to a
+      // configurator whose credits have already been taken
+      replace: true,
+      state: {
+        summary: summaryRows({ config, ctx, format, picked, circuit }),
+        cost,
+        left: balance - cost,
+      },
     })
-    navigate('/dashboard')
   }
 
   const contextValid = config.context.filter((f) => f.required).every((f) => ctx[f.key])
@@ -200,8 +208,10 @@ export default function SessionConfig() {
 
           <p className={styles.meter} data-live={meter.live || undefined}>
             <span className={styles.meterLabel}>{meter.label}</span>
-            <span className={styles.meterValue}>{meter.value}</span>
-            <span className={styles.meterBalance}>{balance} in your balance</span>
+            <span className={styles.meterFigure}>
+              <span className={styles.meterValue}>{meter.value}</span>
+              <span className={styles.meterBalance}>{balance} in your balance</span>
+            </span>
           </p>
         </header>
 
@@ -321,7 +331,10 @@ export default function SessionConfig() {
               </Button>
 
               <div className={styles.actionsEnd}>
-                {blockedBecause ? <p className={styles.blocked}>{blockedBecause}</p> : null}
+                {/* the rail carries this on a wide screen */}
+                {blockedBecause ? (
+                  <p className={`${styles.blocked} ${styles.blockedInline}`}>{blockedBecause}</p>
+                ) : null}
                 <Button
                   disabled={!canContinue}
                   onClick={() => (step === 4 ? start() : go(step + 1))}
@@ -345,6 +358,7 @@ export default function SessionConfig() {
             step={step}
             circuit={circuit}
             move={move}
+            blocked={blockedBecause}
           />
         </div>
       </div>

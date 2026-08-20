@@ -78,12 +78,11 @@
   flex-direction: column;
   gap: 2px;
   margin: 0;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border: 1px solid var(--screen-card-bd);
   border-radius: var(--radius-lg);
   background: var(--screen-card-bg);
   box-shadow: var(--screen-card-shadow);
-  text-align: end;
 }
 
 .meter[data-live] { border-color: var(--screen-accent); }
@@ -92,6 +91,15 @@
   font-size: var(--text-xs);
   line-height: 18px;
   color: var(--screen-meta);
+}
+
+/* The figure and the balance share a line: three stacked lines stood taller
+   than the back button and title opposite them, and the balance only ever
+   qualifies the figure it sits next to. */
+.meterFigure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
 }
 
 .meterValue {
@@ -103,18 +111,27 @@
 }
 
 .meterBalance {
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--screen-count-bg);
   font-size: var(--text-xs);
   line-height: 18px;
-  color: var(--screen-meta);
+  color: var(--screen-count-text);
+  white-space: nowrap;
 }
 
 /* ---- stepper ---- */
+/* The stepper is the header's last row, so the rule that separates the header
+   from the step it is introducing sits under it — the same treatment the
+   report's jump links carry. */
 .stepper {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0;
   padding: 0;
+  padding-block-end: var(--space-5);
+  border-bottom: 1px solid var(--border-default);
   list-style: none;
 }
 
@@ -210,7 +227,15 @@
 }
 
 /* Every group heading inside a panel reads the same, whether it is this
-   screen's own fieldset or a library control's legend. */
+   screen's own fieldset or a library control's legend.
+
+   A <legend> is laid out *on* its fieldset's border, which on a panel with a
+   visible card edge reads as the heading escaping the box. Only the Duration
+   fieldset had one; it now carries a visually-hidden legend for the group's
+   name and an `.eyebrow` paragraph for the heading you can see — the pattern
+   the focus step already used. Floating the legend instead was tried and blew
+   the step's width out: a percentage width on a legend resolves against the
+   fieldset's border box, not its content box. */
 .legend,
 .panel legend {
   padding: 0;
@@ -230,10 +255,14 @@
   color: var(--brand);
 }
 
+/* One field per row. Side by side, three questions of different weights —
+   a required role, a required grade, an optional location — read as one wide
+   thing to fill in; stacked, each is answered before the next is looked at. */
 .fields {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
+  max-inline-size: 520px;
 }
 
 /* ---- step 2: the size cards ---- */
@@ -604,6 +633,28 @@
   text-align: end;
 }
 
+/* Beside the button only when the rail is not on screen to carry it — the
+   same wide/narrow split `.orderInline` uses. A disabled Continue never loses
+   the reason it is disabled. */
+.blockedInline { display: none; }
+
+/* the rail's copy: a card under Your session, in the warning's own colours */
+.railBlocked {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--warning-bd);
+  border-radius: var(--radius-lg);
+  background: var(--warning-bg);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--warning-fg);
+}
+
+.railBlocked > svg { flex: 0 0 auto; margin-block-start: 1px; }
+.railBlockedText { margin: 0; min-width: 0; }
+
 .foot {
   margin: 0;
   font-size: var(--text-xs);
@@ -674,6 +725,7 @@
   .body { grid-template-columns: minmax(0, 1fr); }
   .rail { display: none; }
   .orderInline { display: block; }
+  .blockedInline { display: block; }
   .focusGrid { grid-template-columns: minmax(0, 1fr); }
 }
 

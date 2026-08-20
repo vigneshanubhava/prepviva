@@ -430,3 +430,28 @@ export function practicePlan({ trackId, dims = [], profile = null, intent = 'tar
     missing: config.context.filter((f) => f.required && !ctx[f.key]).map((f) => f.label),
   }
 }
+
+/**
+ * What a configured session says it is, as rows.
+ *
+ * It lives here rather than in the Ready step because two screens state the
+ * same thing — the confirmation you agree to, and the room you land in once
+ * the credits are spent — and a second copy is a second chance for the two to
+ * describe different sessions. `step` is which step owns the answer, for the
+ * Edit link the confirmation carries and the room does not.
+ */
+export function summaryRows({ config, ctx, format, picked, circuit }) {
+  return [
+    ...config.context.filter((f) => ctx[f.key]).map((f) => ({ k: f.label, v: ctx[f.key], step: 1 })),
+    {
+      k: circuit ? 'Circuit' : 'Length',
+      v: circuit
+        ? `${format.stations} stations \u00d7 ${format.stationLength} min`
+        : `${format.duration} minutes`,
+      step: 2,
+    },
+    { k: 'Mode', v: MODES.find((m) => m.value === format.mode)?.label, step: 2 },
+    { k: 'Examiner', v: DIFFICULTY.find((d) => d.value === format.difficulty)?.label, step: 2 },
+    { k: circuit ? 'Stations' : 'Focus areas', v: picked.join(' \u00b7 '), step: 3 },
+  ]
+}

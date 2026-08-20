@@ -82,6 +82,7 @@ No backend, no localStorage/sessionStorage. `npm run dev` → http://localhost:5
 | `/dashboard` | Dashboard — greeting, track switcher, practise-next / readiness / consistency, global figures, competencies and recent sessions | — (flow from `../interview-prototype`, look from a supplied mock) |
 | `/practice` | Practice — the CV gate, then the track picker | — (flow from `../interview-prototype`) |
 | `/practice/:trackId` | Session configurator — Context, Format, Focus, Ready, with the summary rail | — (flow from `../interview-prototype`) |
+| `/practice/:trackId/room` | Where Start lands — the interview room, held as a placeholder that says so | — |
 | `/sessions` | My Sessions — every session across every track, newest first | — (flow from `../interview-prototype`) |
 | `/sessions/:trackId/:index` | One session's report — six zones, in reading order | — (flow from `../interview-prototype`) |
 | `/performance` | Performance — readiness over time, the full competency breakdown, session-by-session, and the compare view | — (flow from `../interview-prototype`) |
@@ -322,6 +323,12 @@ Things worth not breaking:
 
 - **the credit meter changes state, not just its number**: a range at Context,
   live at Format (the only step where the price moves), locked after.
+- **the header carries a rule under the stepper**, and the credit meter beside
+  the title is two lines — label, then the figure with the balance as a pill —
+  so it stands the same height as the back button and title opposite it.
+- **the reason a disabled Continue is disabled rides the rail**, under "Your
+  session", and drops back beside the button below 1100px where the rail is not
+  on screen (`.blockedInline`, the same wide/narrow split `.orderInline` uses).
 - **the wall is never just a disabled button.** An option that costs more than
   the balance says how much is missing, and the banner offers both ways out —
   top up, or drop to the cheapest option that fits. Every disabled Continue has
@@ -609,6 +616,14 @@ the mark exists only as a 501×585 bitmap. Re-run that if the mark ever changes;
   every stacked card 200px tall — on Settings and on first-run setup both. The
   media query now releases it with `flex: 0 0 auto`. Check any `flex-basis`
   that survives a `flex-direction` change.
+- **A `<legend>` renders *on* its fieldset's border**, so on a panel with a
+  visible card edge the heading looks like it has escaped the box — which is
+  exactly how the Format step's "Duration" read. The fix is a visually-hidden
+  legend for the group's name plus a normal `.eyebrow` paragraph for the
+  heading, the pattern the focus step already used. **Do not float the legend
+  instead**: `float + inline-size: 100%` resolves the percentage against the
+  fieldset's *border* box, and it blew the whole step 90px wider than its
+  column.
 - **Paint over a native input has to be `pointer-events: none`.** `Switch`
   drew its track over the input without it, so a click on the visible control
   was swallowed — a real user still hit the wrapping `<label>`, but a test
@@ -730,11 +745,15 @@ Anything beyond those is new.
   performance" and "See all" go there, and its session rows link to `/sessions`
   rather than to a report screen, which the reference prototype has and this one
   does not.
-- **The interview room is not built.** Starting a session at the end of the
-  configurator spends its credits, raises a toast saying so, and returns to the
-  dashboard — where the spend is visible in the same figures the session was
-  priced against. It is the one place the prototype takes an action it cannot
-  finish, and the toast says as much rather than pretending.
+- **The interview room is not built** — there is no model behind this prototype
+  to ask the questions and nothing to record. Starting spends the credits and
+  lands on `/practice/:trackId/room` (`SessionRoom.jsx`), which says plainly
+  that the room is where the session *will* run and repeats the configuration
+  that was just paid for. It replaced a bounce back to the dashboard with an
+  apology in a toast, which read as the flow failing rather than ending. The
+  configuration travels in router state, and `navigate` **replaces** the entry,
+  so Back returns to the track picker rather than to a configurator whose
+  credits have already been taken.
 - **Signup's terms error does not clear until the next submit.** `Login` clears
   its error as soon as you type; `Signup` recalculates only on submit, so a
   stale "Accept the terms to continue" sits next to an already-ticked box.

@@ -19,6 +19,7 @@ import Pricing from './routes/Pricing.jsx'
 import Report from './routes/Report.jsx'
 import ScrollToTop from './routes/ScrollToTop.jsx'
 import SessionConfig from './routes/SessionConfig.jsx'
+import SessionRoom from './routes/SessionRoom.jsx'
 import Sessions from './routes/Sessions.jsx'
 import Settings from './routes/Settings.jsx'
 import Signup from './routes/Signup.jsx'
@@ -51,6 +52,8 @@ export default function App() {
         {/* practice: the CV gate and track picker, then the configurator */}
         <Route path="/practice" element={<Practice />} />
         <Route path="/practice/:trackId" element={<SessionConfig />} />
+        {/* where Start lands — the room is not built, and says so */}
+        <Route path="/practice/:trackId/room" element={<SessionRoom />} />
         <Route path="/sessions" element={<Sessions />} />
         <Route path="/sessions/:trackId/:index" element={<Report />} />
         <Route path="/performance" element={<Performance />} />

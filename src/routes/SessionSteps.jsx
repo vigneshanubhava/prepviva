@@ -7,7 +7,7 @@ import {
   Input,
   Select,
 } from '../components/ui/index.js'
-import { DIFFICULTY, MODES, costOf, isCircuit } from '../data/practice.js'
+import { DIFFICULTY, MODES, costOf, isCircuit, summaryRows } from '../data/practice.js'
 import styles from './SessionConfig.module.css'
 
 /**
@@ -102,7 +102,10 @@ export function StepFormat({ config, format, setFormat, setStations, cost, balan
       </p>
 
       <fieldset className={styles.panel}>
-        <legend className={styles.legend}>{circuit ? 'Stations' : 'Duration'}</legend>
+        {/* the group's name for a screen reader; the heading you can see is the
+            paragraph under it, because a <legend> renders on the card's edge */}
+        <legend className={styles.visuallyHidden}>{circuit ? 'Stations' : 'Duration'}</legend>
+        <p className={styles.eyebrow}>{circuit ? 'Stations' : 'Duration'}</p>
 
         <div className={styles.sizes}>
           {sizes.map((size) => {
@@ -344,19 +347,7 @@ export function OrderPanel({ config, picked, move, circuit, className = '' }) {
    so changing one answer never means re-answering the rest.
    ────────────────────────────────────────────────────────────────────── */
 export function StepReady({ config, ctx, format, picked, cost, balance, consent, setConsent, onEdit, circuit, resume }) {
-  const rows = [
-    ...config.context.filter((f) => ctx[f.key]).map((f) => ({ k: f.label, v: ctx[f.key], step: 1 })),
-    {
-      k: circuit ? 'Circuit' : 'Length',
-      v: circuit
-        ? `${format.stations} stations × ${format.stationLength} min`
-        : `${format.duration} minutes`,
-      step: 2,
-    },
-    { k: 'Mode', v: MODES.find((m) => m.value === format.mode)?.label, step: 2 },
-    { k: 'Examiner', v: DIFFICULTY.find((d) => d.value === format.difficulty)?.label, step: 2 },
-    { k: circuit ? 'Stations' : 'Focus areas', v: picked.join(' · '), step: 3 },
-  ]
+  const rows = summaryRows({ config, ctx, format, picked, circuit })
 
   return (
     <div className={styles.step}>
@@ -410,7 +401,7 @@ export function StepReady({ config, ctx, format, picked, cost, balance, consent,
    at step 4. Unanswered rows show as em-dashes rather than disappearing, so
    what is still to come has a shape.
    ────────────────────────────────────────────────────────────────────── */
-export function SummaryRail({ config, ctx, format, picked, step, circuit, move }) {
+export function SummaryRail({ config, ctx, format, picked, step, circuit, move, blocked }) {
   const rows = [
     ...config.context.map((f) => ({ k: f.label, v: ctx[f.key] })),
     {
@@ -462,6 +453,17 @@ export function SummaryRail({ config, ctx, format, picked, step, circuit, move }
           </div>
         ) : null}
       </div>
+
+      {/* Why Continue is off, under the session it is refusing to start. It
+          rides the rail on a wide screen and sits beside the button on a narrow
+          one (`.blockedInline`), so the reason is never off-screen from the
+          control it explains. */}
+      {blocked ? (
+        <p className={styles.railBlocked}>
+          <Icon name="alertTriangle" size="14px" strokeWidth={1.6} />
+          <span className={styles.railBlockedText}>{blocked}</span>
+        </p>
+      ) : null}
     </aside>
   )
 }
