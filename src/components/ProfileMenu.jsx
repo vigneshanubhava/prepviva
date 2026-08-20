@@ -26,7 +26,7 @@ const THEMES = [
 
 export default function ProfileMenu({ name, email }) {
   const [open, setOpen] = useState(false)
-  const { account, savePhoto, removePhoto } = useAccount()
+  const { account, savePhoto } = useAccount()
   const [photoError, setPhotoError] = useState(null)
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
@@ -55,8 +55,14 @@ export default function ProfileMenu({ name, email }) {
     }
   }, [open])
 
+  /* The picture is in the roving list, but it is not where the menu should
+     open: a focus ring around the photograph reads as an edit already under
+     way. Opening lands on the first link instead. */
   useEffect(() => {
-    if (open) menuRef.current?.querySelector('[role^="menuitem"]')?.focus()
+    if (!open) return
+    const menu = menuRef.current
+    const first = menu?.querySelector('[data-menu-first]') || menu?.querySelector('[role^="menuitem"]')
+    first?.focus()
   }, [open])
 
   function moveFocus(step) {
@@ -118,9 +124,12 @@ export default function ProfileMenu({ name, email }) {
               person who never agreed to be here.
 
               The picture is the button — a camera badge on the circle, the
-              browser's own file dialog behind it. A link reading "Add a photo"
-              said the same thing in more words and further from the thing it
-              changed. */}
+              browser's own file dialog behind it, and nothing else. A link
+              reading "Add a photo" said the same thing in more words and
+              further from the thing it changed, and a second link to remove
+              one made a four-line block out of a picture. Picking again
+              replaces; removing lives in Settings, with the rest of the
+              account. */}
           <div className={styles.account}>
             <AvatarUpload
               className={styles.photo}
@@ -135,11 +144,6 @@ export default function ProfileMenu({ name, email }) {
                 return savePhoto(file).then(() =>
                   toast({ tone: 'success', title: 'Photo updated' }),
                 )
-              }}
-              onRemove={() => {
-                setPhotoError(null)
-                removePhoto()
-                toast({ tone: 'success', title: 'Photo removed' })
               }}
               onReject={(message) => setPhotoError(message)}
             />
@@ -180,7 +184,13 @@ export default function ProfileMenu({ name, email }) {
 
           <div className={styles.links}>
             {/* Figma: "Admin" */}
-            <button type="button" role="menuitem" className={styles.link} onClick={() => go('/settings')}>
+            <button
+              type="button"
+              role="menuitem"
+              data-menu-first
+              className={styles.link}
+              onClick={() => go('/settings')}
+            >
               <Icon name="settings" size="var(--profile-icon)" strokeWidth={1.5} />
               Settings
             </button>

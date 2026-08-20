@@ -532,7 +532,7 @@ export default function KitchenSink() {
         <Section
           id="avatarupload"
           title="AvatarUpload"
-          note="The picture is the button: a camera badge on the circle, the browser's own file dialog behind it, and a drop target for a dragged file. Same extension and size checks as FileDrop — they share fileRules.js. The badge carries the state: camera, spinner while the image is squared, tick when it is kept."
+          note="The picture is the button: a camera badge on the circle, the browser's own file dialog behind it, and a drop target for a dragged file. One control and nothing under it — a caption or a second link turns a picture into a block and pushes whatever sits beside it out of line. Same extension and size checks as FileDrop, from fileRules.js. The badge carries the state: camera, spinner while the image is squared, tick when it is kept."
         >
           <div className={styles.panel}>
             <div className={styles.row}>
@@ -541,12 +541,10 @@ export default function KitchenSink() {
                 src={photo?.url}
                 accept={['.png', '.jpg', '.jpeg', '.webp']}
                 maxMB={5}
-                hint="JPG, PNG or WEBP · up to 5MB"
                 onSelect={(file) => {
                   setPhotoError(null)
                   return readPhoto(file).then(setPhoto)
                 }}
-                onRemove={() => setPhoto(null)}
                 onReject={(message) => setPhotoError(message)}
               />
 

@@ -68,7 +68,7 @@ const PHONE = /^[+\d][\d\s()-]{6,}$/
 const LINKEDIN = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/.+/i
 
 export function ProfileSection() {
-  const { account, summary, saveDetails, savePhoto, removePhoto } = useAccount()
+  const { account, summary, saveDetails, savePhoto } = useAccount()
   const { toast } = useToast()
 
   const committed = useMemo(
@@ -110,7 +110,9 @@ export function ProfileSection() {
         <div className={styles.identity}>
           {/* The picture is the picker: a camera badge on the circle, the file
               dialog behind it, and the same two checks every other attach here
-              makes. */}
+              makes. Nothing sits under it: the accepted types and the size
+              limit are the disclosure's job at the foot of the panel, and a
+              caption here would push the name and the badge out of line. */}
           <AvatarUpload
             className={styles.identityPhoto}
             name={account.name}
@@ -118,15 +120,9 @@ export function ProfileSection() {
             size="lg"
             accept={PHOTO_TYPES}
             maxMB={PHOTO_MAX_MB}
-            hint={`JPG, PNG or WEBP · up to ${PHOTO_MAX_MB}MB`}
             onSelect={(file) => {
               setPhotoError(null)
               return savePhoto(file).then(() => toast({ tone: 'success', title: 'Photo updated' }))
-            }}
-            onRemove={() => {
-              setPhotoError(null)
-              removePhoto()
-              toast({ tone: 'success', title: 'Photo removed' })
             }}
             onReject={(message) => setPhotoError(message)}
           />
@@ -191,8 +187,8 @@ export function ProfileSection() {
         </div>
 
         <Disclosure>
-          Your photo is prepared in this browser — squared to 256px and kept on this device. Without
-          one, your initials stand in throughout PrepViva.
+          JPG, PNG or WEBP, up to {PHOTO_MAX_MB}MB. Your photo is prepared in this browser — squared
+          to 256px and kept on this device. Without one, your initials stand in throughout PrepViva.
         </Disclosure>
       </Panel>
 

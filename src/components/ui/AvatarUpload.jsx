@@ -22,6 +22,13 @@ import styles from './AvatarUpload.module.css'
  * file that lands anywhere else is a browser navigation, so the target says so
  * with a ring while you drag.
  *
+ * There is one control and nothing else. Picking again replaces what is
+ * there, so "Replace" would be a second button for what the badge already
+ * does, and a line of type under the circle — a size limit, a remove link —
+ * turns a picture into a four-line block and pushes everything beside it out
+ * of line. Whatever the screen has to say about the file, it says where its
+ * own copy lives.
+ *
  * `onSelect` may return a promise; that is what drives the spinner. Rejections
  * — a bad type, an oversize file, an unreadable image — come back through
  * `onReject` rather than being drawn from in here, so the screen keeps its own
@@ -34,14 +41,10 @@ export default function AvatarUpload({
   accept = [],
   maxMB,
   onSelect,
-  /** Rendered only when there is a photograph to remove. */
-  onRemove,
   onReject,
-  removeLabel = 'Remove photo',
-  /** Both buttons take this role, so the control can join a menu's roving
+  /** The button takes this role, so the control can join a menu's roving
       focus rather than sitting outside the list a screen reader reads. */
   itemRole,
-  hint,
   disabled = false,
   className = '',
 }) {
@@ -124,20 +127,6 @@ export default function AvatarUpload({
           )}
         </span>
       </button>
-
-      {hint ? <p className={styles.hint}>{hint}</p> : null}
-
-      {src && onRemove ? (
-        <button
-          type="button"
-          role={itemRole}
-          className={styles.remove}
-          disabled={disabled || busy}
-          onClick={onRemove}
-        >
-          {removeLabel}
-        </button>
-      ) : null}
 
       <VisuallyHidden>
         <input
