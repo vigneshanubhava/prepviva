@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Billing from './routes/Billing.jsx'
 import Checkout from './routes/Checkout.jsx'
+import Dashboard from './routes/Dashboard.jsx'
 import EmailCanceled from './routes/EmailCanceled.jsx'
 import EmailMagicLink from './routes/EmailMagicLink.jsx'
 import GeneratingLink from './routes/GeneratingLink.jsx'
@@ -12,8 +13,14 @@ import Login from './routes/Login.jsx'
 import ManagePlan from './routes/ManagePlan.jsx'
 import NotBuilt from './routes/NotBuilt.jsx'
 import PreparingAccount from './routes/PreparingAccount.jsx'
+import Practice from './routes/Practice.jsx'
+import Performance from './routes/Performance.jsx'
 import Pricing from './routes/Pricing.jsx'
+import Report from './routes/Report.jsx'
 import ScrollToTop from './routes/ScrollToTop.jsx'
+import SessionConfig from './routes/SessionConfig.jsx'
+import Sessions from './routes/Sessions.jsx'
+import Settings from './routes/Settings.jsx'
 import Signup from './routes/Signup.jsx'
 import Welcome from './routes/Welcome.jsx'
 
@@ -40,6 +47,16 @@ export default function App() {
         <Route path="/welcome/setup" element={<Onboarding />} />
 
         {/* signed-in app */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* practice: the CV gate and track picker, then the configurator */}
+        <Route path="/practice" element={<Practice />} />
+        <Route path="/practice/:trackId" element={<SessionConfig />} />
+        <Route path="/sessions" element={<Sessions />} />
+        <Route path="/sessions/:trackId/:index" element={<Report />} />
+        <Route path="/performance" element={<Performance />} />
+        {/* settings — one route per section, so a section can be linked */}
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/:section" element={<Settings />} />
         <Route path="/billing" element={<Billing />} />
         <Route path="/billing/manage-plan" element={<ManagePlan />} />
         {/* the cancellation confirmation, in the same simulated inbox */}

@@ -66,7 +66,7 @@
   gap: var(--space-2);                        /* Figma: 8px */
   height: var(--space-8);                     /* Figma: 32px */
   padding: 0 var(--space-4);                  /* Figma: 16px */
-  border: 1px solid var(--billing-hero-bd);
+  border: 1px solid var(--app-hero-bd);
   border-radius: var(--radius-full);          /* Figma: 9999px */
   background: transparent;
   font-family: var(--font-sans);

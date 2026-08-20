@@ -27,10 +27,10 @@
   flex-direction: column;
   gap: 6px;                                   /* Figma: 6px */
   min-height: var(--billing-hero-h);          /* Figma: 206px */
-  padding: var(--space-6) var(--billing-hero-pad);  /* Figma: 24px 40px */
+  padding: var(--space-6) var(--app-hero-pad);  /* Figma: 24px 40px */
   border-radius: var(--radius-md) var(--radius-md) 0 0;
-  background: linear-gradient(to top, var(--billing-hero-from), var(--billing-hero-to));
-  color: var(--billing-hero-text);
+  background: linear-gradient(to top, var(--app-hero-from), var(--app-hero-to));
+  color: var(--app-hero-text);
 }
 
 .heroTop {
@@ -67,7 +67,7 @@
   justify-content: center;
   gap: var(--space-2);                        /* Figma: 8px */
   padding: var(--space-2) var(--space-4);     /* Figma: 8px 16px */
-  border: 1px solid var(--billing-hero-bd);
+  border: 1px solid var(--app-hero-bd);
   border-radius: var(--radius-full);          /* Figma: 9999px */
   font-size: var(--text-xs);                  /* Figma: 12px */
   color: inherit;
@@ -75,8 +75,8 @@
   white-space: nowrap;
 }
 
-.heroBtn:hover { background: var(--billing-hero-bd); }
-.heroBtn:focus-visible { outline: 2px solid var(--billing-hero-text); outline-offset: 2px; }
+.heroBtn:hover { background: var(--app-hero-bd); }
+.heroBtn:focus-visible { outline: 2px solid var(--app-hero-text); outline-offset: 2px; }
 
 /* ---- stat cards ----
    Figma floats these over the hero: the row sits at y=106 inside a 206px hero,

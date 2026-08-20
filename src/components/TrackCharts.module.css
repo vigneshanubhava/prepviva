@@ -1,0 +1,135 @@
+/* The track charts, shared by the dashboard, performance and the report. Every one inherits --screen-accent from the
+   section it is drawn in — see Dashboard.module.css — and falls back to the
+   brand if it is ever used outside one. */
+
+/* ---- sparkline ---- */
+.spark {
+  display: block;
+  flex: 0 0 auto;
+  width: var(--dash-spark-w);
+  height: var(--dash-spark-h);
+  max-width: none;                 /* Tailwind preflight caps SVGs at their box */
+  overflow: visible;
+  color: var(--screen-accent, var(--brand));
+}
+
+/* ---- heatmap ---- */
+.heat {
+  display: flex;
+  gap: var(--dash-heat-gap);
+  color: var(--screen-accent, var(--brand));
+}
+
+.heatWeek {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-heat-gap);
+}
+
+.heatCell {
+  display: block;
+  width: var(--dash-heat-cell);
+  height: var(--dash-heat-cell);
+  border-radius: var(--radius-sm);
+  background: currentColor;
+  opacity: 0.1;                    /* a week with nothing in it */
+}
+
+.heatCell[data-level='1'] { opacity: 0.45; }
+.heatCell[data-level='2'] { opacity: 0.85; }
+
+/* ---- competency bars ---- */
+.bars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* the row's glyph, tinted the way its bar is */
+.barTile {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--screen-tile-sm);
+  height: var(--screen-tile-sm);
+  border: 1px solid var(--screen-tile-bd);
+  border-radius: var(--radius-md);
+  background: var(--screen-tile-bg);
+}
+
+.barTile[data-tone='strong'] { color: var(--success-fg); }
+.barTile[data-tone='mid']    { color: var(--screen-accent, var(--brand)); }
+.barTile[data-tone='weak']   { color: var(--warning-fg); }
+
+.barLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--screen-title);
+}
+
+.barTrack {
+  flex: 0 0 auto;
+  display: block;
+  width: var(--dash-bar-w);
+  height: var(--dash-bar-h);
+  border-radius: var(--radius-full);
+  background: var(--screen-track);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--screen-accent, var(--brand));
+}
+
+/* The only judgement the bars make: the two best and the two that need work. */
+.barFill[data-tone='strong'] { background: var(--success-solid); }
+.barFill[data-tone='weak']   { background: var(--warning-solid); }
+
+.barScore {
+  flex: 0 0 var(--dash-score-w);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  color: var(--screen-stat);
+}
+
+.bars[data-columns='1'] { grid-template-columns: minmax(0, 1fr); }
+
+/* ---- trend chart ---- */
+.trend {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  color: var(--screen-accent, var(--brand));
+}
+
+.grid { stroke: var(--screen-row-bd); stroke-width: 1; }
+.axis { fill: var(--screen-meta); font-size: 10px; }
+.area { fill: currentColor; opacity: 0.09; }
+
+.point { fill: var(--screen-card-bg); stroke: currentColor; stroke-width: 1.75; }
+.point[data-last] { fill: currentColor; }
+
+@media (max-width: 900px) {
+  .bars { grid-template-columns: minmax(0, 1fr); }
+}

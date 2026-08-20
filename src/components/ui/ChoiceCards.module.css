@@ -1,0 +1,101 @@
+.set { width: 100%; margin: 0; padding: 0; border: 0; min-width: 0; }
+
+.legend {
+  padding: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--text-primary);
+}
+
+.caption {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-muted);
+}
+
+.cards { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-3); }
+
+.row { flex-direction: row; flex-wrap: wrap; }
+.row .card { flex: 1 1 200px; }
+
+.card {
+  /* the accent the icon tile takes; each option can override it */
+  --choice-accent: var(--info-solid);
+  --choice-accent-bg: var(--info-bg);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+
+.card[data-accent='brand'] { --choice-accent: var(--brand); --choice-accent-bg: var(--brand-subtle-bg); }
+.card[data-accent='nhs']   { --choice-accent: var(--track-nhs); --choice-accent-bg: var(--track-nhs-bg); }
+.card[data-accent='uni']   { --choice-accent: var(--track-uni); --choice-accent-bg: var(--track-uni-bg); }
+.card[data-accent='pg']    { --choice-accent: var(--track-pg);  --choice-accent-bg: var(--track-pg-bg); }
+
+.card:hover { border-color: var(--choice-accent); }
+
+.on { border-color: var(--choice-accent); background: var(--choice-accent-bg); }
+
+/* The input covers the card, so it carries both the hit area and the ring. */
+.native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.card:has(.native:focus-visible) { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--choice-accent-bg);
+  color: var(--choice-accent);
+}
+
+/* On a selected card the tile inverts, so it stays legible against the wash. */
+.on .icon { background: var(--surface-raised); }
+
+.text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.detail { font-size: var(--text-xs); line-height: 18px; color: var(--text-muted); }
+
+.tick { flex: none; margin-inline-start: auto; color: var(--choice-accent); }
+
+.disabled { opacity: 0.55; }
+.disabled .card, .disabled .native { cursor: not-allowed; }
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--danger-fg);
+}
+
+/* A row of cards stacks once each one would be narrower than its own text.
+   The basis has to be released with the axis: `flex: 1 1 200px` is 200px of
+   *width* in a row and 200px of *height* in a column, which stretched every
+   stacked card to 200px tall. */
+@media (max-width: 880px) {
+  .row { flex-direction: column; }
+  .row .card { flex: 0 0 auto; }
+}

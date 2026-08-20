@@ -12,6 +12,7 @@
   gap: var(--space-2);                       /* Figma: 8px */
   width: var(--app-nav-w);                   /* Figma: 150px item + 8px each side */
   padding: var(--space-2);                   /* Figma: 8px */
+  border-inline-end: 1px solid var(--app-nav-bd);
   background: var(--app-nav-bg);
   overflow: hidden;
   transition: width var(--duration-base) var(--ease-out);

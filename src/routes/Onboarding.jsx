@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Icon, Input, Select, VisuallyHidden, useToast } from '../components/ui/index.js'
+import {
+  Button,
+  ChipGroup,
+  ChoiceCards,
+  FileDrop,
+  Icon,
+  Input,
+  Select,
+  StepProgress,
+  useToast,
+} from '../components/ui/index.js'
 import AuthShell from '../components/AuthShell.jsx'
 import { useAccount } from '../data/AccountProvider.jsx'
 import {
@@ -27,10 +37,11 @@ import styles from './Onboarding.module.css'
  * every other out-of-app screen in PrepViva uses (1:2167, 1:2230, 1:3169), so
  * setup looks like the rest of this app rather than like the reference.
  *
- * The progress row, the choice cards and the CV drop zone are this screen's own
- * parts, drawn from PrepViva's tokens. The onboarding modal on artboards 15-17
- * is not used: a six-step form does not belong in a 594px dialog, and the
- * request was a page.
+ * The progress row, the choice cards, the chips and the CV drop zone were this
+ * screen's own parts and are now `StepProgress`, `ChoiceCards`, `ChipGroup` and
+ * `FileDrop` in the component library, shown in every state at /kitchen-sink.
+ * The onboarding modal on artboards 15-17 is not used: a six-step form does not
+ * belong in a 594px dialog, and the request was a page.
  *
  * Only the name is required. Everything after it can be skipped — the reference
  * calls the CV "deferred-required", asked for here and enforced before a first
@@ -38,6 +49,13 @@ import styles from './Onboarding.module.css'
  */
 
 const STEPS = ['about', 'track', 'date', 'worries', 'question', 'cv']
+
+/**
+ * Where setup lets you out — finished or skipped, the same place. The dashboard
+ * is where the magic link signs you in, and the track this flow collects is the
+ * one it opens on, so setup hands straight over to it.
+ */
+const LANDING = '/dashboard'
 
 export default function Onboarding() {
   const { account, onboard, skipOnboarding } = useAccount()
@@ -59,7 +77,6 @@ export default function Onboarding() {
   }))
 
   const headingRef = useRef(null)
-  const fileRef = useRef(null)
 
   const current = STEPS[step]
   const track = trackById(draft.track)
@@ -130,7 +147,7 @@ export default function Onboarding() {
       title: `You're all set, ${firstName(details.name || draft.name)}`,
       body: summarise(details),
     })
-    navigate('/billing')
+    navigate(LANDING)
   }
 
   function next() {
@@ -160,52 +177,17 @@ export default function Onboarding() {
   /** Setting up later means the app, with nothing kept. */
   function later() {
     skipOnboarding()
-    navigate('/billing')
-  }
-
-  function pickFile(event) {
-    const file = event.target.files?.[0]
-    event.target.value = ''      // so re-picking the same file still fires
-    if (!file) return
-
-    const named = file.name.toLowerCase()
-    if (!CV_TYPES.some((ext) => named.endsWith(ext))) {
-      set('resume', null)
-      setErrors({ resume: `That is not a CV we can read — use ${CV_TYPES.join(', ')}.` })
-      return
-    }
-    if (file.size > CV_MAX_MB * 1024 * 1024) {
-      set('resume', null)
-      setErrors({ resume: `That file is over ${CV_MAX_MB}MB. Try exporting it as a PDF.` })
-      return
-    }
-    set('resume', { name: file.name, size: file.size })
+    navigate(LANDING)
   }
 
   return (
     <AuthShell tone="signup" gap="apart" cardClassName={styles.shellCard}>
       <div className={styles.body}>
-        {/* ---- progress (the reference's segmented bar) ---- */}
-        <div className={styles.progress}>
-          <div className={styles.bar}
-            role="progressbar"
-            aria-valuemin={1}
-            aria-valuenow={step + 1}
-            aria-valuemax={STEPS.length}
-            aria-valuetext={`Step ${step + 1} of ${STEPS.length}: ${TITLES[current].title(draft, track)}`}
-          >
-            {STEPS.map((id, index) => (
-              <span
-                key={id}
-                className={`${styles.segment} ${index <= step ? styles.segmentOn : ''}`}
-                aria-hidden="true"
-              />
-            ))}
-          </div>
-          <p className={styles.count}>
-            Step {step + 1} of {STEPS.length}
-          </p>
-        </div>
+        <StepProgress
+          step={step}
+          total={STEPS.length}
+          label={TITLES[current].title(draft, track)}
+        />
 
         <div className={styles.step}>
           <h1 className={styles.h1} ref={headingRef} tabIndex={-1}>
@@ -258,6 +240,7 @@ export default function Onboarding() {
                   label: entry.label,
                   detail: entry.blurb,
                   icon: entry.icon,
+                  accent: entry.accent,
                 }))}
               />
 
@@ -283,7 +266,7 @@ export default function Onboarding() {
                 value={draft.dateState}
                 onChange={(value) => set('dateState', value)}
                 options={DATE_STATES.map((entry) => ({ value: entry.value, label: entry.label }))}
-                row
+                layout="row"
               />
 
               {draft.dateState === 'has-date' ? (
@@ -309,7 +292,7 @@ export default function Onboarding() {
                   label: entry.label,
                   detail: entry.detail,
                 }))}
-                row
+                layout="row"
               />
             </div>
           ) : null}
@@ -317,33 +300,13 @@ export default function Onboarding() {
           {/* ----------------------------------------------- 4. worries */}
           {current === 'worries' ? (
             <div className={styles.fields}>
-              <fieldset className={styles.chipSet}>
-                <legend className={styles.legend}>Choose any that apply</legend>
-                <div className={styles.chips}>
-                  {WORRIES.map((worry) => {
-                    const on = draft.worries.includes(worry)
-                    return (
-                      <label key={worry} className={`${styles.chip} ${on ? styles.chipOn : ''}`}>
-                        <input
-                          className={styles.chipInput}
-                          type="checkbox"
-                          checked={on}
-                          onChange={() =>
-                            set(
-                              'worries',
-                              on
-                                ? draft.worries.filter((w) => w !== worry)
-                                : [...draft.worries, worry],
-                            )
-                          }
-                        />
-                        {on ? <Icon name="check" size="14px" strokeWidth={2.5} /> : null}
-                        {worry}
-                      </label>
-                    )
-                  })}
-                </div>
-              </fieldset>
+              <ChipGroup
+                legend="Choose any that apply"
+                name="worries"
+                options={WORRIES}
+                value={draft.worries}
+                onChange={(next) => set('worries', next)}
+              />
 
               {/* The answers have to visibly do something, or the step reads as
                   a survey — the reference makes the same point. */}
@@ -388,57 +351,16 @@ export default function Onboarding() {
           {/* ---------------------------------------------------- 6. the CV */}
           {current === 'cv' ? (
             <div className={styles.fields}>
-              <div className={styles.drop}>
-                {draft.resume ? (
-                  <p className={styles.file}>
-                    <Icon name="checkCircle" size="16px" className={styles.fileIcon} />
-                    <span className={styles.fileName}>{draft.resume.name}</span>
-                    <span className={styles.fileSize}>{formatSize(draft.resume.size)}</span>
-                    <button
-                      type="button"
-                      className={styles.fileRemove}
-                      onClick={() => set('resume', null)}
-                    >
-                      Remove
-                      <VisuallyHidden> {draft.resume.name}</VisuallyHidden>
-                    </button>
-                  </p>
-                ) : (
-                  <>
-                    <span className={styles.dropIcon} aria-hidden="true">
-                      <Icon name="upload" size="24px" strokeWidth={1.5} />
-                    </span>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => fileRef.current?.click()}
-                    >
-                      Choose a file
-                    </Button>
-                    <p className={styles.dropHint}>
-                      {CV_TYPES.join(', ')} — up to {CV_MAX_MB}MB
-                    </p>
-                  </>
-                )}
-
-                <VisuallyHidden>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept={CV_TYPES.join(',')}
-                    onChange={pickFile}
-                    aria-label="CV or résumé"
-                    tabIndex={-1}
-                  />
-                </VisuallyHidden>
-              </div>
-
-              {errors.resume ? (
-                <p className={styles.error} role="alert">
-                  <Icon name="alertCircle" size="16px" />
-                  {errors.resume}
-                </p>
-              ) : null}
+              <FileDrop
+                label="CV or résumé"
+                hint={`${CV_TYPES.join(', ')} — up to ${CV_MAX_MB}MB`}
+                accept={CV_TYPES}
+                maxMB={CV_MAX_MB}
+                file={draft.resume}
+                error={errors.resume}
+                onSelect={(meta) => set('resume', meta)}
+                onReject={(message) => setErrors({ resume: `${message} Try exporting it as a PDF.` })}
+              />
 
               {/* Purpose, retention and deletion, on the screen that asks for
                   the document — the reference's GDPR line. */}
@@ -531,61 +453,8 @@ const TITLES = {
   },
 }
 
-/** Card-shaped radios: the reference's RadioCards, in this project's tokens. */
-function ChoiceCards({ legend, caption, name, options, value, onChange, error, row = false }) {
-  return (
-    <fieldset className={styles.cardSet}>
-      <legend className={styles.legend}>{legend}</legend>
-      {caption ? <p className={styles.caption}>{caption}</p> : null}
-
-      <div className={`${styles.cards} ${row ? styles.cardsRow : ''}`}>
-        {options.map((option) => {
-          const on = value === option.value
-          return (
-            <label key={option.value} className={`${styles.card} ${on ? styles.cardOn : ''}`}>
-              <input
-                className={styles.cardInput}
-                type="radio"
-                name={name}
-                value={option.value}
-                checked={on}
-                onChange={() => onChange(option.value)}
-              />
-              {option.icon ? (
-                <span className={styles.cardIcon} aria-hidden="true">
-                  <Icon name={option.icon} size="20px" strokeWidth={1.75} />
-                </span>
-              ) : null}
-              <span className={styles.cardText}>
-                <span className={styles.cardLabel}>{option.label}</span>
-                {option.detail ? (
-                  <span className={styles.cardDetail}>{option.detail}</span>
-                ) : null}
-              </span>
-              {on ? <Icon name="check" size="16px" strokeWidth={2.5} className={styles.cardTick} /> : null}
-            </label>
-          )
-        })}
-      </div>
-
-      {error ? (
-        <p className={styles.error} role="alert">
-          <Icon name="alertCircle" size="16px" />
-          {error}
-        </p>
-      ) : null}
-    </fieldset>
-  )
-}
-
 function firstName(full) {
   return (full || '').trim().split(' ')[0] || ''
-}
-
-function formatSize(bytes) {
-  const kb = bytes / 1024
-  if (kb < 1024) return `${Math.max(1, Math.round(kb))} KB`
-  return `${(kb / 1024).toFixed(1)} MB`
 }
 
 /** The toast states what was actually kept, like every other one in the app. */

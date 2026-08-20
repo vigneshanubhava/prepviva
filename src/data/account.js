@@ -12,6 +12,7 @@
  */
 import { PLANS, formatGBP } from './plans.js'
 import {
+  CREDITS_PER_PANEL,
   TRIAL_CREDITS,
   TRIAL_DAYS,
   addDays,
@@ -94,6 +95,7 @@ export const ACCOUNT = {
    */
   profile: {
     phone: null,
+    linkedin: null,       // a profile URL, collected in Settings rather than setup
     track: null,           // 'nhs' | 'university' | 'postgraduate'
     role: null,            // the role, course or stage within that track
     dateState: null,       // 'has-date' | 'waiting' | 'no-date'
@@ -332,9 +334,208 @@ export function completeOnboarding(account = ACCOUNT, details = {}) {
   }
 }
 
+/**
+ * The CV, attached later than setup — from the practice screen's gate, which is
+ * where the rule is actually enforced. No backend and no storage, so the name
+ * and size are kept and the bytes are not, exactly as setup does it.
+ */
+export function attachResume(account = ACCOUNT, file) {
+  if (!file) return account
+  return {
+    ...account,
+    profile: { ...account.profile, resume: { name: file.name, size: file.size } },
+  }
+}
+
+/**
+ * Your details, edited in Settings rather than collected by setup.
+ *
+ * The name is the account's, not a second copy of it — the header, the avatar
+ * and the dashboard greeting all read the one field, so renaming here renames
+ * everywhere. Email is deliberately not writable: it is the address the magic
+ * link is sent to, and changing it would need a round trip this prototype has
+ * no backend for. The screen says that rather than offering a field that lies.
+ */
+export function updateDetails(account = ACCOUNT, { name, phone, linkedin } = {}) {
+  return {
+    ...account,
+    name: name?.trim() || account.name,
+    profile: {
+      ...account.profile,
+      phone: phone?.trim() || null,
+      linkedin: linkedin?.trim() || null,
+    },
+  }
+}
+
+/**
+ * The answers first-run setup collected, edited afterwards — the gap
+ * doc/HANDOFF.md named. Same fields, same shape, same writer contract as
+ * `completeOnboarding`, so a profile edited here is indistinguishable from one
+ * that came out of the wizard.
+ *
+ * Changing the track moves the dashboard's primary track with it, which is the
+ * whole point: a candidate who switches from a university course to an NHS post
+ * should not have to keep reading a screen scoped to the wrong one.
+ */
+export function updateInterviewProfile(account = ACCOUNT, details = {}) {
+  const { track, role, dateState, interviewDate, experience, worries } = details
+  return {
+    ...account,
+    profile: {
+      ...account.profile,
+      track: track || null,
+      role: role || null,
+      dateState: dateState || null,
+      // a date only means anything against "I have a date"
+      interviewDate: dateState === 'has-date' ? interviewDate || null : null,
+      experience: experience || null,
+      worries: worries || [],
+    },
+  }
+}
+
+/**
+ * The CV, taken off the account. Practice gates on it, so this genuinely locks
+ * the practice screens again — which is why the button that calls it says so.
+ */
+export function removeResume(account = ACCOUNT) {
+  return { ...account, profile: { ...account.profile, resume: null } }
+}
+
+/**
+ * Starting a session spends its credits. Capped at the allowance so a balance
+ * can reach zero but never go under it — the configurator refuses to start a
+ * session it cannot pay for, and this is the backstop.
+ */
+export function spendCredits(account = ACCOUNT, credits = 0) {
+  const { allowance } = billingSummary(account).credits
+  return { ...account, creditsUsed: Math.min(allowance, account.creditsUsed + Math.max(0, credits)) }
+}
+
 /** Skipped, or dismissed. Nothing is collected; it does not ask again. */
 export function dismissOnboarding(account = ACCOUNT) {
   return { ...account, onboarded: true }
+}
+
+/* ── prototype controls ─────────────────────────────────────────────────────
+   doc/BRIEF.md asks for a panel that can force any state — trial day, plan,
+   payment status, credits — because most of the interesting screens cannot be
+   reached by using the app normally: you cannot run out of credits on demand,
+   and you certainly cannot cancel a subscription four times in a demo.
+
+   These are the writers behind it. They are deliberately blunt — no proration,
+   no invoices, no dates negotiated with anything — because they are answering
+   "show me this state", not "the user did this". The flows themselves
+   (`changePlan`, `cancelSubscription`) stay the honest path.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/** How long the account has been open, and what that makes it. */
+export const PROTOTYPE_PHASES = [
+  { value: 'trial-start', label: 'Day 1', days: 0, status: 'trialing', hint: 'Trial just started' },
+  { value: 'trial-end', label: 'Day 12', days: 11, status: 'trialing', hint: 'Trial nearly over' },
+  { value: 'first-charge', label: 'Just paid', days: TRIAL_DAYS + 1, status: 'active', hint: 'First charge taken' },
+  { value: 'long-standing', label: '8 mo', days: 250, status: 'active', hint: '8 months in — a run of invoices' },
+]
+
+/** What is left in the balance, named by what it stops you doing. */
+export const PROTOTYPE_CREDITS = [
+  { value: 'full', label: 'Full', hint: 'The whole allowance' },
+  { value: 'low', label: 'Low', hint: 'Not enough for a full panel' },
+  { value: 'critical', label: 'Last few', hint: 'Below the cheapest session' },
+  { value: 'empty', label: 'None', hint: 'Blocked', tone: 'warn' },
+]
+
+const CREDITS_LEFT = { full: Infinity, low: CREDITS_PER_PANEL - 1, critical: 2, empty: 0 }
+
+/** Clearing every field a cancellation left behind. */
+function uncancelled(account) {
+  return {
+    ...account,
+    canceledOn: null,
+    canceledFrom: null,
+    accessEnds: null,
+    cancelReason: null,
+    cancelNote: null,
+  }
+}
+
+export function forcePhase(account = ACCOUNT, value) {
+  const phase = PROTOTYPE_PHASES.find((p) => p.value === value)
+  if (!phase) return account
+  return {
+    ...uncancelled(account),
+    signedUpOn: addDays(new Date(), -phase.days),
+    // the period is read off the signup date again; a plan change would move it
+    periodStart: null,
+    pendingChange: null,
+    status: phase.status,
+  }
+}
+
+export function forcePlan(account = ACCOUNT, planId) {
+  if (!PLANS.some((plan) => plan.id === planId)) return account
+  return { ...account, planId, pendingChange: null }
+}
+
+/**
+ * trialing · active · canceled. A trial that has already run out is moved back
+ * inside its 14 days rather than left as a contradiction, and cancelling goes
+ * through the real writer so the dates it derives are the ones the screens read.
+ */
+export function forceStatus(account = ACCOUNT, status) {
+  if (status === 'canceled') {
+    return account.status === 'canceled'
+      ? account
+      : cancelSubscription(account, { reason: 'prototype' })
+  }
+
+  const base = uncancelled(account)
+  if (status !== 'trialing') return { ...base, status }
+
+  const expired = daysLeftInTrial(base.signedUpOn) <= 0
+  return {
+    ...base,
+    status: 'trialing',
+    signedUpOn: expired ? addDays(new Date(), -5) : base.signedUpOn,
+    periodStart: null,
+  }
+}
+
+export function forceCredits(account = ACCOUNT, level) {
+  const { allowance } = billingSummary(account).credits
+  const left = Math.min(allowance, CREDITS_LEFT[level] ?? allowance)
+  return { ...account, creditsUsed: allowance - left }
+}
+
+/** The CV the practice screen gates on, on or off the account. */
+export function forceCv(account = ACCOUNT, attached) {
+  return {
+    ...account,
+    profile: {
+      ...account.profile,
+      resume: attached ? account.profile.resume || { name: 'oliver-davies-cv.pdf', size: 184320 } : null,
+    },
+  }
+}
+
+/** Which of the credit steps the balance is currently sitting on. */
+export function creditLevelOf(account = ACCOUNT) {
+  const { remaining } = billingSummary(account).credits
+  if (remaining <= 0) return 'empty'
+  if (remaining <= CREDITS_LEFT.critical) return 'critical'
+  if (remaining <= CREDITS_LEFT.low) return 'low'
+  return 'full'
+}
+
+/** Which phase the account's age puts it in, for the panel's own selection. */
+export function phaseOf(account = ACCOUNT) {
+  const age = Math.round((Date.now() - account.signedUpOn.getTime()) / 86400000)
+  const trialing = account.status === 'trialing' || account.canceledFrom === 'trialing'
+  const candidates = PROTOTYPE_PHASES.filter((p) => (p.status === 'trialing') === trialing)
+  return (candidates.length ? candidates : PROTOTYPE_PHASES).reduce((best, p) =>
+    Math.abs(p.days - age) < Math.abs(best.days - age) ? p : best,
+  ).value
 }
 
 /** Every billing anniversary that has already been charged, oldest first. */

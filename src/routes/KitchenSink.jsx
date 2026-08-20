@@ -5,7 +5,10 @@ import {
   Button,
   Card,
   Checkbox,
+  ChipGroup,
+  ChoiceCards,
   EmptyState,
+  FileDrop,
   Icon,
   iconNames,
   Input,
@@ -15,6 +18,8 @@ import {
   Select,
   Skeleton,
   Spinner,
+  StepProgress,
+  Switch,
   Table,
   THead,
   TBody,
@@ -37,7 +42,12 @@ const SECTIONS = [
   ['input', 'Input'],
   ['select', 'Select'],
   ['checkbox', 'Checkbox'],
+  ['switch', 'Switch'],
   ['radio', 'Radio'],
+  ['choicecards', 'ChoiceCards'],
+  ['chipgroup', 'ChipGroup'],
+  ['filedrop', 'FileDrop'],
+  ['stepprogress', 'StepProgress'],
   ['badge', 'Badge'],
   ['card', 'Card'],
   ['banner', 'Banner'],
@@ -77,6 +87,7 @@ export default function KitchenSink() {
   const [selectValue, setSelectValue] = useState('')
   const [selectFilled, setSelectFilled] = useState('nhs')
   const [checked, setChecked] = useState(true)
+  const [reminders, setReminders] = useState(true)
   const [track, setTrack] = useState('nhs')
   const [tab, setTab] = useState('overview')
   const [pillTab, setPillTab] = useState('invoices')
@@ -84,6 +95,12 @@ export default function KitchenSink() {
   const [modalOpen, setModalOpen] = useState(false)
   const [dangerModalOpen, setDangerModalOpen] = useState(false)
   const [sortDir, setSortDir] = useState('asc')
+  const [choice, setChoice] = useState('nhs')
+  const [dateChoice, setDateChoice] = useState('has-date')
+  const [worries, setWorries] = useState(['Freezing up'])
+  const [cv, setCv] = useState(null)
+  const [cvError, setCvError] = useState(null)
+  const [wizardStep, setWizardStep] = useState(2)
 
   const trackOptions = [
     { value: 'nhs', label: 'NHS', description: 'Clinical and non-clinical posts' },
@@ -275,6 +292,39 @@ export default function KitchenSink() {
           </div>
         </Section>
 
+        {/* ------------------------------------------------------------ Switch */}
+        <Section
+          id="switch"
+          title="Switch"
+          note="A checkbox with role=switch — for a preference that applies, rather than a value that is submitted. The track and knob are paint over the native control."
+        >
+          <div className={styles.panel}>
+            <div className={styles.grid}>
+              <Switch label="Off" checked={false} onChange={() => {}} />
+              <Switch
+                label="On"
+                checked={reminders}
+                onChange={(event) => setReminders(event.target.checked)}
+              />
+              <Switch label="Hover" forceState="hover" checked={false} onChange={() => {}} />
+              <Switch label="Focus" forceState="focus" checked={false} onChange={() => {}} />
+              <Switch label="Small" size="sm" checked onChange={() => {}} />
+              <Switch label="Disabled" disabled checked={false} onChange={() => {}} />
+              <Switch label="Disabled on" disabled checked onChange={() => {}} />
+              <Switch
+                label="With description"
+                description="An hour before a session you have booked"
+                checked
+                onChange={() => {}}
+              />
+              <Switch aria-label="No visible label" checked={false} onChange={() => {}} />
+            </div>
+          </div>
+          <ForcedNote>
+            Hover and focus are forced with `forceState`; the rest are live.
+          </ForcedNote>
+        </Section>
+
         {/* ------------------------------------------------------------ Radio */}
         <Section
           id="radio"
@@ -312,6 +362,183 @@ export default function KitchenSink() {
                   { value: 'transactions', label: 'Transactions' },
                 ]}
               />
+            </div>
+          </div>
+        </Section>
+
+        {/* ----------------------------------------------------- ChoiceCards */}
+        <Section
+          id="choicecards"
+          title="ChoiceCards"
+          note="Radios drawn as cards, for a choice that needs a glyph, a label and a line of explanation each. Native radios in a fieldset, so arrow keys and the group name come free. Each option can take an accent — the three interview tracks have their own colour in the token layer."
+        >
+          <div className={styles.panel}>
+            <div className={styles.stack}>
+              <ChoiceCards
+                legend="What are you practising for?"
+                name="ks-choice"
+                value={choice}
+                onChange={setChoice}
+                options={[
+                  { value: 'nhs', label: 'NHS', detail: 'A job or post in the NHS', icon: 'briefcase', accent: 'nhs' },
+                  { value: 'uni', label: 'University', detail: 'Applying to study', icon: 'graduationCap', accent: 'uni' },
+                  { value: 'pg', label: 'Postgraduate', detail: 'Specialty or core training', icon: 'trophy', accent: 'pg' },
+                ]}
+              />
+
+              <p className={styles.eyebrow}>Row layout, no icons</p>
+              <ChoiceCards
+                legend="Where are you up to?"
+                name="ks-choice-row"
+                layout="row"
+                value={dateChoice}
+                onChange={setDateChoice}
+                options={[
+                  { value: 'has-date', label: 'I have a date' },
+                  { value: 'waiting', label: 'Applied, waiting to hear' },
+                  { value: 'no-date', label: 'No date yet' },
+                ]}
+              />
+
+              <p className={styles.eyebrow}>With a caption, and in error</p>
+              <ChoiceCards
+                legend="Interviewed before?"
+                caption="Sets your starting difficulty. Changeable any time."
+                name="ks-choice-error"
+                layout="row"
+                value={null}
+                onChange={() => {}}
+                error="Choose one to continue."
+                options={[
+                  { value: 'first', label: 'First time', detail: 'Guided mode, gentle examiner' },
+                  { value: 'some', label: 'Done a few', detail: 'Guided mode, realistic examiner' },
+                ]}
+              />
+
+              <p className={styles.eyebrow}>Disabled</p>
+              <ChoiceCards
+                legend="Disabled group"
+                name="ks-choice-disabled"
+                disabled
+                value="brand"
+                onChange={() => {}}
+                options={[
+                  { value: 'brand', label: 'Selected', detail: 'The brand accent', icon: 'sparkle', accent: 'brand' },
+                  { value: 'other', label: 'Unselected', detail: 'The default accent', icon: 'users' },
+                ]}
+              />
+            </div>
+          </div>
+        </Section>
+
+        {/* ------------------------------------------------------- ChipGroup */}
+        <Section
+          id="chipgroup"
+          title="ChipGroup"
+          note="Multi-select chips — a checkbox group drawn as pills, for short unordered answers. The tick is decorative; selection is the input's."
+        >
+          <div className={styles.panel}>
+            <div className={styles.stack}>
+              <ChipGroup
+                legend="What worries you most?"
+                hint="Pick as many as you like."
+                name="ks-worries"
+                options={['Freezing up', 'Structuring my answers', 'Clinical questions', 'Ethical scenarios', 'Running out of time']}
+                value={worries}
+                onChange={setWorries}
+              />
+              <span className={styles.caption}>Selected: {worries.length ? worries.join(', ') : 'none'}</span>
+
+              <p className={styles.eyebrow}>In error, and disabled</p>
+              <ChipGroup
+                legend="Choose at least one"
+                options={['Morning', 'Afternoon', 'Evening']}
+                value={[]}
+                onChange={() => {}}
+                error="Pick a time that suits you."
+              />
+              <ChipGroup
+                legend="Disabled"
+                disabled
+                options={['Morning', 'Afternoon', 'Evening']}
+                value={['Afternoon']}
+                onChange={() => {}}
+              />
+            </div>
+          </div>
+        </Section>
+
+        {/* -------------------------------------------------------- FileDrop */}
+        <Section
+          id="filedrop"
+          title="FileDrop"
+          note="Attach one file. It checks the extension and the size itself and hands the message back, so the screen keeps its own voice. Only the name and size are passed on — nothing here reads the bytes."
+        >
+          <div className={styles.panel}>
+            <div className={styles.stack}>
+              <FileDrop
+                label="CV or résumé"
+                hint=".pdf, .doc, .docx — up to 5MB"
+                accept={['.pdf', '.doc', '.docx']}
+                maxMB={5}
+                file={cv}
+                error={cvError}
+                onSelect={(meta) => {
+                  setCv(meta)
+                  setCvError(null)
+                }}
+                onReject={(message) => setCvError(message)}
+              />
+
+              <p className={styles.eyebrow}>Attached, and rejected</p>
+              <FileDrop
+                label="Attached"
+                file={{ name: 'oliver-davies-cv.pdf', size: 240 * 1024 }}
+                onSelect={() => {}}
+              />
+              <FileDrop
+                label="Rejected"
+                hint=".pdf, .doc, .docx — up to 5MB"
+                accept={['.pdf']}
+                maxMB={5}
+                file={null}
+                error="That file type is not accepted — use .pdf, .doc, .docx."
+                onSelect={() => {}}
+                onReject={() => {}}
+              />
+
+              <p className={styles.eyebrow}>Disabled</p>
+              <FileDrop label="Disabled" hint="Nothing to add yet" disabled onSelect={() => {}} />
+            </div>
+          </div>
+        </Section>
+
+        {/* ---------------------------------------------------- StepProgress */}
+        <Section
+          id="stepprogress"
+          title="StepProgress"
+          note="How far through a multi-step flow you are. One progressbar for assistive tech, segments for everyone else, and the count in words beside it — a bar with no number leaves sighted users counting pips."
+        >
+          <div className={styles.panel}>
+            <div className={styles.stack}>
+              <StepProgress step={wizardStep} total={6} label="When is your interview" />
+              <div className={styles.row}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setWizardStep((n) => Math.max(0, n - 1))}
+                >
+                  Back
+                </Button>
+                <Button size="sm" onClick={() => setWizardStep((n) => Math.min(5, n + 1))}>
+                  Next
+                </Button>
+              </div>
+
+              <p className={styles.eyebrow}>First step, last step, and without the count</p>
+              <StepProgress step={0} total={6} />
+              <StepProgress step={5} total={6} />
+              <StepProgress step={1} total={3} showCount={false} />
             </div>
           </div>
         </Section>

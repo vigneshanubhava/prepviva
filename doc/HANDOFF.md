@@ -34,9 +34,18 @@ in `src/data/account.js` rather than forking the screen. The cancel flow
 downgrade flow (50-55) are built — see below — and are the worked examples of
 that approach.
 
-That makes the **Prototype controls panel** the brief asks for (force trial day,
-plan, payment status, credits, theme) the natural thing to build alongside —
-`account.js` is already shaped for it, but nothing writes to it yet.
+The **Prototype controls panel** the brief asks for is built — the gear in the
+header. It forces practice history, account age, subscription, plan, credits and
+the CV, so every state below is reachable in a demo without editing a file.
+
+The **dashboard and practice are built** — `/dashboard`, where the magic link
+and first-run setup both land, and `/practice`, which gates on the CV and then
+configures a session in four steps. It has no artboard: the behaviour is the reference prototype's, and the look
+comes from a mock supplied in the session — a light page, white cards with a
+soft edge and a soft lift, outlined glyph tiles, one filled brand pill per card.
+Same tokens, type scale and radii as everything else; the surface is where it
+parts company with Billing's purple masthead on grey. See "Practice history"
+below.
 
 The onboarding modal (`15`-`17`, `1:4194`) is built, but as a **first-run
 wizard** collecting name, phone and CV rather than the three-card product tour —
@@ -70,6 +79,14 @@ No backend, no localStorage/sessionStorage. `npm run dev` → http://localhost:5
 | `/login/email` | Magic-link email in a simulated inbox | `14:10469` |
 | `/login/signing-in` | "Signing you in" loader between the email and the app (auto-advances) | — (borrows `1:6287`) |
 | `/welcome/setup` | First-run setup — six steps: about you, track, date, worries, one question, CV | — (flow from `../interview-prototype`) |
+| `/dashboard` | Dashboard — greeting, track switcher, practise-next / readiness / consistency, global figures, competencies and recent sessions | — (flow from `../interview-prototype`, look from a supplied mock) |
+| `/practice` | Practice — the CV gate, then the track picker | — (flow from `../interview-prototype`) |
+| `/practice/:trackId` | Session configurator — Context, Format, Focus, Ready, with the summary rail | — (flow from `../interview-prototype`) |
+| `/sessions` | My Sessions — every session across every track, newest first | — (flow from `../interview-prototype`) |
+| `/sessions/:trackId/:index` | One session's report — six zones, in reading order | — (flow from `../interview-prototype`) |
+| `/performance` | Performance — readiness over time, the full competency breakdown, session-by-session, and the compare view | — (flow from `../interview-prototype`) |
+| `/settings` | Settings — redirects to the first section | — |
+| `/settings/:section` | Settings — profile, interview profile, devices, preferences, sign-in and security, active sessions, data and privacy | — (no artboard; layout is this build's) |
 | `/billing` | Billing and invoices — Starter, on trial | `1:5133`, spacing from `1:13303` |
 | `/billing` + Manage card | Manage-cards drawer (455px, over a scrim) | `29:4853` |
 | any signed-in screen + avatar | Profile menu: account, theme, Settings, Sign out | `1:4997` / `1:5099` |
@@ -85,13 +102,15 @@ No backend, no localStorage/sessionStorage. `npm run dev` → http://localhost:5
 Signup flow: pricing CTA → `/signup?plan=<id>` → checkout → preparing → welcome.
 Login flow: `/login` → `/login/sending` → `/login/link-sent` → (prototype-only
 "Open the email") → `/login/email` → magic link → `/login/signing-in` →
-**`/billing`** (the dashboard is not built, so signing in lands on the one
-signed-in screen that is). The loader replaces its own history entry, so Back
-from Billing returns to the email rather than signing you in again.
+**`/dashboard`**. The loader replaces its own history entry, so Back from the
+dashboard returns to the email rather than signing you in again.
 
 **First run gates the app**: `AppLayout` sends an account with
 `onboarded: false` to `/welcome/setup`, so the first signed-in screen anyone
-reaches is setup. Finishing it, or "Set up later", lands on `/billing`.
+reaches is setup. Finishing it, or "Set up later", lands on **`/dashboard`** —
+`LANDING` at the top of `Onboarding.jsx`, the same one-line switch `SigningIn`
+carries. The track setup collects becomes the dashboard's primary track, so the
+screen it hands over to opens on what was just chosen.
 
 Plan travels in the query string; name/email travel in React Router `state`
 (the brief rules out storage). Each login screen falls back to
@@ -103,12 +122,17 @@ welcome use, so every screen stays reachable by URL.
 | Component | What it owns |
 |---|---|
 | `Logo` | The mark + wordmark lockup. Used by `AppHeader`, `AuthShell` and the email. |
-| `AppHeader` | The fixed app header from `1:2121`. Pages clear it with `--app-header-h`. |
+| `AppHeader` | The fixed app header from `1:2121`. Pages clear it with `--app-header-h`. `controls={false}` hides the prototype gear — Checkout passes it, having no account to force anything on. |
 | `AuthShell` | Banner + card page shell for the out-of-app screens (`1:2167`, `1:2230`, `1:3169`, `1:5516`). Props: `tone` (`welcome`/`signup`), `gap` (`lg`/`apart`). |
 | `AppNav` | The left navigation, its credits panel, and the collapse toggle. |
 | `AppLayout` | Shell for every **signed-in** screen: `AppHeader` + `AppNav` + content column. Wrap new signed-in screens in this. |
 | `BrandMark` | Payment-scheme logos (Visa, Mastercard) at Figma's 49×16. |
 | `PlanCard` | One plan card — Figma draws the same one on the public pricing page (`14:11391`) and on Manage plan. Takes `badge`, `cta`, `note` and `footer` (which replaces the CTA — artboard 54's scheduled-downgrade notice); exports `PlanIcon` and `Tick`. |
+| `PageHero` | The purple masthead (Figma `1:5133`) — glyph, title, lede, and an optional row of `HeroAction` pills on the right. Used by Settings, Performance, My Sessions and Practice. **Billing still draws its own**: that one is 206px because three stat cards overlap its bottom half, and it carries a menu, so the height and the overlap arithmetic belong to that screen. Both read `--app-hero-*`, so a change to the band's colours still lands on both. |
+| `PrototypeMenu` | **Prototype only.** The gear in the header and the controls panel behind it — practice history, account age, subscription, plan, credits, CV. Delete it and its line in `AppHeader` before this ships. |
+| `TrackSwitcher` | The chips that rescope a screen to one track, shared by the dashboard and Performance. A track earns a place by having been used; the primary track shows at zero, and the note says which are missing and why. |
+| `TrackCharts` | `Sparkline`, `Heatmap`, `DimBars` and `TrendChart` — hand-drawn SVG/CSS, no charting dependency. **None takes a colour**: they inherit `--screen-accent` from the section they sit in. |
+| `CreditNotice` | The low-balance ladder (low / critical / empty), shared by the dashboard and the practice screens. Thresholds stay in `data/dashboard.js`. |
 | `ProfileMenu` | The dropdown under the header avatar (`1:5099`) — account block, System/Light/Dark, Settings, Sign out. Opened by `AppHeader`, so every signed-in screen has it. |
 | `MailClient` | The simulated inbox both emails are read in (`14:10469`, `14:10022`). Chrome only, inert, `aria-hidden`. Takes `subject`, `to`, `proto` and the email as children. |
 | `EmailCard` | The branded 640px email inside it — logo, gradient hero, heading, body, footer. `tone="brand"` swaps the blue hero for the purple one artboard 34 uses. |
@@ -135,7 +159,13 @@ properties only inherit downward.
 The upgrade flow spans two screens: you change the plan on Manage plan and see
 the result on Billing. `AccountProvider` holds the one live account for the
 session — `useAccount()` gives `{ account, summary, cancel, renew, upgrade,
-schedule, keepPlan, onboard, skipOnboarding, updateCards, notice, setNotice }`. **Signed-in screens read
+schedule, keepPlan, onboard, skipOnboarding, attachCv, spend, updateCards,
+notice, setNotice }`, plus the settings screen's own state and writers
+(`settings`, `saveSettings`, `saveDetails`, `saveInterviewProfile`, `detachCv`,
+`registerPasskey`, `removePasskey`, `revokeSession`, `revokeOtherSessions`,
+`changePassword`). `attachCv` is the practice screen's gate; `spend` is what
+starting a session does to the balance, which is why the nav's credits panel and
+the billing card move the moment one starts. **Signed-in screens read
 the account from here, not from `ACCOUNT` directly.** In memory only; the brief
 rules out storage, not state. `notice` is the one-shot message a screen leaves
 for the next one — artboard 43's "Successfully updated the plan" toast.
@@ -169,13 +199,336 @@ Currently set to **active**, so the invoice table is populated. The invoice run
 is generated from the billing anniversaries, not typed out — change the number
 of months and the rows follow.
 
+## Practice history — `src/data/dashboard.js`
+
+The dashboard's own state, ported from the reference prototype
+(`../interview-prototype/src/data/dashboardData.js` + `domain/rubric.js`). Two
+rules it exists to enforce, both the reference's:
+
+- **Quality is per track, volume is global.** The three tracks are marked
+  against different rubrics on different scales (`RUBRIC`: 0–100, 0–10, 0–12),
+  so a blended readiness number would be meaningless. Everything under the
+  track chips rescopes; `globalTotals()` — sessions and minutes — deliberately
+  does not.
+- **A score off one data point is a lie.** `tierOf(sessions)` returns
+  `empty | single | early | full`, and the screen renders only what the tier has
+  earned: one session shows its result, never a readiness figure or a trend.
+
+Tracks are keyed by the ids first-run setup already uses (`onboarding.js`
+`TRACKS`: `nhs`, `university`, `postgraduate`), so **the track collected in
+setup becomes the dashboard's primary track** — the one that shows in the
+switcher at zero sessions, and the one the interview countdown names.
+`profile.interviewDate` drives the countdown when setup collected one.
+
+A session's price is `creditsFor(minutes)` — 1 credit ≈ 10 minutes, from
+`trial.js` — so the card's sentence and the number on its button cannot drift
+apart. `creditLevel()` is the low-balance ladder the notice above the screen
+renders against, set against what a session actually costs.
+
+`HISTORY` holds the four candidate states — `cold`, `warm`, `established`,
+`lapsed`. The prototype controls panel switches between them; **`?state=cold`**
+on the URL still seeds it on first load, and anything unrecognised falls back to
+`established`.
+
+The charts (`DashboardCharts.jsx`) are route-scoped, like `RecordsTable` on
+Billing: three hand-drawn SVG/CSS pieces with no charting dependency. **None of
+them takes a colour** — they inherit `--dash-accent`, which `Dashboard.module.css`
+sets from the track on show, so a chart can never pick a colour of its own and
+both themes resolve without a prop. A competency row's glyph repeats what its
+bar colour says (strength / middle / needs work), so the judgement is not
+carried by colour alone.
+
+Two things about the screen's surface are worth knowing before editing it:
+
+- **it paints its own page tint.** `.page` bleeds out through `AppLayout`'s
+  padding with negative margins — the trick Billing's banner uses — so the
+  content column reads light edge to edge instead of the app's grey. Anything
+  added at the top level of the route goes inside that div.
+- **the brand purple carries the actions, the track accent carries the data.**
+  Eyebrows, pills and links are `--brand`; the chips, the card's leading edge,
+  the sparkline, the heatmap and the middle competency bars are the track's own
+  `--track-*` colour. That split is what keeps three tracks legible on one
+  screen.
+
+`Icon` gained `calendar` and `arrowRight` for this screen; both show at
+`/kitchen-sink` automatically, which renders `iconNames`.
+
+## What a session can be — `src/data/practice.js`
+
+The configurator's whole vocabulary: per-track context fields, format, focus
+items, plus `MODES` and `DIFFICULTY`. Ported from the reference prototype's
+`domain/branches.js`, and it makes the same claim — **these objects are the only
+difference between a panel and a circuit.** Every step is rendered by shared
+code in `SessionSteps.jsx`, which knows nothing about any particular track, so a
+fourth track is a config entry rather than a new screen. Keep it that way: if a
+step starts branching on `config.id`, the config is missing a field.
+
+`shape` decides how format and focus are read:
+
+| | panel (`nhs`) | circuit (`university`, `postgraduate`) |
+|---|---|---|
+| Format | one length, 30/45/60 min | station count × station length |
+| Focus | 3–6 areas the examiner leans on | one station each, **exactly** the circuit size |
+| Order | priority — higher areas get more of the interview | the running order you face them in |
+
+**Pricing is minutes, not stations.** The reference charges a flat rate per
+station; this app has already told the candidate that 1 credit is about 10
+minutes (`trial.js`), so `costOf()` runs everything through `creditsFor()`.
+A longer station costs what it takes, and the dashboard's recommendation and the
+configurator can never quote different numbers.
+
+`practicePlan()` lives here too, because a plan *is* a session configuration.
+The dashboard's "practise this next" card builds one and hands it over in router
+state; the configurator applies it wholesale and lands on the step that still
+needs an answer — Ready if nothing does, Format if the balance will not cover
+it, Context if a required field could not be recovered. Whatever it pre-filled
+is named in a note at the top of the step, because answers nobody typed have to
+say where they came from.
+
+**One vocabulary, two files.** `focusFromWorries()` maps setup's worries onto
+focus areas, and the strings in `onboarding.js`'s `WORRY_FOCUS` must be items
+this file offers, spelled exactly — an unmatched one is dropped rather than
+pre-selecting an area the candidate never chose. `DIM_FOCUS` does the same job
+for rubric dimensions ("Handling Pressure" scores; "Handling Pressure /
+Resilience" is what you practise). Both are checked by walking the flow, not by
+a type.
+
+## Practice — `src/routes/Practice.jsx`, `SessionConfig.jsx`, `SessionSteps.jsx`
+
+**The page title does not change with the state.** Both states open on the same
+`PageHero` — "Practice" — and the CV gate explains itself inside its own card
+instead of renaming the page above it; a heading that disagrees with the nav
+item it was reached from reads as a different screen.
+
+`/practice` does two things in order, both the reference's:
+
+1. **the CV gate.** Practice is unreachable without a CV — the questions are
+   meant to reference real experience. Setup lets the CV be skipped, so this is
+   where the rule is enforced, and it explains why rather than just refusing.
+   `attachCv()` on the account saves it (name and size only, as setup does), and
+   `SessionConfig` redirects back here if it is ever missing.
+2. **the track picker.** One card per track, each naming its shape and price
+   range, because a panel and a circuit are configured differently from the very
+   next screen.
+
+`/practice/:trackId` is the configurator — addressed by track rather than held
+in the parent's state, so a half-configured session survives a refresh and the
+dashboard can hand a plan over by navigating.
+
+Things worth not breaking:
+
+- **the credit meter changes state, not just its number**: a range at Context,
+  live at Format (the only step where the price moves), locked after.
+- **the wall is never just a disabled button.** An option that costs more than
+  the balance says how much is missing, and the banner offers both ways out —
+  top up, or drop to the cheapest option that fits. Every disabled Continue has
+  the reason beside it.
+- **dropping the station count trims the circuit**, or step 3 keeps stations
+  that no longer have a slot.
+- the focus grid is native checkboxes with a full-cover invisible input, the
+  same pattern `ChoiceCards` and `ChipGroup` use — a test has to `check()` the
+  input rather than click the label.
+
+`CreditNotice` moved to `src/components/` when the practice screens became the
+second surface that needed the low-balance ladder; the thresholds stay in
+`data/dashboard.js`.
+
+## The report — `src/data/report.js`, `src/routes/Report.jsx`, `ReportZones.jsx`
+
+Ported from the reference prototype's `features/report/`. Six zones, in reading
+order: **Verdict · Headline · Scorecard · Answer lab · Coaching · Path forward.**
+
+Three rules carried over, all of them load-bearing:
+
+1. **Derived is separated from placeholder.** The score, its band and rank, the
+   readiness call and gap, the practice estimate, the trend against the previous
+   attempt, the date, the session code, the duration and the competency scores
+   are all computed. Everything else — narratives, insights, voice, ethics, the
+   answer lab — is sample copy, kept in one block at the bottom of `report.js`
+   so there is a single place to delete from, and **tagged on screen wherever it
+   appears**. A reviewer must never think a paragraph was written about their
+   own session.
+2. **No tabs.** The reference tried a Full report / Section-wise toggle and
+   removed it: a report split across tabs is one someone finishes having never
+   read the action plan. The links under the header jump; they never filter.
+3. **A URL can outlive what it points at.** A report is addressed by track and
+   position (`/sessions/nhs/0`) rather than handed over in state, so it survives
+   a reload and can be linked — and switching practice history in the prototype
+   panel can delete the session under it, which is why there is an explicit
+   "that report is not here" state rather than a crash.
+
+`sessionCode()` is deterministic (FNV-1a then xorshift32) so a code survives a
+re-render; the alphabet drops I, O, 0 and 1 because they are misread when a code
+is read aloud. `REPORT.benchmark` is the one number the gap, the readiness call,
+the ring's notch and the practice estimate all hang off — move it and they move
+together.
+
+The only export is the browser's own print-to-PDF, behind a real button, with a
+`@media print` block that drops the chrome and keeps every zone. Nothing here
+reaches a backend, so nothing pretends to.
+
+## My Sessions and Performance
+
+`Sessions.jsx` flattens every track's history, newest first. The **per-track
+index travels in the link** because that is how a report finds the attempt
+before it — a flat list position would point at the wrong one the moment two
+tracks interleave.
+
+`Performance.jsx` is the dashboard's scoping rule with room to breathe:
+readiness over time as a full `TrendChart`, the complete competency breakdown,
+and a session-by-session table with the change column the dashboard has no space
+for. Its compare view carries **a warning it cannot be shown without** — two
+tracks are marked on different scales by different examiners against different
+axes, so a longer bar is not a better performance. The view exists to show the
+*shape* of two profiles. If that warning ever gets trimmed as clutter, the view
+should go with it.
+
+## Settings — `src/routes/Settings.jsx`, `SettingsSections.jsx`, `SettingsParts.jsx`
+
+The screen every other screen already linked to: the left nav has always had it,
+the profile menu has always had it, and first-run setup's own copy promised its
+answers could be changed here. It has **no artboard** — the reference for it was
+a set of screenshots supplied in the session, and the request was to take their
+*content* and lay it out better.
+
+What was taken, and what was not:
+
+- **taken:** input devices, connection status, notification preferences,
+  password, passkeys, active sessions, profile fields, the delete-account danger
+  zone.
+- **replaced:** the row of pill tabs became a grouped **section rail**, one URL
+  per section (`/settings/:section`). Tabs cap how many sections can exist; a
+  settings screen grows by one a quarter forever. The rail also lets Account /
+  Practice / Security be said out loud instead of implied by tab order. On
+  request the page title sits in **Billing's purple masthead** above both
+  columns; below 1080px the rail becomes one horizontally-scrolling row of pills
+  under it.
+- **dropped:** the two large black device-preview panes. This prototype never
+  opens a camera, and two rectangles that will never show a face were the least
+  honest thing on the screen. What replaces them is what they crowded out — the
+  connection strip and a diagnostics run that names what to fix.
+- **added, because the gap list asked for them:** the interview profile
+  (setup's own answers, editable at last), CV replace/remove, recording
+  retention, and a data export.
+
+Rules it follows:
+
+1. **Nothing saves on keystroke.** Each section edits a draft (`useDraft` in
+   `settingsDraft.js`) and a sticky save bar appears the moment the draft
+   differs from what is committed. A form that writes as you type has no
+   Discard. The two deliberate exceptions say so on screen: the theme applies
+   immediately (it is the same setting as the profile menu's, and a preview that
+   needs saving is not a preview), and the CV saves on attach.
+2. **The account half writes through `account.js`**, not through a settings
+   store of its own — `updateDetails`, `updateInterviewProfile`, `removeResume`.
+   A profile edited here is indistinguishable from one the wizard collected, and
+   changing the track here moves the dashboard's primary track with it.
+3. **Everything else lives in `src/data/settings.js`** and is held in
+   `AccountProvider` beside the account (`settings`, `saveSettings`,
+   `registerPasskey`, `removePasskey`, `revokeSession`, `revokeOtherSessions`,
+   `changePassword`). It sits in the provider rather than the route because the
+   screen is seven sections deep and each one saves on its own — held in the
+   route, moving between sections would reset the other six.
+4. **Nothing pretends to reach a device or a server.** The device lists are
+   named options, not an `enumerateDevices()` call that returns blanks without a
+   permission prompt; the latency samples and every diagnostic verdict are
+   fixed, because a chart that redraws differently each render is a decoration
+   claiming to be a measurement. Each of those panels carries one line saying
+   so. The one genuinely working action is **Download my data**, which builds
+   the JSON in the browser from live state.
+5. **Revoking never touches the current session**, and deleting the account
+   resets it to `ACCOUNT` and returns to `/pricing` — with the dialog saying
+   plainly that a reload brings the demo account back.
+
+**The masthead is shared, so its tokens are.** `--billing-hero-from/to/text/bd`
+and the 40px inline padding are now `--app-hero-*`, beside `--app-header-*` and
+`--app-nav-*`; `--billing-hero-h` (206px) stays Billing's, because that height
+exists to be overlapped by its three stat cards and nothing overlaps the rest.
+The band moved into `components/PageHero.jsx` once Settings, Performance, My
+Sessions and Practice all carried it — four copies of one gradient are four
+chances to drift. Performance's Single track / Compare two switch rides the band
+as `HeroAction` pills, since it scopes the whole screen the band names.
+
+`Switch` was added to `src/components/ui/` for this screen and shows at
+`/kitchen-sink`; so do the seven new `Icon` glyphs (camera, monitor, smartphone,
+wifi, activity, key, shield). The rail carries a flag only where a section wants
+something done — `Not set` on an interview profile that setup skipped — never a
+badge per section, which says nothing about any of them.
+
+## Prototype controls — the gear in the header
+
+The panel doc/BRIEF.md asks for, built as `src/components/PrototypeMenu.jsx`.
+The reference prototype keeps the same thing in its sidebar
+(`../interview-prototype/src/app/dev/ScenarioPanel.jsx`) and the reasoning is
+its: most of the interesting screens cannot be reached by using the app
+normally. You cannot run out of credits on demand, you cannot age an account
+eight months, and you certainly cannot cancel a subscription four times in a
+demo — without this they can only be seen by editing `account.js` mid-sentence.
+
+| Control | Writes | Reaches |
+|---|---|---|
+| Practice history | `PrototypeProvider` | the dashboard's four candidate states |
+| Account age | `forcePhase` — `signedUpOn` + `status` | trial day counts, the invoice run |
+| Subscription | `forceStatus` | the trial card, the cancelled banner and strip |
+| Plan | `forcePlan` | plan name, price, credit allowance everywhere |
+| Credits | `forceCredits` | the credit notice ladder, the nav panel, the practice wall |
+| CV on the account | `forceCv` | the practice screen's gate |
+
+Two rules it follows:
+
+- **it writes the same fields the flows write**, so no screen can tell a forced
+  state from an earned one. The blunt writers live in a marked block at the
+  bottom of `account.js` and do no arithmetic — no proration, no invoices, no
+  negotiated dates. `changePlan()` and `cancelSubscription()` stay the honest
+  path, and the panel's Cancelled option calls the real one.
+- **practice history is the exception**: it is fixture data the account has no
+  field for, so it lives in `src/data/PrototypeProvider.jsx`. `?state=cold` on
+  any URL still seeds it, which is what the dashboard used before the panel
+  existed.
+
+`Reset` puts the whole account back to `ACCOUNT`; `Run first-run setup` clears
+`onboarded` and sends you to `/welcome/setup`. Nothing persists — a reload is
+the other way back.
+
+**Delete `PrototypeMenu`, `PrototypeProvider` and the prototype block in
+`account.js` before any of this ships.**
+
+### The light screens' ground
+
+`--screen-page` is deliberately a step darker than white (`#eff1f7`). A
+near-white ground made the whole dashboard read as one washed-out sheet — the
+cards have to sit **on** something for their edges and shadows to mean anything.
+The card, tile and chip borders are set against that ground, not against white,
+which is why they look heavy if you preview them on a white background.
+
+For the same reason the left nav carries a right edge (`--app-nav-bd`): the nav
+and the header are both white, so without it the nav bleeds into the header
+above and has no boundary against the page beside it. Billing keeps its own
+darker `--app-page-bg` and is unaffected by either.
+
 ## Component library — `src/components/ui/`
 
-Avatar, Badge, Banner, Button, Card, Checkbox, EmptyState, Field, Icon, Input,
-Modal, Radio/RadioGroup, SegmentedControl, Select, Skeleton, Spinner, Table,
-Tabs, Toast, VisuallyHidden. All exported from `index.js`.
+Avatar, Badge, Banner, Button, Card, Checkbox, ChipGroup, ChoiceCards,
+EmptyState, Field, FileDrop, Icon, Input, Modal, Radio/RadioGroup,
+SegmentedControl, Select, Skeleton, Spinner, StepProgress, Switch, Table, Tabs,
+Toast, VisuallyHidden. All exported from `index.js`.
 
-Every one is shown in every state at `/kitchen-sink`.
+Every one is shown in every state at `/kitchen-sink`. **A control built for one
+screen moves here as soon as a second surface could want it** — the last four
+were first-run setup's own parts:
+
+| Component | What it owns |
+|---|---|
+| `ChoiceCards` | Radios as cards: glyph, label, a line of explanation. `layout="row"`, an `error`, and a per-option `accent` — `brand`, or `nhs` / `uni` / `pg`, which the token layer already colours. |
+| `ChipGroup` | Multi-select chips over a checkbox group, for short unordered answers. |
+| `FileDrop` | Attach one file. Checks extension and size itself and hands the message back through `onReject`, so the screen keeps its own voice. Passes on name and size only. |
+| `StepProgress` | Where you are in a multi-step flow: one `role="progressbar"`, decorative segments, and the count in words. |
+| `Switch` | A preference that *applies*, as opposed to a checkbox, which selects a value a form later submits. A native `<input type="checkbox">` with `role="switch"` under paint; `size="sm"` for a dense row. Settings' own toggles sit inside a form that still needs saving, which is why that screen carries a save bar rather than letting the control imply it saved. |
+
+The full-cover invisible `<input>` in `ChoiceCards` and `ChipGroup` is
+deliberate — the whole card is the hit area and the native control keeps the
+focus ring. It also means a test has to `check()` the input rather than click the
+label text.
 
 ## Styling rules — non-negotiable
 
@@ -188,16 +541,46 @@ Every one is shown in every state at `/kitchen-sink`.
    grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\(|var\(--(purple|gray|emerald|amber|red|blue|pink|teal|white)-' src/components src/routes src/data
    ```
 3. **Figma's literal values live in `tokens.css`, never in a component.**
+   A library component uses the **semantic** layer only (`--info-*`, `--track-*`,
+   `--border-*`) — a per-screen block is for a screen. The token file carries no
+   unused tokens; this audit should stay empty apart from the Tailwind bridge
+   (`--color-*`, which exists so the utilities resolve):
+   ```
+   node -e "const fs=require('fs'),p=require('path');const tok=fs.readFileSync('src/styles/tokens.css','utf8');const names=[...new Set([...tok.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map(m=>m[1]))];const blob=(function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const f=p.join(d,e.name);if(e.isDirectory())return walk(f);return /\.(css|jsx|js)$/.test(e.name)&&!f.endsWith('tokens.css')?[fs.readFileSync(f,'utf8')]:[]})})('src').join('\n');console.log(names.filter(n=>!blob.includes('var('+n)&&!tok.includes('var('+n)&&!n.startsWith('--color-')))"
+   ```
    Per-screen blocks already exist: `--pricing-*`, `--signup-*`, `--checkout-*`,
    `--welcome-*`, `--login-*`, `--mail-*`, `--email-*`, `--billing-*` and
    `--cancel-*`, plus the shared `--app-header-*`, `--app-nav-*` and
-   `--app-credits-*`. Each declares a **light value matching Figma exactly and a
+   `--app-credits-*`. **`--screen-*` is the exception to the per-screen rule**:
+   the dashboard and both practice screens are drawn in one surface (light page,
+   white cards with a soft edge, outlined glyph tiles, one filled brand pill),
+   so it is named for the surface rather than for any one screen. Sizes that
+   really do belong to a single screen still sit in their own block —
+   `--dash-card-h`, the chart sizes. Each declares a **light value matching Figma exactly and a
    derived dark value**. Add a new block per screen the same way — but check the
    existing blocks first: most of the login sequence resolved onto `--signup-*`
    and `--welcome-*` values that already matched.
    Keep `doc/tokens.css` in sync: `cp src/styles/tokens.css doc/tokens.css`.
 4. Light is default; dark is `data-theme="dark"` on `<html>` with **zero markup
    changes**. Check every screen in both.
+
+## The favicon
+
+`public/favicon.png` (64px) and `public/apple-touch-icon.png` (180px), declared
+in `index.html`. Both are the app's own mark — `src/assets/signup/logo-mark.png`
+— centred on a **white tile**, so the tab shows what the header shows and the
+mark keeps its own ground on a dark tab bar rather than sitting on whatever
+colour the browser paints. The favicon's tile is a rounded square; the touch
+icon's is full-bleed, because iOS masks that one itself.
+
+They were produced by drawing that PNG onto a canvas in the browser
+(Playwright + `canvas.toDataURL`), because this repo has no image tooling and
+the mark exists only as a 501×585 bitmap. Re-run that if the mark ever changes;
+`--app-hero-from` is also stamped as `theme-color`.
+
+**`public/favicon.svg` was deleted**: it was the template's lightning mark
+(`#863bff`, the aidnn logo), not PrepViva's, and nothing referenced it.
+`public/icons.svg` is template leftovers too — also unreferenced, left in place.
 
 ## Content rules
 
@@ -212,6 +595,31 @@ Every one is shown in every state at `/kitchen-sink`.
   say so.
 
 ## Gotchas — each of these cost real time
+
+- **A zero-height flex item still eats a `gap`.** Settings' focus anchor is an
+  empty `<span>` at the top of the content column; as a flex child it pushed the
+  section title down by the column's whole 20px gap, which read as a stray gap
+  under the page title. It is `position: absolute` now. Anything invisible
+  inside a flex or grid container has to leave the flow, not just have no size.
+- **`flex: 1 1 200px` is a *height* once the axis flips.** `ChoiceCards`
+  stacks its row layout below 880px, and the basis written for the row made
+  every stacked card 200px tall — on Settings and on first-run setup both. The
+  media query now releases it with `flex: 0 0 auto`. Check any `flex-basis`
+  that survives a `flex-direction` change.
+- **`a && b && c` returns `c`, not `true`.** Performance's `showCompare` was
+  `compare && canCompare && aId && bId`, so in the compare view it held a *track
+  id*; `showCompare === view.value` was then false for both view buttons at
+  once, and the one actually on screen announced `aria-pressed="false"`. It is
+  `Boolean(...)` now. Anything compared with `===` has to be a real boolean.
+- **A rule drawn on the page tint needs `--border-default`, not
+  `--screen-card-bd`.** The card-edge colour is set against white; on the light
+  screens' own ground (`#eff1f7`) it is within a couple of percent of the
+  background and the line simply does not appear — it computes correctly and
+  photographs as nothing. The report header's divider is `--border-default`.
+- **A full-page screenshot is not evidence about a page with fixed chrome.**
+  Chromium stitches it, so the app header can appear a second time halfway down
+  and heights can be distorted. Measure with `getBoundingClientRect()`, or
+  screenshot the viewport only.
 
 - **Tailwind preflight sets `img { max-width: 100% }`**, which silently squashes
   any SVG drawn larger than its box. Set `max-width: none` on oversized leaves.
@@ -273,14 +681,21 @@ real browser: route transitions, data carried between screens, form validation
 and announced errors, that no input lacks a label, both themes, and no console
 errors. Then `npm run build` and `npm run lint`.
 
-Lint has 6 known benign `only-export-components` fast-refresh warnings
-(Icon, Field, Toast, Avatar, ThemeProvider, AccountProvider). Anything beyond
-those is new.
+Lint has 7 known benign `only-export-components` fast-refresh warnings
+(Icon, Field, Toast, Avatar, ThemeProvider, AccountProvider, PrototypeProvider).
+Anything beyond those is new.
 
 ## Known gaps / not built
 
-- **Prototype controls panel** the brief asks for (force trial day, plan, payment
-  status, credits, theme) — not built. `src/data/account.js` is shaped for it.
+- The dashboard mock also showed a **different left nav** (Mock Interviews, AI
+  Coach, Learn, Resources) and a floating action button under it. Neither was
+  built: `AppNav` is shared by every signed-in screen and `doc/BRIEF.md` fixes
+  the one nav set in `src/data/nav.js`. Changing it is a product decision, not a
+  dashboard one.
+- **Payment-failed states have no screen.** `account.status` still accepts
+  `past_due`, but nothing renders it — artboards 35 (read-only warning banner)
+  and 37 (account temporarily disabled) are not built, so the prototype controls
+  panel deliberately does not offer it.
 - `AppNav` read `billingSummary()` off the module default, so the nav's credits
   panel never followed a plan change; it reads `useAccount()` now. Any new
   chrome that shows account figures must do the same.
@@ -292,22 +707,22 @@ those is new.
 - Nothing in the Manage-cards drawer reaches Stripe — the panel's own copy says
   payment methods are handled there, and this prototype has no Stripe. "Set as
   default" and remove mutate component state only, so they reset on reload.
-- Setup's answers have nowhere to be edited afterwards — its copy says Settings,
-  which is not built. Whatever builds Settings should read `account.profile`
-  (phone, track, role, date, experience, worries, CV).
 - `/welcome/setup` stays reachable by URL after it has been through, which is how
   it is demonstrated a second time without a reload. It does not redirect an
   already-onboarded account away, deliberately.
-- **Settings itself is not built** — the profile menu's Settings link and the
-  nav's both land on the "not built" placeholder. The theme control the brief
-  wanted there lives in the profile menu, which is where artboard 18 puts it.
-- Links to `/terms`, `/dashboard`, `/practice`, `/sessions`, `/performance`,
-  `/settings` and `/login/password` currently land on the "not built"
-  placeholder. It keeps the signed-in shell (header, left nav, credits panel)
-  for the paths the nav owns — `isSignedInPath()` in `src/data/nav.js`, which is
-  also where the one nav set now lives — and stays a bare card for the rest.
-  `/dashboard` is where the magic link signs you in, so it is the next one worth
-  building.
+- Links to `/terms` and `/login/password` currently land on the "not built"
+  placeholder. It keeps the
+  signed-in shell (header, left nav, credits panel) for the paths the nav owns —
+  `isSignedInPath()` in `src/data/nav.js`, which is also where the one nav set
+  now lives — and stays a bare card for the rest. The dashboard's "Open
+  performance" and "See all" go there, and its session rows link to `/sessions`
+  rather than to a report screen, which the reference prototype has and this one
+  does not.
+- **The interview room is not built.** Starting a session at the end of the
+  configurator spends its credits, raises a toast saying so, and returns to the
+  dashboard — where the spend is visible in the same figures the session was
+  priced against. It is the one place the prototype takes an action it cannot
+  finish, and the toast says as much rather than pretending.
 - **Signup's terms error does not clear until the next submit.** `Login` clears
   its error as soon as you type; `Signup` recalculates only on submit, so a
   stale "Accept the terms to continue" sits next to an already-ticked box.
@@ -356,7 +771,7 @@ those is new.
   reads as a page swap rather than a sign-in. `SigningIn` borrows artboard 12's
   treatment — the same moment on the way out — and reuses its stylesheet.
   `SIGNING_MS` and `LANDING` at the top of the file are the two things to
-  change; `LANDING` becomes `/dashboard` when that screen exists.
+  change; `LANDING` is `/dashboard` now that the screen exists.
 - **The billing artboard is the Admin variant.** Its nav (Connectors, People,
   an "Admin" header chip) is deleted per the brief; `AppNav` ships the one set —
   Dashboard, Practice, My Sessions, Performance, Billing, Settings — which
@@ -476,6 +891,17 @@ those is new.
 - **`PlanChange` takes `onClose` and `onDone` separately.** Dismissing the modal
   must not do what finishing it does — wiring both to one callback navigated
   away as though the plan had changed.
+- **The controls setup needed are library components, not screen parts.**
+  `StepProgress`, `ChoiceCards`, `ChipGroup` and `FileDrop` started inside
+  `Onboarding.jsx`; they are generic, so they moved to `src/components/ui/` and
+  are shown in every state at `/kitchen-sink`. The screen kept only what is
+  genuinely its own — the shell card height, the worry preview, the question
+  block and the footer.
+- **The track colours were already in the token layer.** `--track-nhs`,
+  `--track-uni` and `--track-pg` sat unused; the track cards now take them
+  through `ChoiceCards`' per-option `accent`, which is why NHS, University and
+  Postgraduate read blue, pink and teal. `src/data/onboarding.js` names the
+  accent per track, so nothing colours a track by hand.
 - **First-run setup is a page, not the onboarding modal.** Artboards 15-17 are a
   three-card product tour whose copy `doc/BRIEF.md` deletes outright, and six
   steps of form do not belong in a 594px dialog. `/welcome/setup` is a route in
@@ -501,6 +927,9 @@ those is new.
   nothing. Asking again on the next screen would make that a lie. `ONBOARDED` at
   the top of `account.js` seeds the flag, next to `DAYS_ELAPSED`, so the
   Prototype controls panel can drive it.
+- **`--ftu-*` is down to one value.** Once the controls moved to the library and
+  onto semantic tokens, the block's colours were dead; `--ftu-card-h` (the fixed
+  card height) is all that remains, because it is a fact about that screen only.
 - **The CV is not stored, only described.** No backend and no storage: the file's
   name and size go on `account.profile.resume` so the toast can state what was
   attached, and the bytes are dropped. Type and size are still validated

@@ -1,0 +1,97 @@
+/* A native checkbox with role="switch"; everything visible here is paint over
+   it, so focus, activation and announcement stay the browser's own. */
+
+.wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.wrap.disabled .control { cursor: not-allowed; }
+
+.native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.track {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-block;
+  inline-size: 40px;
+  block-size: 24px;
+  border-radius: var(--radius-full);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-default);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.sm .track { inline-size: 34px; block-size: 20px; }
+
+.knob {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.sm .knob { inline-size: 14px; block-size: 14px; }
+
+.control:hover .track,
+.track[data-force~='hover'] { border-color: var(--border-strong); }
+
+.native:checked + .track,
+.track[data-force~='checked'] {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.native:checked + .track .knob,
+.track[data-force~='checked'] .knob { transform: translateX(16px); }
+
+.sm .native:checked + .track .knob,
+.sm .track[data-force~='checked'] .knob { transform: translateX(14px); }
+
+.native:focus-visible + .track,
+.track[data-force~='focus'] {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.native:disabled + .track,
+.track[data-force~='disabled'] { opacity: 0.5; }
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 20px;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.description {
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-muted);
+}

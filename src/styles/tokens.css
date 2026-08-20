@@ -51,7 +51,6 @@
   --surface-overlay:   var(--white);
   --surface-scrim:     rgb(17 24 39 / 0.45);
   --surface-brand:     var(--purple-800);
-  --surface-brand-alt: var(--purple-600);
 
   /* text */
   --text-primary:   var(--gray-900);
@@ -111,7 +110,6 @@
   --surface-overlay:   #1a1a24;
   --surface-scrim:     rgb(0 0 0 / 0.65);
   --surface-brand:     var(--purple-900);
-  --surface-brand-alt: var(--purple-700);
 
   --text-primary:   #f4f4f6;
   --text-secondary: #a8a8b8;
@@ -213,7 +211,6 @@
   --pricing-tick: #2769F2;
 
   /* toggle track (kept for the Manage Plan screens) */
-  --pricing-toggle-track: #e9d5ff;
 
   /* footnote */
   --pricing-note-bg:     #fefce8;
@@ -260,7 +257,6 @@
   --pricing-icon: #5aa2ff;
   --pricing-tick: #6ba4ff;
 
-  --pricing-toggle-track: var(--brand-subtle-bg);
 
   --pricing-note-bg:     rgb(217 119 6 / 0.14);
   --pricing-note-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.3);
@@ -520,8 +516,6 @@
   --mail-chip-text:   rgb(0 0 0 / 0.6);
   --mail-tag-bg:      #98d7e4;
   --mail-tag-text:    #0d3b44;
-  --mail-btn-bg:      #4f81e5;
-  --mail-btn-text:    #ffffff;
   --mail-canvas:      rgb(0 0 0 / 0.05);
   --mail-action-bd:   rgb(0 0 0 / 0.16);
 
@@ -560,8 +554,6 @@
   --mail-chip-text:   rgb(255 255 255 / 0.66);
   --mail-tag-bg:      #17414b;
   --mail-tag-text:    #9fdbe8;
-  --mail-btn-bg:      #4f81e5;
-  --mail-btn-text:    #ffffff;
   --mail-canvas:      rgb(0 0 0 / 0.35);
   --mail-action-bd:   rgb(255 255 255 / 0.2);
 
@@ -611,6 +603,9 @@
   /* shell */
   --app-page-bg:      #e5e7eb;   /* Figma: surface/tertiary */
   --app-nav-bg:       #ffffff;
+  /* the nav is white and so is the header; without an edge it runs straight
+     into the page tint beside it */
+  --app-nav-bd:       #e2e6f0;
   --app-nav-text:     #364153;   /* Figma: text/secondary */
   --app-nav-icon:     #6a7282;   /* Figma: icon/primary2 */
   --app-nav-active:   #59168b;   /* Figma: graph/purple/purple-900 */
@@ -626,11 +621,13 @@
   --app-upgrade-bd:      #3583fc;   /* Figma: border/focus */
   --app-upgrade-text:    #59168b;
 
-  /* billing hero */
-  --billing-hero-from: #7e22ce;
-  --billing-hero-to:   #401168;
-  --billing-hero-text: #ffffff;
-  --billing-hero-bd:   #99a1af;   /* Figma: border/tertiary2 */
+  /* The purple masthead. Named --app-hero-* rather than --billing-hero-*
+     because Settings carries the same band; only its two Figma sizes below
+     stay Billing's, being tied to the stat cards that overlap it. */
+  --app-hero-from: #7e22ce;
+  --app-hero-to:   #401168;
+  --app-hero-text: #ffffff;
+  --app-hero-bd:   #99a1af;   /* Figma: border/tertiary2 */
 
   /* cards, table and controls */
   --billing-card-bg:    #ffffff;
@@ -657,6 +654,7 @@
 [data-theme="dark"] {
   --app-page-bg:      #08080c;
   --app-nav-bg:       var(--surface-raised);
+  --app-nav-bd:       var(--border-subtle);
   --app-nav-text:     var(--text-secondary);
   --app-nav-icon:     var(--text-muted);
   --app-nav-active:   var(--brand);
@@ -671,10 +669,10 @@
   --app-upgrade-bd:      var(--brand-subtle-bd);
   --app-upgrade-text:    var(--brand-subtle-text);
 
-  --billing-hero-from: var(--purple-700);
-  --billing-hero-to:   var(--purple-950);
-  --billing-hero-text: #ffffff;
-  --billing-hero-bd:   rgb(255 255 255 / 0.35);
+  --app-hero-from: var(--purple-700);
+  --app-hero-to:   var(--purple-950);
+  --app-hero-text: #ffffff;
+  --app-hero-bd:   rgb(255 255 255 / 0.35);
 
   --billing-card-bg:    var(--surface-raised);
   --billing-card-bd:    var(--border-subtle);
@@ -736,13 +734,12 @@
 /* Figma sizes for the shell and this screen that sit outside the global scales. */
 :root {
   --app-nav-w:          166px;   /* Figma: 150px item + 8px padding each side */
-  --app-nav-item-w:     150px;   /* Figma: 150px */
   --app-gutter:          16px;   /* Figma: content inset from the right edge */
   --app-gutter-start:    20px;   /* Figma: gap between the nav and the content */
   --app-content-gap:     15px;   /* Figma: gap under the 40px header */
 
-  --billing-hero-h:     206px;   /* Figma: 206px */
-  --billing-hero-pad:    40px;   /* Figma: 40px */
+  --app-hero-pad:        40px;   /* Figma: 40px — the masthead's inline padding */
+  --billing-hero-h:     206px;   /* Figma: 206px — the height its stat cards overlap */
   --billing-card-h:     148px;   /* Figma: 148px, fixed */
   /* Figma keeps the frame at 148 on the cancelled artboard even though its own
      strip is 11px taller than the renewal line, so the content overflows the
@@ -754,7 +751,6 @@
   --billing-card-inset:   8px;   /* Figma: tile at x=362, y=8 in a 410 card */
   --billing-row-h:       62px;   /* Figma: data row */
   --billing-row-pad-y:   20px;   /* Figma: (62 - 22 line) / 2 */
-  --billing-head-h:      34px;   /* Figma: header row */
   --billing-tab-h:       36px;   /* Figma: 18px label + 16px + 2px rule */
   --billing-search-w:   332px;   /* Figma: 332px */
   --billing-bar-h:       12px;   /* Figma: 12px */
@@ -905,34 +901,14 @@
 
 /* ------------------------------------------------------------
    2j-b. FIRST-RUN SETUP — /welcome/setup
-   The onboarding flow ported from the sibling interview-prototype. The page
-   itself is AuthShell, so its shell values come from --signup-*; these are the
-   parts the flow adds — the progress bar, the choice cards and chips, and the
-   CV drop zone.
+   The page is AuthShell, so its shell values come from --signup-*, and the
+   controls it uses (StepProgress, ChoiceCards, ChipGroup, FileDrop) are library
+   components on the semantic layer. One value is the screen's own.
    ------------------------------------------------------------ */
-:root,
-[data-theme="light"] {
-  --ftu-chip-bg:    #eef6ff;   /* Figma: surface/bg03 — a chosen card or chip */
-  --ftu-link:       #0a3fbc;   /* Figma: text/action */
-  --ftu-dot:        #d1d5dc;   /* the steps still to come */
-  --ftu-dot-on:     #126af9;   /* the steps done, and a selected edge */
-  --ftu-drop-bg:    #f9fafb;   /* Figma: surface/primary */
-  --ftu-drop-bd:    #d1d5dc;
-  --ftu-file-bg:    #eef6ff;   /* the attached CV, on surface/bg03 */
-}
-
-/* The card holds one height across all six steps: the tallest of them (the date
-   step, at 738px) rather than AuthShell's 680, so nothing jumps or clips. */
-:root { --ftu-card-h: 740px; }
-
-[data-theme="dark"] {
-  --ftu-chip-bg:    var(--info-bg);
-  --ftu-link:       var(--text-link);
-  --ftu-dot:        var(--border-default);
-  --ftu-dot-on:     var(--info-solid);
-  --ftu-drop-bg:    var(--surface-inset);
-  --ftu-drop-bd:    var(--border-default);
-  --ftu-file-bg:    var(--info-bg);
+:root {
+  /* One height for all six steps — the tallest of them, so the card neither
+     jumps between steps nor clips the longest one. */
+  --ftu-card-h: 740px;
 }
 
 /* ------------------------------------------------------------
@@ -997,10 +973,117 @@
 /* Figma sizes for this flow that sit outside the global scales. */
 :root {
   --manage-panel-h:     105px;   /* Figma: 105px header card */
-  --manage-column:     1314px;   /* Figma: 1314px content block */
   --change-modal-w:     588px;   /* Figma: 588px */
   --change-dot:           6px;   /* Figma: 6px timeline dot */
   --change-mark:         32px;   /* Figma: 32px success tick */
+}
+
+/* ------------------------------------------------------------
+   2l. APP SCREEN SURFACE — /dashboard, /practice
+   No Figma artboard: these screens come from the reference prototype, and
+   their look from the mock the build was asked to match — a light page, white
+   cards with a soft edge and a soft lift, outlined glyph tiles, and one filled
+   brand pill per card. It is the same system as the rest of the app (same type
+   scale, same radii, same brand and status colours); what changes is the
+   surface, which is near-white here rather than the billing screen's purple
+   masthead on grey.
+
+   The prefix is --screen-* rather than a per-screen one because more than one
+   screen is drawn in it, and a token named for the dashboard would be a lie on
+   the practice screens. Per-screen sizes still live in their own block below.
+
+   The track accents are the semantic --track-* pair, so a chart never picks
+   a colour of its own.
+   ------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  /* The screen's own page tint, under the whole content column. Deep enough
+     that a white card reads as a section sitting on it rather than as part of
+     it — a near-white ground made the whole page look washed out. */
+  --screen-page: #eff1f7;
+
+  /* cards and panels */
+  --screen-card-bg: #ffffff;
+  --screen-card-bd: #e2e6f0;
+  --screen-card-shadow:
+    0 1px 2px 0 rgb(17 24 39 / 0.03),
+    0 10px 26px -14px rgb(17 24 39 / 0.14);
+
+  /* the outlined tile every glyph sits in */
+  --screen-tile-bg: #ffffff;
+  --screen-tile-bd: #e2e6f0;
+
+  /* type */
+  --screen-heading: #101828;   /* text/primary */
+  --screen-stat:    #101828;
+  --screen-title:   #364153;   /* text/secondary */
+  --screen-muted:   #6a7282;   /* text/tertiary */
+  --screen-meta:    #99a1af;   /* text/placeholder */
+
+  /* the track chips, which are light pills here rather than on a gradient */
+  --screen-chip-bg:    #ffffff;
+  --screen-chip-bd:    #dfe3ee;
+  --screen-chip-text:  #4a5565;
+  --screen-count-bg:   #f3f4f6;
+  --screen-count-text: #6a7282;
+
+  /* charts and lists */
+  --screen-track:     #e6e9f2;
+  --screen-row-bd:    #f0f2f7;
+  --screen-row-hover: #f6f7fb;
+}
+
+[data-theme="dark"] {
+  --screen-page: var(--surface-page);
+
+  --screen-card-bg: var(--surface-raised);
+  --screen-card-bd: var(--border-subtle);
+  --screen-card-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.4),
+    0 10px 26px -14px rgb(0 0 0 / 0.6);
+
+  --screen-tile-bg: var(--surface-inset);
+  --screen-tile-bd: var(--border-subtle);
+
+  --screen-heading: var(--text-primary);
+  --screen-stat:    var(--text-primary);
+  --screen-title:   var(--text-primary);
+  --screen-muted:   var(--text-muted);
+  --screen-meta:    var(--text-faint);
+
+  --screen-chip-bg:    var(--surface-raised);
+  --screen-chip-bd:    var(--border-default);
+  --screen-chip-text:  var(--text-secondary);
+  --screen-count-bg:   var(--surface-inset);
+  --screen-count-text: var(--text-muted);
+
+  --screen-track:     var(--surface-inset);
+  --screen-row-bd:    var(--border-subtle);
+  --screen-row-hover: var(--surface-inset);
+}
+
+/* Sizes these screens use that sit outside the global scales. */
+:root {
+  --screen-tile:       36px;   /* the glyph tile on a card or a band cell */
+  --screen-tile-sm:    32px;   /* the one on a list row */
+  --screen-text-stat:  32px;   /* one large figure — a score, a price */
+
+  /* dashboard only */
+  --dash-card-h:      212px;   /* the tallest of the three cards */
+  --dash-spark-w:     132px;
+  --dash-spark-h:      34px;
+  --dash-heat-cell:    12px;
+  --dash-heat-gap:      4px;
+  --dash-bar-w:        96px;
+  --dash-bar-h:         6px;
+  --dash-score-w:      30px;
+
+  /* settings only — the section rail, the reading column it sets against, and
+     the connection strip on the devices section */
+  --set-rail-w:       244px;   /* the sticky section rail */
+  --set-column-max:   920px;   /* a settings form is read, not scanned: cap it */
+  --set-meter-h:       44px;   /* the latency strip */
+  --set-meter-bar:      7px;   /* one sample in it */
 }
 
 /* ------------------------------------------------------------
@@ -1019,7 +1102,6 @@
   --text-xl:   1.25rem;   /* 20 */
   --text-2xl:  1.5rem;    /* 24 */
   --text-3xl:  1.875rem;  /* 30 */
-  --text-4xl:  2.25rem;   /* 36 */
 
   --leading-tight:  1.2;
   --leading-snug:   1.35;

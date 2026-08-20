@@ -1,14 +1,20 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { SETTINGS, makePasskey } from './settings.js'
 import {
   ACCOUNT,
+  attachResume,
   billingSummary,
   cancelSubscription,
   changePlan,
   completeOnboarding,
   dismissOnboarding,
   keepCurrentPlan,
+  removeResume,
   renewSubscription,
   scheduleChange,
+  spendCredits,
+  updateDetails,
+  updateInterviewProfile,
 } from './account.js'
 
 const AccountContext = createContext(null)
@@ -29,6 +35,14 @@ const AccountContext = createContext(null)
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(ACCOUNT)
   const [notice, setNotice] = useState(null)
+  /**
+   * Everything Settings owns that the account has no field for — notification
+   * preferences, recording retention, device choices, passkeys and the signed-in
+   * device list. It sits here rather than in the settings route because the
+   * screen is seven sections deep and each one saves on its own; holding it in
+   * the route would reset the other six every time one of them navigated.
+   */
+  const [settings, setSettings] = useState(SETTINGS)
 
   const cancel = useCallback(
     (reason) => setAccount((a) => cancelSubscription(a, reason)),
@@ -44,6 +58,56 @@ export function AccountProvider({ children }) {
   const onboard = useCallback((details) => setAccount((a) => completeOnboarding(a, details)), [])
   const skipOnboarding = useCallback(() => setAccount((a) => dismissOnboarding(a)), [])
 
+  // The practice screen's CV gate, and the session it then lets you start.
+  const attachCv = useCallback((file) => setAccount((a) => attachResume(a, file)), [])
+  const spend = useCallback((credits) => setAccount((a) => spendCredits(a, credits)), [])
+
+  // Settings' own writers. Each takes the same shape the flow it replaces takes,
+  // so a profile edited here is indistinguishable from one the wizard collected.
+  const saveDetails = useCallback((details) => setAccount((a) => updateDetails(a, details)), [])
+  const saveInterviewProfile = useCallback(
+    (details) => setAccount((a) => updateInterviewProfile(a, details)),
+    [],
+  )
+  const detachCv = useCallback(() => setAccount((a) => removeResume(a)), [])
+
+  const saveSettings = useCallback(
+    (patch) => setSettings((current) => ({ ...current, ...patch })),
+    [],
+  )
+  const registerPasskey = useCallback(
+    (name) =>
+      setSettings((current) => ({ ...current, passkeys: [...current.passkeys, makePasskey(name)] })),
+    [],
+  )
+  const removePasskey = useCallback(
+    (id) =>
+      setSettings((current) => ({
+        ...current,
+        passkeys: current.passkeys.filter((key) => key.id !== id),
+      })),
+    [],
+  )
+  // Revoking never touches the session you are reading the screen on — signing
+  // yourself out of the device in your hand is a different action, and it lives
+  // in the profile menu.
+  const revokeSession = useCallback(
+    (id) =>
+      setSettings((current) => ({
+        ...current,
+        sessions: current.sessions.filter((s) => s.current || s.id !== id),
+      })),
+    [],
+  )
+  const revokeOtherSessions = useCallback(
+    () => setSettings((current) => ({ ...current, sessions: current.sessions.filter((s) => s.current) })),
+    [],
+  )
+  const changePassword = useCallback(
+    () => setSettings((current) => ({ ...current, passwordChangedDaysAgo: 0 })),
+    [],
+  )
+
   const updateCards = useCallback(
     (update) => setAccount((a) => ({ ...a, cards: update(a.cards) })),
     [],
@@ -54,6 +118,16 @@ export function AccountProvider({ children }) {
       account,
       summary: billingSummary(account),
       setAccount,
+      settings,
+      saveSettings,
+      saveDetails,
+      saveInterviewProfile,
+      detachCv,
+      registerPasskey,
+      removePasskey,
+      revokeSession,
+      revokeOtherSessions,
+      changePassword,
       cancel,
       renew,
       upgrade,
@@ -61,6 +135,8 @@ export function AccountProvider({ children }) {
       keepPlan,
       onboard,
       skipOnboarding,
+      attachCv,
+      spend,
       updateCards,
       notice,
       setNotice,
@@ -68,6 +144,16 @@ export function AccountProvider({ children }) {
     [
       account,
       notice,
+      settings,
+      saveSettings,
+      saveDetails,
+      saveInterviewProfile,
+      detachCv,
+      registerPasskey,
+      removePasskey,
+      revokeSession,
+      revokeOtherSessions,
+      changePassword,
       cancel,
       renew,
       upgrade,
@@ -75,6 +161,8 @@ export function AccountProvider({ children }) {
       keepPlan,
       onboard,
       skipOnboarding,
+      attachCv,
+      spend,
       updateCards,
     ],
   )

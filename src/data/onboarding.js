@@ -22,6 +22,8 @@ export const TRACKS = [
     id: 'nhs',
     label: 'NHS',
     icon: 'briefcase',
+    // The token layer already names a colour per track — see --track-* .
+    accent: 'nhs',
     blurb: 'A job or post in the NHS',
     subLabel: "What's your role?",
     sub: [
@@ -39,6 +41,7 @@ export const TRACKS = [
     id: 'university',
     label: 'University',
     icon: 'graduationCap',
+    accent: 'uni',
     blurb: 'Applying to study',
     subLabel: 'Which course?',
     sub: [
@@ -56,6 +59,7 @@ export const TRACKS = [
     id: 'postgraduate',
     label: 'Postgraduate',
     icon: 'trophy',
+    accent: 'pg',
     blurb: 'Specialty or core training',
     subLabel: 'Which stage?',
     sub: ['Core training', 'ST1 and run-through', 'Higher specialty'],
@@ -92,47 +96,54 @@ export const WORRIES = [
  * session will open on, per track. The vocabulary differs by track — a panel's
  * "focus areas" and a circuit's "stations" are not the same words for the same
  * slot — which is why this is a map rather than one list.
+ *
+ * **Every value here must be one of that track's focus items in
+ * `practice.js`, spelled exactly.** The configurator pre-selects from this, so
+ * a name that does not match is silently dropped — which is the right failure,
+ * but it makes setup's promise quietly untrue. This file does not import the
+ * config (the config imports the dashboard, which imports this), so the match
+ * is by convention and by the test below it.
  */
 const WORRY_FOCUS = {
   'Freezing up': {
-    nhs: 'Handling pressure',
-    university: 'Situational judgement',
-    postgraduate: 'Judgement under pressure',
+    nhs: 'Handling Pressure / Resilience',
+    university: 'Situational Judgement',
+    postgraduate: 'Judgement Under Pressure',
   },
   'Structuring my answers': {
-    nhs: 'Communication and clarity',
-    university: 'Communication and role play',
-    postgraduate: 'Communication and role play',
+    nhs: 'Communication & Clarity',
+    university: 'Communication / Role Play',
+    postgraduate: 'Communication / Role Play',
   },
   'Clinical questions': {
-    nhs: 'Clinical judgement',
-    university: 'Health awareness',
-    postgraduate: 'Clinical scenario',
+    nhs: 'Clinical Judgment & Decision-Making',
+    university: 'Health Awareness / Current Issues',
+    postgraduate: 'Clinical Scenario',
   },
   'Ethical scenarios': {
-    nhs: 'Integrity and NHS values',
-    university: 'Ethical scenario',
-    postgraduate: 'Ethical scenario',
+    nhs: 'Integrity & NHS Values',
+    university: 'Ethical Scenario',
+    postgraduate: 'Ethical Scenario',
   },
   'Not having enough examples': {
-    nhs: 'Quality improvement',
-    university: 'Work experience reflection',
-    postgraduate: 'Portfolio review',
+    nhs: 'Quality Improvement & Learning',
+    university: 'Work Experience Reflection',
+    postgraduate: 'Portfolio Review',
   },
   'Running out of time': {
-    nhs: 'Handling pressure',
-    university: 'Situational judgement',
-    postgraduate: 'Judgement under pressure',
+    nhs: 'Handling Pressure / Resilience',
+    university: 'Situational Judgement',
+    postgraduate: 'Judgement Under Pressure',
   },
   'Body language': {
-    nhs: 'Communication and clarity',
-    university: 'Communication and role play',
+    nhs: 'Communication & Clarity',
+    university: 'Communication / Role Play',
     postgraduate: 'Presentation',
   },
   'Sounding rehearsed': {
-    nhs: 'Compassion and empathy',
-    university: 'Empathy and reflection',
-    postgraduate: 'Motivation and specialty fit',
+    nhs: 'Compassion & Empathy',
+    university: 'Empathy & Reflection',
+    postgraduate: 'Motivation & Specialty Fit',
   },
 }
 

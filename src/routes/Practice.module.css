@@ -1,0 +1,217 @@
+/* Practice — the CV gate and the track picker. Drawn in the app's light screen
+   surface (--screen-*), the same one the dashboard uses. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  margin:
+    calc((var(--app-header-h) + var(--app-content-gap)) * -1)
+    calc(var(--app-gutter) * -1)
+    calc(var(--space-8) * -1)
+    calc(var(--app-gutter-start) * -1);
+  padding: calc(var(--app-header-h) + var(--space-6)) var(--space-6) var(--space-8);
+  min-height: 100vh;
+  background: var(--screen-page);
+}
+
+.page > * { min-width: 0; }
+
+.notice { margin-bottom: var(--space-2); }
+
+/* ---- the CV gate ---- */
+.blocked { border-radius: var(--radius-xl); }
+
+.gate {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+  padding: var(--space-6);
+  border: 1px solid var(--screen-card-bd);
+  border-radius: var(--radius-xl);
+  background: var(--screen-card-bg);
+  box-shadow: var(--screen-card-shadow);
+}
+
+/* the gate says what the band used to: why practice needs a CV at all */
+.gateHead { display: flex; align-items: flex-start; gap: var(--space-4); }
+
+.gateTile {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--screen-tile);
+  block-size: var(--screen-tile);
+  border: 1px solid var(--screen-tile-bd);
+  border-radius: var(--radius-lg);
+  background: var(--screen-tile-bg);
+  color: var(--brand);
+}
+
+.gateTitle {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--screen-heading);
+}
+
+.gateBody {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--screen-muted);
+}
+
+.gateNote {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--screen-meta);
+}
+
+.gateActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.gateBack {
+  font-size: var(--text-sm);
+  color: var(--screen-muted);
+  text-decoration: none;
+}
+
+.gateBack:hover { color: var(--screen-heading); text-decoration: underline; }
+
+/* ---- the track picker ---- */
+.tracks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px solid var(--screen-card-bd);
+  border-radius: var(--radius-xl);
+  background: var(--screen-card-bg);
+  box-shadow: var(--screen-card-shadow);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.track[data-track='nhs']          { --screen-accent: var(--track-nhs); --screen-accent-bg: var(--track-nhs-bg); }
+.track[data-track='university']   { --screen-accent: var(--track-uni); --screen-accent-bg: var(--track-uni-bg); }
+.track[data-track='postgraduate'] { --screen-accent: var(--track-pg);  --screen-accent-bg: var(--track-pg-bg); }
+
+.track:hover { border-color: var(--screen-accent); transform: translateY(-2px); }
+.track:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.trackTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--screen-tile);
+  height: var(--screen-tile);
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--screen-accent);
+  border-radius: var(--radius-lg);
+  background: var(--screen-accent-bg);
+  color: var(--screen-accent);
+}
+
+.trackTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--screen-heading);
+}
+
+.trackBlurb {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 20px;
+  color: var(--screen-muted);
+}
+
+.trackMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+}
+
+.trackShape {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--screen-accent-bg);
+  color: var(--screen-accent);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  line-height: 18px;
+}
+
+.trackCost {
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--screen-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.trackShapeNote {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--screen-meta);
+}
+
+.trackGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--brand);
+}
+
+.track:hover .trackGo { text-decoration: underline; }
+
+/* ---- foot ---- */
+.foot {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  padding-inline-start: var(--space-1);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--screen-meta);
+}
+
+.foot > svg { flex: 0 0 auto; margin-top: 1px; }
+
+@media (max-width: 1100px) {
+  .tracks { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .page { padding-inline: var(--space-4); }
+  .h1 { font-size: var(--text-2xl); }
+}

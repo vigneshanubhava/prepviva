@@ -15,8 +15,8 @@ import styles from './GeneratingLink.module.css'
  */
 const SIGNING_MS = 1600
 
-/** Where signing in lands. Billing until the dashboard is built. */
-const LANDING = '/billing'
+/** Where signing in lands — the dashboard, which is now built. */
+const LANDING = '/dashboard'
 
 export default function SigningIn() {
   const navigate = useNavigate()

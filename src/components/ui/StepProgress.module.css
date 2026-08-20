@@ -1,0 +1,22 @@
+.wrap { display: flex; align-items: center; gap: var(--space-4); width: 100%; }
+
+.bar { display: flex; flex: 1 1 auto; gap: var(--space-1); min-width: 0; }
+
+.segment {
+  flex: 1 1 0;
+  max-width: 56px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--border-default);
+  transition: background var(--duration-base) var(--ease-out);
+}
+
+.on { background: var(--info-solid); }
+
+.count {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-muted);
+}

@@ -1,0 +1,76 @@
+/* The shared track switcher — see TrackSwitcher.jsx. Drawn on the app's light
+   screen surface, so it uses the --screen-* tokens like the cards it scopes. */
+
+.wrap { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 7px var(--space-3);
+  border: 1px solid var(--screen-chip-bd);
+  border-radius: var(--radius-lg);
+  background: var(--screen-chip-bg);
+  color: var(--screen-chip-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 20px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.chip > svg { color: var(--screen-meta); }
+.chip:hover { border-color: var(--border-default); }
+.chip:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.chip[data-accent='nhs'] { --screen-accent: var(--track-nhs); --screen-accent-bg: var(--track-nhs-bg); }
+.chip[data-accent='uni'] { --screen-accent: var(--track-uni); --screen-accent-bg: var(--track-uni-bg); }
+.chip[data-accent='pg']  { --screen-accent: var(--track-pg);  --screen-accent-bg: var(--track-pg-bg); }
+
+/* selected: the track's own colour on the edge and the glyph, which is the
+   accent everything it scopes is then drawn in */
+.chip[data-on] {
+  border-color: var(--screen-accent);
+  color: var(--screen-heading);
+  font-weight: var(--weight-medium);
+}
+
+.chip[data-on] > svg { color: var(--screen-accent); }
+
+.chip[data-on] .chipCount {
+  background: var(--screen-accent-bg);
+  color: var(--screen-accent);
+}
+
+.chipLabel { white-space: nowrap; }
+
+.chipCount {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--screen-count-bg);
+  color: var(--screen-count-text);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hiddenNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--screen-meta);
+}
+
+.hiddenNote > svg { flex: 0 0 auto; }
+

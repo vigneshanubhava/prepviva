@@ -148,6 +148,14 @@ const paths = {
       <polyline points="12 7 12 12 15.5 14" />
     </>
   ),
+  calendar: (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2.5" />
+      <line x1="3.5" y1="10" x2="20.5" y2="10" />
+      <line x1="8" y1="3.5" x2="8" y2="7" />
+      <line x1="16" y1="3.5" x2="16" y2="7" />
+    </>
+  ),
   history: (
     <>
       <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1" />
@@ -262,6 +270,50 @@ const paths = {
     <>
       <path d="M3.5 12.5h4l1.5 3h6l1.5-3h4" />
       <path d="M5.4 5h13.2l1.9 7.5v4.3a2.2 2.2 0 0 1-2.2 2.2H5.7a2.2 2.2 0 0 1-2.2-2.2v-4.3Z" />
+    </>
+  ),
+  /* Settings' own set: the device, connection and credential glyphs the
+     settings screen needs. Same 24-box, same stroked-in-currentColor rule. */
+  camera: (
+    <>
+      <path d="M3 9a2 2 0 0 1 2-2h2.1l1.2-2a1.4 1.4 0 0 1 1.2-.7h5a1.4 1.4 0 0 1 1.2.7l1.2 2H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </>
+  ),
+  monitor: (
+    <>
+      <rect x="3" y="4.5" width="18" height="12" rx="2" />
+      <path d="M12 16.5V20" />
+      <path d="M8.5 20h7" />
+    </>
+  ),
+  smartphone: (
+    <>
+      <rect x="6.5" y="3" width="11" height="18" rx="2.4" />
+      <line x1="10.6" y1="17.8" x2="13.4" y2="17.8" />
+    </>
+  ),
+  wifi: (
+    <>
+      <path d="M4.4 9.4a11 11 0 0 1 15.2 0" />
+      <path d="M7.5 12.8a7 7 0 0 1 9 0" />
+      <path d="M10.2 16.2a3.2 3.2 0 0 1 3.6 0" />
+      <line x1="12" y1="19.4" x2="12" y2="19.5" />
+    </>
+  ),
+  activity: <polyline points="3 12.5 7.4 12.5 10 6.2 14 17.8 16.6 12.5 21 12.5" />,
+  key: (
+    <>
+      <circle cx="8.2" cy="12" r="4.2" />
+      <path d="M12.4 12H21" />
+      <path d="M18.2 12v3.2" />
+      <path d="M15.2 12v2.4" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 3.5 19 6v5.5c0 4-2.8 7.3-7 9-4.2-1.7-7-5-7-9V6Z" />
+      <polyline points="9.2 12 11.2 14 15 10" />
     </>
   ),
 }

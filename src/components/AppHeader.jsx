@@ -1,6 +1,7 @@
 import { Icon } from './ui/index.js'
 import Logo from './Logo.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
+import PrototypeMenu from './PrototypeMenu.jsx'
 import styles from './AppHeader.module.css'
 
 /**
@@ -11,12 +12,17 @@ import styles from './AppHeader.module.css'
  *
  * Pages that use it must clear its height themselves; --app-header-h is the
  * measurement to offset by.
+ *
+ * `controls` hangs the prototype panel off the gear — on by default, and off on
+ * the signup flow, where there is no account yet for it to force anything on.
  */
-export default function AppHeader({ name, email, className = '' }) {
+export default function AppHeader({ name, email, controls = true, className = '' }) {
   return (
     <header className={`${styles.header} ${className}`}>
       <Logo />
       <div className={styles.right}>
+        {/* prototype only — see PrototypeMenu */}
+        {controls ? <PrototypeMenu /> : null}
         <button type="button" className={styles.iconBtn} aria-label="Notifications">
           <Icon name="bell" size="1.25rem" strokeWidth={2} />
         </button>

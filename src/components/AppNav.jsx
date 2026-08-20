@@ -33,6 +33,10 @@ export default function AppNav({ collapsed = false, onToggle }) {
               to={item.to}
               className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}
               title={collapsed ? item.label : undefined}
+              /* the label is display:none when the nav is collapsed — by the
+                 toggle or by the 900px media query — and a link with no
+                 accessible name is a link nobody can ask for */
+              aria-label={item.label}
             >
               <span className={styles.icon}>
                 <Icon name={item.icon} size="16px" strokeWidth={1.5} />
