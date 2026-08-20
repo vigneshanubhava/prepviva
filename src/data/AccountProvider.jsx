@@ -1,10 +1,13 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SETTINGS, makePasskey } from './settings.js'
+import { readPhoto } from './photo.js'
+import { load, save } from './session.js'
 import {
   ACCOUNT,
   attachResume,
   billingSummary,
   cancelSubscription,
+  clearAvatar,
   changePlan,
   completeOnboarding,
   dismissOnboarding,
@@ -12,6 +15,7 @@ import {
   removeResume,
   renewSubscription,
   scheduleChange,
+  setAvatar,
   spendCredits,
   updateDetails,
   updateInterviewProfile,
@@ -33,7 +37,9 @@ const AccountContext = createContext(null)
  * that shows it clears it.
  */
 export function AccountProvider({ children }) {
-  const [account, setAccount] = useState(ACCOUNT)
+  // seeded from the tab's session so a refresh does not undo the demo — see
+  // data/session.js, including why a hard refresh cannot be told apart
+  const [account, setAccount] = useState(() => load('account', ACCOUNT))
   const [notice, setNotice] = useState(null)
   /**
    * Everything Settings owns that the account has no field for — notification
@@ -42,14 +48,18 @@ export function AccountProvider({ children }) {
    * screen is seven sections deep and each one saves on its own; holding it in
    * the route would reset the other six every time one of them navigated.
    */
-  const [settings, setSettings] = useState(SETTINGS)
+  const [settings, setSettings] = useState(() => load('settings', SETTINGS))
   /**
    * Which notifications have been read. The bell's rows are derived from state
    * rather than stored (`data/notifications.js`), so the only thing there is to
    * keep is the ids that have been seen — and an id that stops being generated
    * simply stops mattering.
    */
-  const [notificationsRead, setNotificationsRead] = useState([])
+  const [notificationsRead, setNotificationsRead] = useState(() => load('notificationsRead', []))
+
+  useEffect(() => save('account', account), [account])
+  useEffect(() => save('settings', settings), [settings])
+  useEffect(() => save('notificationsRead', notificationsRead), [notificationsRead])
 
   const cancel = useCallback(
     (reason) => setAccount((a) => cancelSubscription(a, reason)),
@@ -77,6 +87,15 @@ export function AccountProvider({ children }) {
     [],
   )
   const detachCv = useCallback(() => setAccount((a) => removeResume(a)), [])
+
+  /* The photograph. `readPhoto` squares and shrinks it before it is kept, so
+     what the account holds is a small data URL rather than a 5MB file. */
+  const savePhoto = useCallback(
+    (file) => readPhoto(file).then((avatar) => setAccount((a) => setAvatar(a, avatar))),
+    [],
+  )
+
+  const removePhoto = useCallback(() => setAccount((a) => clearAvatar(a)), [])
 
   const saveSettings = useCallback(
     (patch) => setSettings((current) => ({ ...current, ...patch })),
@@ -137,6 +156,8 @@ export function AccountProvider({ children }) {
       saveDetails,
       saveInterviewProfile,
       detachCv,
+      savePhoto,
+      removePhoto,
       registerPasskey,
       removePasskey,
       revokeSession,
@@ -165,6 +186,8 @@ export function AccountProvider({ children }) {
       saveDetails,
       saveInterviewProfile,
       detachCv,
+      savePhoto,
+      removePhoto,
       registerPasskey,
       removePasskey,
       revokeSession,

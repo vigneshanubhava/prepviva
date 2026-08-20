@@ -61,7 +61,25 @@ were learned by breaking something first.
 ## Stack
 
 Vite 8 + React 19 + Tailwind v4 + React Router. **JavaScript, not TypeScript.**
-No backend, no localStorage/sessionStorage. `npm run dev` → http://localhost:5173
+No backend. `npm run dev` → http://localhost:5173
+
+**sessionStorage is now used** (`src/data/session.js`), which reverses
+doc/BRIEF.md's no-storage rule on request (2026-08-20): a refresh used to reset
+the account to `ACCOUNT`, which meant back to `onboarded: false` and out to
+first-run setup mid-demo. The account, the settings, notification read-state,
+the prototype's practice history and the theme are kept for the tab.
+
+Two things to know:
+
+- **A hard refresh cannot be told apart from a normal one.** No web API
+  distinguishes them — `PerformanceNavigationTiming.type` reports `"reload"` for
+  both — and sessionStorage survives either. The ways back to a clean slate are
+  **closing the tab** and **Reset** in the prototype controls panel, which
+  clears the stored record as well as the live state.
+- **Dates are named, not sniffed.** `JSON.stringify` writes Dates as strings and
+  nothing turns them back, so `session.js` lists the fields that really are
+  Dates. A blanket reviver would also convert `profile.interviewDate`, which is
+  a date *input's* value and must stay a string.
 
 ## Routes built
 
@@ -538,7 +556,7 @@ were first-run setup's own parts:
 |---|---|
 | `ChoiceCards` | Radios as cards: glyph, label, a line of explanation. `layout="row"`, an `error`, and a per-option `accent` — `brand`, or `nhs` / `uni` / `pg`, which the token layer already colours. |
 | `ChipGroup` | Multi-select chips over a checkbox group, for short unordered answers. |
-| `FileDrop` | Attach one file. Checks extension and size itself and hands the message back through `onReject`, so the screen keeps its own voice. Passes on name and size only. The attached state offers **Replace** as well as Remove — both go through the same input and the same two checks, so a second picker elsewhere can never drift from these rules. `compact` renders the actions alone, for a screen that already names the file (the configurator's "CV attached" card); `allowRemove={false}` where removing would strand the flow. |
+| `FileDrop` | Attach one file. Checks extension and size itself and hands the message back through `onReject`, so the screen keeps its own voice. Passes on name and size only. The attached state offers **Replace** as well as Remove — both go through the same input and the same two checks, so a second picker elsewhere can never drift from these rules. `compact` renders actions alone with no drop zone, for a screen that already names the file or has no room for a target; `allowRemove={false}` where removing would strand the flow; `passFile` adds the `File` to the payload for a screen that must *show* what was picked (the profile photo). `onRemove` exists because `onSelect(null)` means both "removed" and "what you picked was rejected" — fine for a form field, wrong for anything already saved: a bad file must not delete the good one. |
 | `StepProgress` | Where you are in a multi-step flow: one `role="progressbar"`, decorative segments, and the count in words. |
 | `Switch` | A preference that *applies*, as opposed to a checkbox, which selects a value a form later submits. A native `<input type="checkbox">` with `role="switch"` under paint; `size="sm"` for a dense row. Settings' own toggles sit inside a form that still needs saving, which is why that screen carries a save bar rather than letting the control imply it saved. |
 
@@ -787,7 +805,15 @@ Anything beyond those is new.
   screenshot; Apple Pay and Link were dropped.
 - Checkout's button says "Start 14-day trial", not "Pay" — nothing is charged
   that day.
-- Avatars are initials, not a stock photo.
+- **Avatars are initials by default, and the account holder can upload a
+  photograph** (2026-08-20, on request). The original decision ruled out a
+  *stock* face — a photograph of someone who never agreed to be in this product
+  — not a picture the user chose. `Avatar` takes `src`; without one it falls
+  back to initials, which is still what every account starts with.
+  `data/photo.js` squares and shrinks the upload to 256px and keeps it as a
+  data URL, so it is small enough to store and survives a refresh. Uploading
+  lives in two places, both reading the same account field: the profile menu
+  and Settings → Profile.
 - **All four out-of-app screens share one banner image.** Artboards 11 and 13
   draw a flat gradient there; artboard 11's own PNG shows the signup banner, so
   `AuthShell` uses it on all of them.

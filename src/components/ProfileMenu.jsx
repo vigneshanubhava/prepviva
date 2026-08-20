@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Avatar, Icon } from './ui/index.js'
+import { Avatar, FileDrop, Icon } from './ui/index.js'
+import { useAccount } from '../data/AccountProvider.jsx'
 import { useTheme } from '../theme/ThemeProvider.jsx'
+import { PHOTO_MAX_MB, PHOTO_TYPES } from '../data/onboarding.js'
 import styles from './ProfileMenu.module.css'
 
 /**
@@ -24,6 +26,8 @@ const THEMES = [
 
 export default function ProfileMenu({ name, email }) {
   const [open, setOpen] = useState(false)
+  const { account, savePhoto, removePhoto } = useAccount()
+  const [photoError, setPhotoError] = useState(null)
   const { theme, setTheme } = useTheme()
   const navigate = useNavigate()
   const wrapRef = useRef(null)
@@ -95,7 +99,7 @@ export default function ProfileMenu({ name, email }) {
           }
         }}
       >
-        <Avatar name={name} aria-hidden="true" />
+        <Avatar name={name} src={account.avatar?.url} aria-hidden="true" />
       </button>
 
       {open ? (
@@ -107,11 +111,36 @@ export default function ProfileMenu({ name, email }) {
           ref={menuRef}
           onKeyDown={onMenuKeyDown}
         >
-          {/* Figma draws a photograph here. Avatars are initials throughout —
-              a stock face reads as a real person who has not consented. */}
+          {/* Figma draws a photograph here, and now so can the account holder:
+              their own picture, chosen by them, or the initials they get by
+              default. What was ruled out was a stock face standing in for a
+              person who never agreed to be here. */}
           <div className={styles.account}>
-            <Avatar name={name} aria-hidden="true" />
+            <Avatar name={name} src={account.avatar?.url} size="lg" aria-hidden="true" />
             <p className={styles.email}>{email}</p>
+
+            <FileDrop
+              className={styles.photo}
+              compact
+              passFile
+              file={account.avatar}
+              accept={PHOTO_TYPES}
+              maxMB={PHOTO_MAX_MB}
+              chooseLabel="Add a photo"
+              replaceLabel="Change"
+              onSelect={(picked) => {
+                setPhotoError(null)
+                if (picked?.file) savePhoto(picked.file).catch((e) => setPhotoError(e.message))
+              }}
+              onRemove={removePhoto}
+              onReject={(message) => setPhotoError(message)}
+            />
+
+            {photoError ? (
+              <p className={styles.photoError} role="alert">
+                {photoError}
+              </p>
+            ) : null}
           </div>
 
           <hr className={styles.rule} />

@@ -93,6 +93,13 @@ export const ACCOUNT = {
    * onboarding record (`interview-prototype/src/features/onboarding/`), so the
    * two can be compared field by field.
    */
+  /**
+   * The profile photograph, once one is uploaded: `{ url, name }`, where `url`
+   * is a data URL made in the browser (`data/photo.js` squares and shrinks it
+   * to 256px first). There is no backend to send it to; it lives in the tab's
+   * session, and the account falls back to initials without it.
+   */
+  avatar: null,
   profile: {
     phone: null,
     linkedin: null,       // a profile URL, collected in Settings rather than setup
@@ -332,6 +339,20 @@ export function completeOnboarding(account = ACCOUNT, details = {}) {
       resume: resume ? { name: resume.name, size: resume.size } : account.profile.resume,
     },
   }
+}
+
+/**
+ * The profile photograph — `{ url, name }`, where the url is the data URL
+ * `data/photo.js` produced. The CV keeps name and size only because nothing
+ * needs to see it; a picture has to be drawn, so this one carries its pixels.
+ */
+export function setAvatar(account = ACCOUNT, avatar) {
+  return { ...account, avatar: avatar || null }
+}
+
+/** Back to initials. */
+export function clearAvatar(account = ACCOUNT) {
+  return { ...account, avatar: null }
 }
 
 /**

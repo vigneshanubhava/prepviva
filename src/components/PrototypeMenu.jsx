@@ -15,6 +15,7 @@ import {
   forceStatus,
   phaseOf,
 } from '../data/account.js'
+import { clear as clearSession } from '../data/session.js'
 import { HISTORY, HISTORY_STATES } from '../data/dashboard.js'
 import { PLANS } from '../data/plans.js'
 import styles from './PrototypeMenu.module.css'
@@ -136,7 +137,13 @@ export default function PrototypeMenu() {
     navigate('/welcome/setup')
   }
 
+  /**
+   * Back to how the prototype opens — and the way back now that state survives
+   * a refresh. It clears the tab's stored session as well as the live state,
+   * or the next reload would restore what was just thrown away.
+   */
   function reset() {
+    clearSession()
     setAccount(ACCOUNT)
     setHistory('established')
   }

@@ -13,6 +13,17 @@
   line-height: 1;
   text-transform: uppercase;
   user-select: none;
+  overflow: hidden;
+}
+
+/* Tailwind's preflight sets img { max-width: 100% }, which would letterbox a
+   portrait crop inside the circle rather than filling it. */
+.photo {
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  object-fit: cover;
+  display: block;
 }
 
 .sm { width: var(--space-6); height: var(--space-6); font-size: var(--text-xs); }

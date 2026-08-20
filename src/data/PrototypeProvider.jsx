@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { HISTORY, resolveState } from './dashboard.js'
+import { load, save } from './session.js'
 
 const PrototypeContext = createContext(null)
 
@@ -13,12 +14,18 @@ const PrototypeContext = createContext(null)
  * account has no field for.
  *
  * Seeded from `?state=` on first load, so the links that predate the panel
- * still work and a particular state is still shareable by URL.
+ * still work and a particular state is still shareable by URL. Failing that it
+ * picks up whatever the tab was last on, so a refresh keeps the scenario.
  */
 export function PrototypeProvider({ children }) {
-  const [history, setHistory] = useState(() =>
-    resolveState(new URLSearchParams(window.location.search).get('state')),
-  )
+  const [history, setHistory] = useState(() => {
+    // an explicit ?state= wins: it is someone asking for that scenario now
+    const asked = new URLSearchParams(window.location.search).get('state')
+    if (asked) return resolveState(asked)
+    return load('history', resolveState(null))
+  })
+
+  useEffect(() => save('history', history), [history])
 
   const value = useMemo(
     () => ({ history, setHistory, state: HISTORY[history] }),

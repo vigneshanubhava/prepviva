@@ -23,6 +23,8 @@ import { ACCOUNT } from '../data/account.js'
 import {
   CV_MAX_MB,
   CV_TYPES,
+  PHOTO_MAX_MB,
+  PHOTO_TYPES,
   DATE_STATES,
   EXPERIENCE,
   TRACKS,
@@ -66,7 +68,7 @@ const PHONE = /^[+\d][\d\s()-]{6,}$/
 const LINKEDIN = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/.+/i
 
 export function ProfileSection() {
-  const { account, summary, saveDetails } = useAccount()
+  const { account, summary, saveDetails, savePhoto, removePhoto } = useAccount()
   const { toast } = useToast()
 
   const committed = useMemo(
@@ -80,6 +82,7 @@ export function ProfileSection() {
 
   const { draft, dirty, set, reset } = useDraft(committed)
   const [errors, setErrors] = useState({})
+  const [photoError, setPhotoError] = useState(null)
 
   function save() {
     const found = {}
@@ -105,16 +108,43 @@ export function ProfileSection() {
 
       <Panel icon="userCheck" title="Your details" sub="Shown on your reports and in the app header.">
         <div className={styles.identity}>
-          <Avatar name={account.name} size="lg" aria-hidden="true" />
+          <Avatar name={account.name} src={account.avatar?.url} size="lg" aria-hidden="true" />
+
           <div className={styles.identityText}>
             <p className={styles.identityName}>{account.name}</p>
             <p className={styles.identityMeta}>
               {summary.plan.name} &middot; member since {formatDate(account.signedUpOn)}
             </p>
           </div>
+
           <Badge tone={summary.canceled ? 'danger' : summary.trialing ? 'warning' : 'success'}>
             {summary.canceled ? 'Cancelled' : summary.trialing ? 'On trial' : 'Active'}
           </Badge>
+
+          {/* Same picker and the same two checks as every other upload here. */}
+          <FileDrop
+            className={styles.identityPhoto}
+            compact
+            passFile
+            file={account.avatar}
+            accept={PHOTO_TYPES}
+            maxMB={PHOTO_MAX_MB}
+            chooseLabel="Upload a photo"
+            allowRemove
+            onSelect={(picked) => {
+              setPhotoError(null)
+              if (picked?.file) savePhoto(picked.file).catch((e) => setPhotoError(e.message))
+            }}
+            onRemove={removePhoto}
+            onReject={(message) => setPhotoError(message)}
+          />
+
+          {photoError ? (
+            <p className={styles.identityError} role="alert">
+              <Icon name="alertCircle" size="14px" strokeWidth={1.6} />
+              {photoError}
+            </p>
+          ) : null}
         </div>
 
         <div className={styles.fields}>

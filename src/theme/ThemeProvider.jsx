@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { load, save } from '../data/session.js'
 
 const ThemeContext = createContext(null)
 
@@ -14,10 +15,11 @@ const SYSTEM_QUERY = '(prefers-color-scheme: dark)'
  * control showing the current appearance needs.
  *
  * The default is 'light', not 'system' — doc/BRIEF.md makes light the default,
- * and starting from the OS would make that depend on the machine.
+ * and starting from the OS would make that depend on the machine. The setting
+ * is kept for the tab's session, so a refresh does not flip the app back.
  */
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState(() => load('theme', 'light'))
   const [systemDark, setSystemDark] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(SYSTEM_QUERY).matches,
   )
@@ -31,6 +33,8 @@ export function ThemeProvider({ children }) {
     query.addEventListener('change', onChange)
     return () => query.removeEventListener('change', onChange)
   }, [theme])
+
+  useEffect(() => save('theme', theme), [theme])
 
   const resolved = theme === 'system' ? (systemDark ? 'dark' : 'light') : theme
 

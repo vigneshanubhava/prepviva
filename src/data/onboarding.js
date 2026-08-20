@@ -171,5 +171,9 @@ export function trackById(id) {
 }
 
 /** The CV rules, stated once — the step's copy reads them from here. */
+/** The profile photograph, held in the browser and never sent anywhere. */
+export const PHOTO_TYPES = ['.png', '.jpg', '.jpeg', '.webp']
+export const PHOTO_MAX_MB = 5
+
 export const CV_TYPES = ['.pdf', '.doc', '.docx']
 export const CV_MAX_MB = 5

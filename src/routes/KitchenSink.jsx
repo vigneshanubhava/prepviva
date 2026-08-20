@@ -509,6 +509,16 @@ export default function KitchenSink() {
 
               <p className={styles.eyebrow}>Disabled</p>
               <FileDrop label="Disabled" hint="Nothing to add yet" disabled onSelect={() => {}} />
+
+
+              <p className={styles.eyebrow}>Compact — actions only, no zone</p>
+              <FileDrop compact chooseLabel="Upload a photo" onSelect={() => {}} />
+              <FileDrop
+                compact
+                file={{ name: 'oliver-davies.jpg', size: 96 * 1024 }}
+                onSelect={() => {}}
+                onRemove={() => {}}
+              />
             </div>
           </div>
         </Section>

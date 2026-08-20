@@ -14,7 +14,10 @@ import styles from './FileDrop.module.css'
  * from inside, so the screen keeps its own voice; `error` renders it.
  *
  * Only the file's name and size are passed on. This prototype has no backend,
- * and nothing here reads the bytes.
+ * and nothing here reads the bytes — with one opt-in exception: `passFile`
+ * adds the `File` itself to the payload, for a screen that has to *show* what
+ * was picked (the profile photo makes a blob URL from it). Still nothing
+ * leaves the browser.
  */
 export default function FileDrop({
   label,
@@ -25,10 +28,17 @@ export default function FileDrop({
   error,
   onSelect,
   onReject,
+  /** Removing, as its own callback. `onSelect(null)` means both "removed" and
+      "what you picked was rejected", which is fine for a form field and wrong
+      for anything already saved — a bad file must not delete the good one. */
+  onRemove,
   chooseLabel = 'Choose a file',
   replaceLabel = 'Replace',
-  /** Just the actions, for a screen that already states the file's name —
-      the configurator's "CV attached" card. */
+  /** Include the `File` in onSelect's payload — see the note above. */
+  passFile = false,
+  /** Actions only — no drop zone, whether or not a file is attached. For a
+      screen that already states the file, or has no room for a target: the
+      configurator's "CV attached" card, the profile photo. */
   compact = false,
   allowReplace = true,
   /** Off where removing the file would strand the flow the screen is in. */
@@ -57,7 +67,11 @@ export default function FileDrop({
       onReject?.(`That file is over ${maxMB}MB.`, 'size')
       return
     }
-    onSelect?.({ name: chosen.name, size: chosen.size })
+    onSelect?.({
+      name: chosen.name,
+      size: chosen.size,
+      ...(passFile ? { file: chosen } : null),
+    })
   }
 
   return (
@@ -94,12 +108,24 @@ export default function FileDrop({
               type="button"
               className={styles.remove}
               disabled={disabled}
-              onClick={() => onSelect?.(null)}
+              onClick={() => (onRemove ? onRemove() : onSelect?.(null))}
             >
               Remove
               <VisuallyHidden> {file.name}</VisuallyHidden>
             </button>
           ) : null}
+        </p>
+      ) : compact ? (
+        <p className={styles.compact}>
+          <button
+            type="button"
+            className={styles.remove}
+            disabled={disabled}
+            aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
+            onClick={() => inputRef.current?.click()}
+          >
+            {chooseLabel}
+          </button>
         </p>
       ) : (
         <div className={`${styles.zone} ${error ? styles.zoneError : ''}`}>
