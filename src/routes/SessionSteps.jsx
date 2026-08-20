@@ -79,11 +79,28 @@ export function StepContext({ config, ctx, setCtx }) {
   )
 }
 
-/* ── step 2 · format ──────────────────────────────────────────────────────
-   The only step where the price moves. Every option says what it costs and
-   what it would take to afford it, so the wall is visible before it is hit.
-   ────────────────────────────────────────────────────────────────────── */
-export function StepFormat({ config, format, setFormat, setStations, cost, balance, affordable }) {
+/**
+ * The credit wall — named in credits, with the exact shortfall and two ways
+ * out. Never just a disabled button.
+ *
+ * It rides the summary rail on a wide screen, under the session it is refusing
+ * to price, and drops into the step itself below 1100px where the rail is not
+ * on screen. Two renders of one component rather than two messages: the same
+ * split `OrderPanel` uses, so the wall can never say one thing in the column
+ * and another in the rail.
+ */
+export function CreditWall({
+  className = '',
+  config,
+  format,
+  setFormat,
+  setStations,
+  cost,
+  balance,
+  affordable,
+}) {
+  if (affordable) return null
+
   const circuit = isCircuit(config)
   const sizes = circuit ? config.format.stations : config.format.lengths
 
@@ -93,6 +110,43 @@ export function StepFormat({ config, format, setFormat, setStations, cost, balan
       ? costOf(config, { ...format, stations: size }) <= balance
       : costOf(config, { duration: size }) <= balance,
   )
+
+  return (
+    <Banner
+      className={`${styles.wall} ${className}`}
+      tone="danger"
+      title={`This session needs ${cost} credits. You have ${balance}.`}
+      actions={
+        <>
+          <Button as="a" href="/billing/manage-plan" variant="danger" size="sm">
+            Top up {cost - balance} credits
+          </Button>
+          {cheapest ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() =>
+                circuit ? setStations(cheapest) : setFormat((f) => ({ ...f, duration: cheapest }))
+              }
+            >
+              Use the {cheapest} {circuit ? 'station' : 'minute'} option
+            </Button>
+          ) : null}
+        </>
+      }
+    >
+      Every option says what it costs. The ones you cannot afford say how much is missing.
+    </Banner>
+  )
+}
+
+/* ── step 2 · format ──────────────────────────────────────────────────────
+   The only step where the price moves. Every option says what it costs and
+   what it would take to afford it, so the wall is visible before it is hit.
+   ────────────────────────────────────────────────────────────────────── */
+export function StepFormat({ config, format, setFormat, setStations, cost, balance, affordable }) {
+  const circuit = isCircuit(config)
+  const sizes = circuit ? config.format.stations : config.format.lengths
 
   return (
     <div className={styles.step}>
@@ -157,38 +211,17 @@ export function StepFormat({ config, format, setFormat, setStations, cost, balan
         ) : null}
       </fieldset>
 
-      {/* The wall: named in credits, with the exact shortfall, and two ways
-          out. Never just a disabled button. */}
-      {!affordable ? (
-        <Banner
-          className={styles.wall}
-          tone="danger"
-          title={`This session needs ${cost} credits. You have ${balance}.`}
-          actions={
-            <>
-              <Button as="a" href="/billing/manage-plan" variant="danger" size="sm">
-                Top up {cost - balance} credits
-              </Button>
-              {cheapest ? (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() =>
-                    circuit
-                      ? setStations(cheapest)
-                      : setFormat((f) => ({ ...f, duration: cheapest }))
-                  }
-                >
-                  Use the {cheapest} {circuit ? 'station' : 'minute'} option
-                </Button>
-              ) : null}
-            </>
-          }
-        >
-          Every option above says what it costs. The ones you cannot afford say how much is
-          missing.
-        </Banner>
-      ) : null}
+      {/* the rail carries the wall on a wide screen — see CreditWall */}
+      <CreditWall
+        className={styles.wallInline}
+        config={config}
+        format={format}
+        setFormat={setFormat}
+        setStations={setStations}
+        cost={cost}
+        balance={balance}
+        affordable={affordable}
+      />
 
       <div className={styles.panel}>
         <ChoiceCards
@@ -401,7 +434,7 @@ export function StepReady({ config, ctx, format, picked, cost, balance, consent,
    at step 4. Unanswered rows show as em-dashes rather than disappearing, so
    what is still to come has a shape.
    ────────────────────────────────────────────────────────────────────── */
-export function SummaryRail({ config, ctx, format, picked, step, circuit, move, blocked }) {
+export function SummaryRail({ config, ctx, format, picked, step, circuit, move, wall }) {
   const rows = [
     ...config.context.map((f) => ({ k: f.label, v: ctx[f.key] })),
     {
@@ -454,16 +487,8 @@ export function SummaryRail({ config, ctx, format, picked, step, circuit, move, 
         ) : null}
       </div>
 
-      {/* Why Continue is off, under the session it is refusing to start. It
-          rides the rail on a wide screen and sits beside the button on a narrow
-          one (`.blockedInline`), so the reason is never off-screen from the
-          control it explains. */}
-      {blocked ? (
-        <p className={styles.railBlocked}>
-          <Icon name="alertTriangle" size="14px" strokeWidth={1.6} />
-          <span className={styles.railBlockedText}>{blocked}</span>
-        </p>
-      ) : null}
+      {/* the wall, under the session it is refusing to price */}
+      {wall}
     </aside>
   )
 }

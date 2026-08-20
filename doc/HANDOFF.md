@@ -326,9 +326,11 @@ Things worth not breaking:
 - **the header carries a rule under the stepper**, and the credit meter beside
   the title is two lines — label, then the figure with the balance as a pill —
   so it stands the same height as the back button and title opposite it.
-- **the reason a disabled Continue is disabled rides the rail**, under "Your
-  session", and drops back beside the button below 1100px where the rail is not
-  on screen (`.blockedInline`, the same wide/narrow split `.orderInline` uses).
+- **the credit wall rides the summary rail**, under the session it is refusing
+  to price, and drops into the step itself below 1100px where the rail is not on
+  screen. One `CreditWall` rendered in two places — the same wide/narrow split
+  `OrderPanel` uses — so it can never say one thing in the column and another in
+  the rail. The one-line reason beside a disabled Continue stays where it is.
 - **the wall is never just a disabled button.** An option that costs more than
   the balance says how much is missing, and the banner offers both ways out —
   top up, or drop to the cheapest option that fits. Every disabled Continue has

@@ -333,6 +333,9 @@
 
 .wall { border-radius: var(--radius-xl); }
 
+/* the rail carries it on a wide screen; this is its narrow-screen home */
+.wallInline { display: none; }
+
 /* ---- step 3: focus ---- */
 .focusHead {
   display: flex;
@@ -633,27 +636,6 @@
   text-align: end;
 }
 
-/* Beside the button only when the rail is not on screen to carry it — the
-   same wide/narrow split `.orderInline` uses. A disabled Continue never loses
-   the reason it is disabled. */
-.blockedInline { display: none; }
-
-/* the rail's copy: a card under Your session, in the warning's own colours */
-.railBlocked {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--warning-bd);
-  border-radius: var(--radius-lg);
-  background: var(--warning-bg);
-  font-size: var(--text-xs);
-  line-height: 18px;
-  color: var(--warning-fg);
-}
-
-.railBlocked > svg { flex: 0 0 auto; margin-block-start: 1px; }
-.railBlockedText { margin: 0; min-width: 0; }
 
 .foot {
   margin: 0;
@@ -725,7 +707,7 @@
   .body { grid-template-columns: minmax(0, 1fr); }
   .rail { display: none; }
   .orderInline { display: block; }
-  .blockedInline { display: block; }
+  .wallInline { display: flex; }
   .focusGrid { grid-template-columns: minmax(0, 1fr); }
 }
 

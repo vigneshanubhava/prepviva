@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-route
 import AppLayout from '../components/AppLayout.jsx'
 import { Button, Icon } from '../components/ui/index.js'
 import {
+  CreditWall,
   OrderPanel,
   StepContext,
   StepFocus,
@@ -331,10 +332,7 @@ export default function SessionConfig() {
               </Button>
 
               <div className={styles.actionsEnd}>
-                {/* the rail carries this on a wide screen */}
-                {blockedBecause ? (
-                  <p className={`${styles.blocked} ${styles.blockedInline}`}>{blockedBecause}</p>
-                ) : null}
+                {blockedBecause ? <p className={styles.blocked}>{blockedBecause}</p> : null}
                 <Button
                   disabled={!canContinue}
                   onClick={() => (step === 4 ? start() : go(step + 1))}
@@ -358,7 +356,19 @@ export default function SessionConfig() {
             step={step}
             circuit={circuit}
             move={move}
-            blocked={blockedBecause}
+            wall={
+              step === 2 ? (
+                <CreditWall
+                  config={config}
+                  format={format}
+                  setFormat={(fn) => patch({ format: typeof fn === 'function' ? fn(format) : fn })}
+                  setStations={setStations}
+                  cost={cost}
+                  balance={balance}
+                  affordable={affordable}
+                />
+              ) : null
+            }
           />
         </div>
       </div>
