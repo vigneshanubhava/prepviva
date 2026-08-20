@@ -128,6 +128,9 @@ welcome use, so every screen stays reachable by URL.
 | `AppLayout` | Shell for every **signed-in** screen: `AppHeader` + `AppNav` + content column. Wrap new signed-in screens in this. |
 | `BrandMark` | Payment-scheme logos (Visa, Mastercard) at Figma's 49×16. |
 | `PlanCard` | One plan card — Figma draws the same one on the public pricing page (`14:11391`) and on Manage plan. Takes `badge`, `cta`, `note` and `footer` (which replaces the CTA — artboard 54's scheduled-downgrade notice); exports `PlanIcon` and `Tick`. |
+| `NotificationsMenu` | The bell in the header and the panel behind it. Every row is **derived from live state** (`data/notifications.js`), so it cannot announce something that is no longer true, and each row obeys the switch that owns it in Settings → Preferences — which is the link in the panel's footer. Read state lives on `AccountProvider` (`notificationsRead`, `markNotificationsRead`). |
+| `HelpMenu` | The question mark. Four answers to the questions this product actually raises, each quoting its figure from the module that owns it (`data/help.js` reads `MINUTES_PER_CREDIT`, `TRIAL_CREDITS`, `TRIAL_DAYS`), plus two things you can do. Every destination is a screen that exists, and the footnote says plainly there is no support inbox behind it. |
+| `usePopover` | The open/close behaviour those two share — outside click, Escape back to the trigger, focus into the panel. `ProfileMenu` keeps its own: it is a `role="menu"` with arrow-key roving, which these two are not. |
 | `PageHero` | The purple masthead (Figma `1:5133`) — glyph, title, lede, and an optional row of `HeroAction` pills on the right. Used by Settings, Performance, My Sessions and Practice. **Billing still draws its own**: that one is 206px because three stat cards overlap its bottom half, and it carries a menu, so the height and the overlap arithmetic belong to that screen. Both read `--app-hero-*`, so a change to the band's colours still lands on both. |
 | `PrototypeMenu` | **Prototype only.** The gear in the header and the controls panel behind it — practice history, account age, subscription, plan, credits, CV. Delete it and its line in `AppHeader` before this ships. |
 | `TrackSwitcher` | The chips that rescope a screen to one track, shared by the dashboard and Performance. A track earns a place by having been used; the primary track shows at zero, and the note says which are missing and why. |
@@ -606,6 +609,12 @@ the mark exists only as a 501×585 bitmap. Re-run that if the mark ever changes;
   every stacked card 200px tall — on Settings and on first-run setup both. The
   media query now releases it with `flex: 0 0 auto`. Check any `flex-basis`
   that survives a `flex-direction` change.
+- **Paint over a native input has to be `pointer-events: none`.** `Switch`
+  drew its track over the input without it, so a click on the visible control
+  was swallowed — a real user still hit the wrapping `<label>`, but a test
+  targeting the input times out with "track intercepts pointer events", and any
+  future full-cover input would have been dead. Checkbox and Radio already had
+  the rule; Switch does now.
 - **`a && b && c` returns `c`, not `true`.** Performance's `showCompare` was
   `compare && canCompare && aId && bId`, so in the compare view it held a *track
   id*; `showCompare === view.value` was then false for both view buttons at
@@ -699,6 +708,9 @@ Anything beyond those is new.
 - `AppNav` read `billingSummary()` off the module default, so the nav's credits
   panel never followed a plan change; it reads `useAccount()` now. Any new
   chrome that shows account figures must do the same.
+- The header's bell and question mark used to be inert; both are panels now.
+  `AppHeader` gained `signedIn` (default true) which hides them on checkout,
+  where the header runs before there is an account for them to talk about.
 - **The filter button, "Download invoice" and the row kebab are inert.** They are
   on the artboard with no target screen behind them. The hero kebab is live —
   it opens the cancel flow, and offers Renew once cancelled.

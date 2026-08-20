@@ -739,6 +739,10 @@
   --app-content-gap:     15px;   /* Figma: gap under the 40px header */
 
   --app-hero-pad:        40px;   /* Figma: 40px — the masthead's inline padding */
+  /* the two header panels: wide enough for a sentence of explanation per row,
+     narrow enough to hang off the header's right edge on a laptop */
+  --app-panel-w:        360px;
+  --app-panel-max-h:    min(34rem, calc(100vh - var(--app-header-h) - 3rem));
   --billing-hero-h:     206px;   /* Figma: 206px — the height its stat cards overlap */
   --billing-card-h:     148px;   /* Figma: 148px, fixed */
   /* Figma keeps the frame at 148 on the cancelled artboard even though its own

@@ -9,6 +9,7 @@
 }
 
 .control {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
@@ -18,10 +19,14 @@
 
 .wrap.disabled .control { cursor: not-allowed; }
 
+/* The input covers the control, and the paint over it is inert — the same rule
+   Checkbox and Radio follow. A painted track that keeps its own pointer events
+   swallows the click instead of letting it reach the input underneath. */
 .native {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   margin: 0;
   opacity: 0;
   cursor: inherit;
@@ -30,6 +35,7 @@
 .track {
   position: relative;
   flex: 0 0 auto;
+  pointer-events: none;
   display: inline-block;
   inline-size: 40px;
   block-size: 24px;

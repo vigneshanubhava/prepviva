@@ -1,0 +1,150 @@
+/* The help panel — same shell as the notifications one, prose rows instead of
+   alerts, and a note at the bottom that names what is not behind it. */
+
+.wrap { position: relative; display: inline-flex; }
+
+.trigger {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.trigger:hover { color: var(--text-primary); }
+.trigger:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-header);
+  display: flex;
+  flex-direction: column;
+  inline-size: var(--app-panel-w);
+  max-block-size: var(--app-panel-max-h);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--profile-shadow);
+  overflow: hidden;
+}
+
+.head {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.sub { margin: 2px 0 0; font-size: var(--text-xs); line-height: 18px; color: var(--text-muted); }
+
+/* ---- topics ---- */
+.list {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.topic {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  inline-size: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: transparent;
+  font-family: var(--font-sans);
+  text-align: start;
+  cursor: pointer;
+}
+
+.topic:hover { background: var(--surface-inset); }
+.topic:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }
+
+.tile {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--profile-tile-h);
+  block-size: var(--profile-tile-h);
+  border-radius: var(--radius-md);
+  background: var(--brand-subtle-bg);
+  color: var(--brand-subtle-text);
+}
+
+.body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.topicTitle {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.topicBody { font-size: var(--text-xs); line-height: 18px; color: var(--text-muted); }
+
+.topicLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-block-start: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  color: var(--text-link);
+}
+
+/* ---- the two things you can do from here ---- */
+.actions {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-primary);
+  text-align: start;
+  cursor: pointer;
+}
+
+.action:hover { background: var(--surface-inset); }
+.action:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }
+
+/* ---- the honest footnote ---- */
+.foot { background: var(--surface-inset); }
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-muted);
+}
+
+.note > svg { flex: 0 0 auto; margin-block-start: 1px; }

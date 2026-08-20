@@ -57,7 +57,7 @@ export default function Checkout() {
 
   return (
     <div className={styles.page}>
-      <AppHeader name={accountName} controls={false} />
+      <AppHeader name={accountName} controls={false} signedIn={false} />
 
       <main className={styles.wrap}>
         <button type="button" className={styles.back} onClick={() => navigate(-1)} aria-label="Back">

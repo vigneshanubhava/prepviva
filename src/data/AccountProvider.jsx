@@ -43,6 +43,13 @@ export function AccountProvider({ children }) {
    * the route would reset the other six every time one of them navigated.
    */
   const [settings, setSettings] = useState(SETTINGS)
+  /**
+   * Which notifications have been read. The bell's rows are derived from state
+   * rather than stored (`data/notifications.js`), so the only thing there is to
+   * keep is the ids that have been seen — and an id that stops being generated
+   * simply stops mattering.
+   */
+  const [notificationsRead, setNotificationsRead] = useState([])
 
   const cancel = useCallback(
     (reason) => setAccount((a) => cancelSubscription(a, reason)),
@@ -108,6 +115,11 @@ export function AccountProvider({ children }) {
     [],
   )
 
+  const markNotificationsRead = useCallback(
+    (ids) => setNotificationsRead((read) => [...new Set([...read, ...ids])]),
+    [],
+  )
+
   const updateCards = useCallback(
     (update) => setAccount((a) => ({ ...a, cards: update(a.cards) })),
     [],
@@ -120,6 +132,8 @@ export function AccountProvider({ children }) {
       setAccount,
       settings,
       saveSettings,
+      notificationsRead,
+      markNotificationsRead,
       saveDetails,
       saveInterviewProfile,
       detachCv,
@@ -146,6 +160,8 @@ export function AccountProvider({ children }) {
       notice,
       settings,
       saveSettings,
+      notificationsRead,
+      markNotificationsRead,
       saveDetails,
       saveInterviewProfile,
       detachCv,
