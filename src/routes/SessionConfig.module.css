@@ -542,6 +542,7 @@
 
 .readyRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
@@ -563,6 +564,11 @@
   color: var(--success-fg);
 }
 
+.readyText { flex: 1 1 auto; min-width: 0; }
+
+/* the Replace action keeps to the end of the title row */
+.readyCv { flex: 0 0 auto; margin-inline-start: auto; }
+
 .readyTitle {
   margin: 0;
   font-size: var(--text-sm);
@@ -572,6 +578,18 @@
 }
 
 .readyMeta { margin: 0; font-size: var(--text-xs); line-height: 18px; color: var(--screen-meta); }
+
+/* its own line under the row it is about */
+.readyError {
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--danger-fg);
+}
 
 .consent {
   padding: var(--space-4) var(--space-5);

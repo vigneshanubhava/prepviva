@@ -64,7 +64,7 @@ export default function SessionConfig() {
   const { trackId } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const { account, summary, spend } = useAccount()
+  const { account, summary, spend, attachCv } = useAccount()
 
   const config = trackConfig(trackId)
   const plan = location.state?.plan ?? null
@@ -74,6 +74,8 @@ export default function SessionConfig() {
   const [state, setState] = useState(() => (config ? initialState(config, plan, profile.worries) : null))
   const [step, setStep] = useState(1)
   const [reached, setReached] = useState(1)
+  // a rejected replacement on the Ready step — the CV itself lives on the account
+  const [cvError, setCvError] = useState(null)
 
   /* Re-seed when the track or the incoming plan changes. Both arrive from the
      URL, so this is a navigation rather than a render-time surprise. */
@@ -319,6 +321,11 @@ export default function SessionConfig() {
                 onEdit={go}
                 circuit={circuit}
                 resume={profile.resume}
+                cvError={cvError}
+                onReplaceCv={(meta, message) => {
+                  setCvError(message || null)
+                  if (meta) attachCv(meta)
+                }}
               />
             ) : null}
 

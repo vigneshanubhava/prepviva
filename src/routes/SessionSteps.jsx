@@ -3,10 +3,12 @@ import {
   Button,
   Checkbox,
   ChoiceCards,
+  FileDrop,
   Icon,
   Input,
   Select,
 } from '../components/ui/index.js'
+import { CV_MAX_MB, CV_TYPES } from '../data/onboarding.js'
 import { DIFFICULTY, MODES, costOf, isCircuit, summaryRows } from '../data/practice.js'
 import styles from './SessionConfig.module.css'
 
@@ -379,7 +381,7 @@ export function OrderPanel({ config, picked, move, circuit, className = '' }) {
    A confirmation, not a form. Every row jumps back to the step that owns it,
    so changing one answer never means re-answering the rest.
    ────────────────────────────────────────────────────────────────────── */
-export function StepReady({ config, ctx, format, picked, cost, balance, consent, setConsent, onEdit, circuit, resume }) {
+export function StepReady({ config, ctx, format, picked, cost, balance, consent, setConsent, onEdit, circuit, resume, onReplaceCv, cvError }) {
   const rows = summaryRows({ config, ctx, format, picked, circuit })
 
   return (
@@ -400,12 +402,36 @@ export function StepReady({ config, ctx, format, picked, cost, balance, consent,
         <span className={styles.readyTile} data-tone="success" aria-hidden="true">
           <Icon name="checkCircle" size="18px" strokeWidth={1.5} />
         </span>
-        <div>
+        <div className={styles.readyText}>
           <p className={styles.readyTitle}>CV attached</p>
           <p className={styles.readyMeta}>
             {resume.name} — your interviewer reads it before the session.
           </p>
         </div>
+
+        {/* Replace, but not remove: practice is gated on the CV, so taking it
+            off here would strand the session being confirmed. Removing it lives
+            in Settings, where the consequence can be spelled out. */}
+        <FileDrop
+          className={styles.readyCv}
+          compact
+          allowRemove={false}
+          file={resume}
+          accept={CV_TYPES}
+          maxMB={CV_MAX_MB}
+          onSelect={(meta) => meta && onReplaceCv?.(meta)}
+          onReject={(message) => onReplaceCv?.(null, `${message} Try exporting it as a PDF.`)}
+        />
+
+        {/* The card says this itself rather than letting FileDrop print it
+            inline: beside the actions the message squeezed the filename into
+            two lines, and a rejection belongs under the row it is about. */}
+        {cvError ? (
+          <p className={styles.readyError} role="alert">
+            <Icon name="alertCircle" size="14px" strokeWidth={1.6} />
+            {cvError}
+          </p>
+        ) : null}
       </div>
 
       <Checkbox

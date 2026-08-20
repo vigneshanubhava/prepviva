@@ -57,6 +57,10 @@
   cursor: pointer;
 }
 
+/* The first action takes the slack, so a pair of them sits together at the end
+   rather than one drifting into the middle of the row. */
+.remove + .remove { margin-inline-start: var(--space-3); }
+
 .remove:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
 .error {
@@ -67,4 +71,16 @@
   font-size: var(--text-xs);
   line-height: 18px;
   color: var(--danger-fg);
+}
+
+/* Just the actions, where the screen around it already names the file. The
+   full-width wrap would otherwise take the whole row and push them onto a line
+   of their own. */
+.wrapCompact { inline-size: auto; }
+
+.compact {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
 }

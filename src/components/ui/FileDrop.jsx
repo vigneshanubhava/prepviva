@@ -26,6 +26,13 @@ export default function FileDrop({
   onSelect,
   onReject,
   chooseLabel = 'Choose a file',
+  replaceLabel = 'Replace',
+  /** Just the actions, for a screen that already states the file's name —
+      the configurator's "CV attached" card. */
+  compact = false,
+  allowReplace = true,
+  /** Off where removing the file would strand the flow the screen is in. */
+  allowRemove = true,
   disabled = false,
   className = '',
 }) {
@@ -54,23 +61,45 @@ export default function FileDrop({
   }
 
   return (
-    <div className={`${styles.wrap} ${className}`}>
+    <div className={`${styles.wrap} ${compact ? styles.wrapCompact : ''} ${className}`}>
       {label ? <p className={styles.label}>{label}</p> : null}
 
       {file ? (
-        <p className={styles.file}>
-          <Icon name="checkCircle" size="16px" className={styles.fileIcon} />
-          <span className={styles.fileName}>{file.name}</span>
-          <span className={styles.fileSize}>{formatSize(file.size)}</span>
-          <button
-            type="button"
-            className={styles.remove}
-            disabled={disabled}
-            onClick={() => onSelect?.(null)}
-          >
-            Remove
-            <VisuallyHidden> {file.name}</VisuallyHidden>
-          </button>
+        <p className={compact ? styles.compact : styles.file}>
+          {compact ? null : (
+            <>
+              <Icon name="checkCircle" size="16px" className={styles.fileIcon} />
+              <span className={styles.fileName}>{file.name}</span>
+              <span className={styles.fileSize}>{formatSize(file.size)}</span>
+            </>
+          )}
+
+          {/* Replace goes through the same input and the same two checks as the
+              first attach — a second picker somewhere else in the app would be
+              a second place for the size and type rules to drift. */}
+          {allowReplace ? (
+            <button
+              type="button"
+              className={styles.remove}
+              disabled={disabled}
+              onClick={() => inputRef.current?.click()}
+            >
+              {replaceLabel}
+              <VisuallyHidden> {file.name}</VisuallyHidden>
+            </button>
+          ) : null}
+
+          {allowRemove ? (
+            <button
+              type="button"
+              className={styles.remove}
+              disabled={disabled}
+              onClick={() => onSelect?.(null)}
+            >
+              Remove
+              <VisuallyHidden> {file.name}</VisuallyHidden>
+            </button>
+          ) : null}
         </p>
       ) : (
         <div className={`${styles.zone} ${error ? styles.zoneError : ''}`}>

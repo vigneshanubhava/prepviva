@@ -326,6 +326,11 @@ Things worth not breaking:
 - **the header carries a rule under the stepper**, and the credit meter beside
   the title is two lines — label, then the figure with the balance as a pill —
   so it stands the same height as the back button and title opposite it.
+- **the CV can be swapped from the Ready step.** Replace only, not remove:
+  practice is gated on the CV, so taking it off at the point of confirming a
+  session would strand the flow. Removing lives in Settings, where the
+  consequence can be spelled out. A rejected file leaves the old CV in place and
+  says why, on its own line under the row.
 - **the credit wall rides the summary rail**, under the session it is refusing
   to price, and drops into the step itself below 1100px where the rail is not on
   screen. One `CreditWall` rendered in two places — the same wide/narrow split
@@ -533,7 +538,7 @@ were first-run setup's own parts:
 |---|---|
 | `ChoiceCards` | Radios as cards: glyph, label, a line of explanation. `layout="row"`, an `error`, and a per-option `accent` — `brand`, or `nhs` / `uni` / `pg`, which the token layer already colours. |
 | `ChipGroup` | Multi-select chips over a checkbox group, for short unordered answers. |
-| `FileDrop` | Attach one file. Checks extension and size itself and hands the message back through `onReject`, so the screen keeps its own voice. Passes on name and size only. |
+| `FileDrop` | Attach one file. Checks extension and size itself and hands the message back through `onReject`, so the screen keeps its own voice. Passes on name and size only. The attached state offers **Replace** as well as Remove — both go through the same input and the same two checks, so a second picker elsewhere can never drift from these rules. `compact` renders the actions alone, for a screen that already names the file (the configurator's "CV attached" card); `allowRemove={false}` where removing would strand the flow. |
 | `StepProgress` | Where you are in a multi-step flow: one `role="progressbar"`, decorative segments, and the count in words. |
 | `Switch` | A preference that *applies*, as opposed to a checkbox, which selects a value a form later submits. A native `<input type="checkbox">` with `role="switch"` under paint; `size="sm"` for a dense row. Settings' own toggles sit inside a form that still needs saving, which is why that screen carries a save bar rather than letting the control imply it saved. |
 
